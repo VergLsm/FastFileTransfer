@@ -11,6 +11,7 @@ import android.widget.GridView;
 import vision.fastfiletransfer.R;
 
 /**
+ * @deprecated 已经无用
  * A simple {@link Fragment} subclass.
  */
 public class RMGridFragmentApp extends Fragment {
@@ -18,6 +19,7 @@ public class RMGridFragmentApp extends Fragment {
 
     private GridView appGrid;
     private AdapterList mAdapterList;
+    private boolean isSetAdapter;
 
     public RMGridFragmentApp() {
         // Required empty public constructor
@@ -35,7 +37,8 @@ public class RMGridFragmentApp extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        if (null != mAdapterList && null != appGrid) {
+//        if (null != mAdapterList && null != appGrid) {
+        if (isSetAdapter) {
             appGrid.setAdapter(mAdapterList);
         }
     }
@@ -43,5 +46,6 @@ public class RMGridFragmentApp extends Fragment {
     public void setGridAdapter(AdapterList adapterList) {
         mAdapterList = adapterList;
         appGrid.setAdapter(mAdapterList);
+        this.isSetAdapter = true;
     }
 }

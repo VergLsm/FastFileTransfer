@@ -17,7 +17,6 @@ public class RMListFragment extends ListFragment {
     private View mEmptyView;
 
     public RMListFragment() {
-        super();
     }
 
     @Override

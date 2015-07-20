@@ -1,76 +1,77 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/fragment_container"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity"
-    android:id="@+id/fragment_container">
+    tools:context=".MainActivity">
 
 
     <ImageView
+        android:id="@+id/imageView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/imageView"
-        android:src="@mipmap/activity_main_banner_3"
+        android:layout_above="@+id/tvModel"
         android:scaleType="fitStart"
-        android:layout_above="@+id/tvModel" />
+        android:src="@mipmap/activity_main_banner_3" />
 
     <Button
+        android:id="@+id/btnShare"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/activity_main_btn_share"
-        android:text="我要分享"
-        android:id="@+id/btnLeft"
-        android:textSize="20dp"
-        android:paddingLeft="70dp"
-        android:paddingRight="70dp"
-        android:paddingTop="8dp"
-        android:paddingBottom="8dp"
-        android:layout_centerHorizontal="true"
-        android:layout_margin="10dp"
         android:layout_above="@+id/btnReceive"
-        android:textColor="#ffffffff" />
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@drawable/activity_main_btn_rec"
-        android:text="我要接收"
-        android:id="@+id/btnReceive"
-        android:textSize="20dp"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="10dp"
+        android:background="@drawable/activity_main_btn_share"
+        android:paddingBottom="8dp"
         android:paddingLeft="70dp"
         android:paddingRight="70dp"
         android:paddingTop="8dp"
-        android:paddingBottom="8dp"
-        android:layout_centerHorizontal="true"
-        android:layout_alignParentEnd="false"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="50dp"
-        android:textColor="#ffffffff" />
+        android:text="我要分享"
+        android:textColor="#ffffffff"
+        android:textSize="20dp" />
 
-    <TextView
+    <Button
+        android:id="@+id/btnReceive"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="false"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="50dp"
+        android:background="@drawable/activity_main_btn_rec"
+        android:paddingBottom="8dp"
+        android:paddingLeft="70dp"
+        android:paddingRight="70dp"
+        android:paddingTop="8dp"
+        android:text="我要接收"
+        android:textColor="#ffffffff"
+        android:textSize="20dp" />
+
+    <TextView
         android:id="@+id/tvModel"
-        android:textSize="20dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/btnShare"
         android:layout_alignWithParentIfMissing="false"
-        android:layout_above="@+id/btnLeft"
         android:layout_centerHorizontal="true"
         android:layout_margin="10dp"
-        android:text="机型" />
+        android:text="机型"
+        android:textSize="20dp" />
 
     <TextView
+        android:id="@+id/tvInvite"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="邀请好友安装亿动手机助手>"
-        android:id="@+id/tvInvite"
-        android:textColor="#ff07c2ab"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_marginBottom="10dp"
-        android:layout_marginRight="10dp" />
+        android:layout_marginRight="10dp"
+        android:text="邀请好友安装亿动手机助手>"
+        android:textColor="#ff07c2ab" />
 
     <RelativeLayout
+        android:id="@+id/activity_main_top"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/activity_main_top"></RelativeLayout>
+        android:layout_height="wrap_content"></RelativeLayout>
 
 </RelativeLayout>

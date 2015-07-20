@@ -43,7 +43,7 @@ import vision.resourcemanager.FileFolder;
 import vision.resourcemanager.FileImage;
 import vision.resourcemanager.FileText;
 import vision.resourcemanager.FileVideo;
-import vision.resourcemanager.RMGridFragmentApp;
+import vision.resourcemanager.RMGridFragment;
 import vision.resourcemanager.RMListFragment;
 import vision.resourcemanager.ResourceManagerInterface;
 
@@ -272,7 +272,8 @@ public class RMFragment extends Fragment {
         if ((page & PAGE_APP) != 0) {
             mAdapterLists[pageIndex] = new AdapterApp(getActivity(), mSelectedList);
             tab[pageIndex].setText(R.string.apk);
-            mFragments[pageIndex] = new RMGridFragmentApp();
+//            mFragments[pageIndex] = new RMGridFragmentApp();
+            mFragments[pageIndex] = new RMGridFragment();
             new RefreshAppList(mFragments[pageIndex], mAdapterLists[pageIndex]).execute();
             pageIndex++;
         }
@@ -715,7 +716,8 @@ public class RMFragment extends Fragment {
         @Override
         protected void onPostExecute(SparseArray<?> sparseArray) {
             mAdapterList.setData(sparseArray);
-            ((RMGridFragmentApp) mFragment).setGridAdapter(mAdapterList);
+//            ((RMGridFragmentApp) mFragment).setGridAdapter(mAdapterList);
+            ((RMGridFragment) mFragment).setGridAdapter(mAdapterList);
         }
 
     }
