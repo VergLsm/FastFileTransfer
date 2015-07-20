@@ -1,6 +1,11 @@
 package vision.fastfiletransfer;
 
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -12,13 +17,10 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import vis.DevicesList;
 import vis.SelectedFilesQueue;
 import vis.UserDevice;
-import vis.net.protocol.ShareServer;
-import vis.net.wifi.APHelper;
 import vision.resourcemanager.File;
 import vision.resourcemanager.FileFolder;
 import vision.resourcemanager.RMGridFragmentImage;
@@ -27,8 +29,8 @@ import vision.resourcemanager.ResourceManagerInterface;
 
 public class ShareActivity extends FragmentActivity implements ResourceManagerInterface {
 
-    private APHelper mAPHelper;
-    public ShareServer mShareServer;
+    public ShareService shareService;
+
     private SparseArray<FileFolder> mImagesFolder;
     /**
      * 文件选择队列
@@ -48,6 +50,8 @@ public class ShareActivity extends FragmentActivity implements ResourceManagerIn
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        //------------------------------------------------------------
 
         requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
         setContentView(R.layout.activity_share);
@@ -71,22 +75,19 @@ public class ShareActivity extends FragmentActivity implements ResourceManagerIn
         tvTitle = (TextView) findViewById(R.id.titlebar_tvtitle);
         tvTitle.setText("我要分享");
 
+        //----------------------------------------------------------------------------
+
+        binderService();
+
+        //----------------------------------------------------------------------------
+
         mDevicesList = new DevicesList<UserDevice>();
 
-        mAPHelper = new APHelper(this);
-        mShareServer = new ShareServer(this, mDevicesList);
-        mShareServer.enable();
 
-        if (!mAPHelper.isApEnabled()) {
-            //开启AP
-            if (mAPHelper.setWifiApEnabled(APHelper.createWifiCfg(APHelper.SSID), true)) {
-                Toast.makeText(ShareActivity.this, "热点开启", Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(ShareActivity.this, "打开热点失败", Toast.LENGTH_SHORT).show();
-            }
-        }
 
-        btnTitleBarRight = (Button) findViewById(R.id.titlebar_btnRight);
+        btnTitleBarRight = (Button)
+
+                findViewById(R.id.titlebar_btnRight);
 
         jumpToFragment(RM_FRAGMENT, 0);
     }
@@ -105,11 +106,11 @@ public class ShareActivity extends FragmentActivity implements ResourceManagerIn
 
     @Override
     protected void onDestroy() {
-        mShareServer.disable();
-        //关闭AP
-        if (mAPHelper.setWifiApEnabled(null, false)) {
-            Toast.makeText(ShareActivity.this, "热点关闭", Toast.LENGTH_SHORT).show();
-        }
+        //----------------------------------------------------------------------------
+
+        unBinderService();
+
+        //----------------------------------------------------------------------------
         super.onDestroy();
     }
 
@@ -203,4 +204,27 @@ public class ShareActivity extends FragmentActivity implements ResourceManagerIn
         return this.btnTitleBarRight;
     }
 
+    //---------------------------------------------------------------------
+
+    private void binderService() {
+        Intent intent = new Intent(this, ShareService.class);
+        bindService(intent, serConn, Context.BIND_AUTO_CREATE);
+    }
+
+    private void unBinderService() {
+        unbindService(serConn);
+    }
+
+    private ServiceConnection serConn = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            shareService = ((ShareService.ShareBinder) service).getService();
+            shareService.setActivity(ShareActivity.this);
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            shareService = null;
+        }
+    };
 }

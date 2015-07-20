@@ -176,7 +176,7 @@ public class ShareFragment extends Fragment {
             public void onClick(View v) {
                 String[] paths = ((ShareActivity) context).mSelectedFilesQueue.getPaths();
 //                ((ShareActivity) context).mFFTService.sendFlies(context, paths);
-                ((ShareActivity) context).mShareServer.sendFlies(context, paths);
+                ((ShareActivity) context).shareService.sendFlies(context, paths);
             }
         });
     }

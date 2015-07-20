@@ -70,7 +70,7 @@ public class ShareServer {
 
     public ShareServer(Context context, DevicesList<UserDevice> devicesList) {
         mDevicesList = devicesList;
-        mCommandsTransfer = new CommandsTransfer(2222);
+        mCommandsTransfer =  CommandsTransfer.getInstance();
         mFilesTransfer = new FilesTransfer(context, FilesTransfer.SERVICE_RECEIVE);
 //        mAdapter = new UserDevicesAdapter(context, devicesList);
         //把适配器的handler交给mFilesTransfer，以便transfer控制适配器

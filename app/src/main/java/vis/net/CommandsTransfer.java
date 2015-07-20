@@ -20,7 +20,7 @@ import vis.net.protocol.SwapPackage;
  * 使用前必须先调用enable使能，使用完毕必须再调用disable失能；
  * 发送直接调用 {@code send()} ；
  * 接收只需要设置好监听 {@code setCallbackHandler()} 就能开启，设置为Null即关闭<br>
- * <p>
+ * <p/>
  * <br>
  * Created by Vision on 15/6/9.<br>
  * Email:Vision.lsm.2012@gmail.com
@@ -40,6 +40,8 @@ public class CommandsTransfer {
      */
     private boolean isReceive = false;
 
+    private boolean isEndReceive = true;
+
     /**
      * 接收监听端口
      */
@@ -47,17 +49,26 @@ public class CommandsTransfer {
     private DatagramSocket mDatagramSocket = null;
     private DatagramPacket sendPacket;
     private Handler mHandler;
+    //已经自行实例化
+    private static CommandsTransfer single;
 
-    public CommandsTransfer() {
+    private CommandsTransfer() {
         //默认接收端口为2048
         this(2048);
     }
 
-    public CommandsTransfer(int recvPort) {
+    private CommandsTransfer(int recvPort) {
         this.recvPort = recvPort;
         executorService = Executors.newSingleThreadExecutor();
     }
 
+    //静态工厂方法
+    public static CommandsTransfer getInstance() {
+        if (single == null) {
+            single = new CommandsTransfer(2222);
+        }
+        return single;
+    }
     /**
      * 使能UDP
      */
@@ -134,7 +145,9 @@ public class CommandsTransfer {
 //        exec.execute(server);
 //        if (isEnable ) {
         isReceive = true;
-        executorService.execute(new Receiver());
+        if (isEndReceive) {
+            executorService.execute(new Receiver());
+        }
 //            new Thread().start();
 //        }
     }
@@ -144,7 +157,6 @@ public class CommandsTransfer {
      */
     private void stopReceiver() {
         isReceive = false;
-        executorService.shutdown();
     }
 
     /**
@@ -232,9 +244,12 @@ public class CommandsTransfer {
                 }
             }
             Log.d("", "I am closing!");
+            isEndReceive = true;
             if (!mDatagramSocket.isClosed()) {
                 mDatagramSocket.close();
             }
+            executorService.shutdown();
+            CommandsTransfer.single = null;
         }
     }
 
