@@ -15,6 +15,14 @@ public class UserDevice {
      * IP
      */
     public String ip;
+
+    /**
+     * int 型 IP
+     */
+    public int ipInt;
+
+    public int port;
+
     public String name;
     /**
      * 已下载大小

@@ -7,7 +7,9 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -37,6 +39,7 @@ public class ShareFragment extends Fragment {
 //    private Button btnSelectFile;
     private Button btnSend;
     private TextView tvName;
+    private ImageView pb;
     private ListView lvDevices;
     private RelativeLayout rlNobody;
     private DevicesList<UserDevice> mDevicesList;
@@ -85,8 +88,7 @@ public class ShareFragment extends Fragment {
         View rootview = inflater.inflate(R.layout.fragment_share, container, false);
         tvName = (TextView) rootview.findViewById(R.id.tvTips);
         lvDevices = (ListView) rootview.findViewById(R.id.lvDevices);
-//        tvFileName = (TextView) rootview.findViewById(R.id.tvFileName);
-//        btnSelectFile = (Button) rootview.findViewById(R.id.btnSelectFile);
+        pb = (ImageView) rootview.findViewById(R.id.fragment_share_pb);
         rlNobody = (RelativeLayout)
                 rootview.findViewById(R.id.rlNobody);
         btnSend = (Button) rootview.findViewById(R.id.btnSend);
@@ -107,6 +109,7 @@ public class ShareFragment extends Fragment {
             public void onAdded(int size) {
                 lvDevices.setVisibility(View.VISIBLE);
                 rlNobody.setVisibility(View.GONE);
+                pb.clearAnimation();
             }
 
             @Override
@@ -119,34 +122,32 @@ public class ShareFragment extends Fragment {
                 if (size == 0) {
                     lvDevices.setVisibility(View.GONE);
                     rlNobody.setVisibility(View.VISIBLE);
+                    pb.setAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.my_rotate));
                 }
             }
         });
 
-//        lvDevices.setAdapter(((ShareActivity) context).mFFTService.getAdapter());
         tvName.setText(new String(ReceiveServer.LOCALNAME));
+        pb.setAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.my_rotate));
         setAllTheThing();
     }
 
     @Override
     public void onResume() {
         super.onResume();
-//        ((ShareActivity) context).mFFTService.getAdapter().notifyDataSetChanged();
-        if (((ShareActivity) context).mSelectedFilesQueue.isEmpty()) {
-//            this.tvFileName.setText("没有选择文件");
-            this.lvDevices.setVisibility(View.VISIBLE);
-            this.rlNobody.setVisibility(View.GONE);
-            this.btnSend.setEnabled(false);
-            this.btnSend.setText("没有选择文件");
-//                    Toast.makeText(context, "没有选择文件", Toast.LENGTH_SHORT)
-//                            .show();
-        } else {
-//            this.tvFileName.setText(
-//                    "已选择" + ((ShareActivity) context)
-//                            .mSelectedFilesQueue.size() + "个文件"
-//            );
+        if (0 == mDevicesList.size()) {
             this.rlNobody.setVisibility(View.VISIBLE);
             this.lvDevices.setVisibility(View.GONE);
+
+        } else {
+            this.lvDevices.setVisibility(View.VISIBLE);
+            this.rlNobody.setVisibility(View.GONE);
+
+        }
+        if (((ShareActivity) context).mSelectedFilesQueue.isEmpty()) {
+            this.btnSend.setEnabled(false);
+            this.btnSend.setText("没有选择文件");
+        } else {
             this.btnSend.setEnabled(true);
             this.btnSend.setText(
                     "已选择" + ((ShareActivity) context)
@@ -165,34 +166,14 @@ public class ShareFragment extends Fragment {
      * set好所有的东西
      */
     private void setAllTheThing() {
-//        btnSelectFile.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-////                showFileChooser();
-//            }
-//        });
         btnSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String[] paths = ((ShareActivity) context).mSelectedFilesQueue.getPaths();
-//                ((ShareActivity) context).mFFTService.sendFlies(context, paths);
                 ((ShareActivity) context).shareService.sendFlies(context, paths);
             }
         });
     }
 
-//    /**
-//     * 显示文件选择器
-//     */
-//    private void showFileChooser() {
-//        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-//        intent.setType("*/*");
-//        intent.addCategory(Intent.CATEGORY_OPENABLE);
-//        try {
-//            startActivityForResult(Intent.createChooser(intent, "Select a File to Upload"), FILE_SELECT_CODE);
-//        } catch (android.content.ActivityNotFoundException ex) {
-//            Toast.makeText(context, "Please install a File Manager.", Toast.LENGTH_SHORT).show();
-//        }
-//    }
 
 }

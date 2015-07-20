@@ -55,16 +55,16 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/imageView3"
-            android:src="@mipmap/share_fragment_arrow"
+            android:src="@mipmap/ico_yidont"
             android:layout_alignParentLeft="false"
             android:layout_alignParentTop="false"
             android:layout_centerInParent="true" />
 
-        <ProgressBar
-            style="?android:attr/progressBarStyleLarge"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/progressBar"
+        <ImageView
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:id="@+id/fragment_share_pb"
+            android:src="@mipmap/loading_circle_yidont"
             android:layout_centerInParent="true" />
 
         <TextView
@@ -73,9 +73,10 @@
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="还没有人连接这里！"
             android:id="@+id/textView"
-            android:layout_above="@+id/progressBar"
             android:layout_centerHorizontal="true"
-            android:layout_marginBottom="15dp" />
+            android:layout_marginBottom="15dp"
+            android:layout_centerInParent="true"
+            android:layout_above="@+id/fragment_share_pb" />
     </RelativeLayout>
 
 

@@ -21,6 +21,7 @@ import java.net.SocketTimeoutException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import vis.DevicesList;
 import vis.UserDevice;
 import vis.UserFile;
 
@@ -34,6 +35,10 @@ public class FilesTransfer {
     public static final int SERVICE_SHARE = 1;
     public static final int SERVICE_RECEIVE = 2;
 
+
+    public static final int DEIVCE_INVALID = 0;
+    public static final int DEIVCE_VALID = 1;
+
     private final ExecutorService executorService;
     private ServerSocket mServerSocket;
     private Socket mSocket;
@@ -44,6 +49,7 @@ public class FilesTransfer {
     private Context context;
     private Handler mHandler;
     private Message msg;
+    private DevicesList<UserDevice> mDevicesList;
 
     public FilesTransfer(Context context, int serviceType) {
         this.context = context;
@@ -63,13 +69,25 @@ public class FilesTransfer {
     /**
      * 发送文件，最多可同时发往3个地址
      *
-     * @param index   目标用户序号
-     * @param files   要发送的文件
-     * @param address 要发送往的地址
-     * @param port    目标地址的端口
+     * @param index 目标用户序号
+     * @param files 要发送的文件
+     * @param ud    用户对象
      */
-    public void sendFile(int index, File[] files, String address, int port) {
-        executorService.execute(new Sender(index, files, address, port));
+    public void sendFile(int index, File[] files, UserDevice ud) {
+        executorService.execute(new Sender(index, files, ud));
+    }
+
+
+    public void sendFile(File[] files, DevicesList<UserDevice> devicesList) {
+        mDevicesList = devicesList;
+        for (int i = 0, nsize = mDevicesList.size(); i < nsize; i++) {
+            UserDevice ud = (UserDevice) mDevicesList.valueAt(i);
+            if (ud.state != UserDevice.TRANSFER_STATE_TRANSFERRING) {
+                ud.state = UserDevice.TRANSFER_STATE_TRANSFERRING;
+                sendFile(i, files, ud);
+                Log.d(this.getClass().getName(), ud.ip + ":2333->" + files.toString());
+            }
+        }
     }
 
     /**
@@ -199,6 +217,7 @@ public class FilesTransfer {
     }
 
     class Sender implements Runnable {
+        private final UserDevice ud;
         private int length = 0;
         private byte[] sendByte = null;
         private Socket socket = null;
@@ -206,24 +225,20 @@ public class FilesTransfer {
         private FileInputStream fin = null;
 
         private File[] files;
-        private String address;
-        private int port;
 
         private long sendLength;
         private int index;
         private int completionPercentage;
 
         /**
-         * @param index   目标用户序号
-         * @param files   要发送的文件
-         * @param address 要发送往的地址
-         * @param port    目标地址的端口
+         * @param index 目标用户序号
+         * @param files 要发送的文件
+         * @param ud    用户对象
          */
-        public Sender(int index, File[] files, String address, int port) {
+        public Sender(int index, File[] files, UserDevice ud) {
             this.index = index;
             this.files = files;
-            this.address = address;
-            this.port = port;
+            this.ud = ud;
         }
 
         @Override
@@ -233,7 +248,7 @@ public class FilesTransfer {
                 Log.d(this.getClass().getName(), "start send files :" + file.length());
                 try {
                     socket = new Socket();
-                    socket.connect(new InetSocketAddress(address, port), 10 * 1000);
+                    socket.connect(new InetSocketAddress(ud.ip, ud.port), 1000);
                     dout = new DataOutputStream(socket.getOutputStream());
 //                File files = new File("E:\\TU\\DSCF0320.JPG");
                     fin = new FileInputStream(file);
@@ -249,19 +264,25 @@ public class FilesTransfer {
 //                        Log.d("completed", String.valueOf(completionPercentage));
                             completionPercentage = transferred;
                             msg = Message.obtain();
-                            msg.what = this.index;
-                            msg.arg1 = completionPercentage;
+                            msg.what = DEIVCE_VALID;
+                            ud.completed = completionPercentage;
                             if (100 > completionPercentage) {
-                                msg.arg2 = UserDevice.TRANSFER_STATE_TRANSFERRING;
+                                ud.state = UserDevice.TRANSFER_STATE_TRANSFERRING;
                             } else {
-                                msg.arg2 = UserDevice.TRANSFER_STATE_FINISH;
+                                ud.state = UserDevice.TRANSFER_STATE_FINISH;
                             }
                             mHandler.sendMessage(msg);
                         }
 //                    Log.d("sendLength:", String.valueOf(sendLength));
                     }
                 } catch (IOException e) {
-
+                    Log.d("", e.getMessage() + "这个目标设备有问题了");
+                    Toast.makeText(context,"这个目标设备有问题了",Toast.LENGTH_SHORT)
+                            .show();
+                    msg = Message.obtain();
+                    msg.what = DEIVCE_INVALID;
+                    msg.arg1 = ud.ipInt;
+                    mHandler.sendMessage(msg);
                 } finally {
                     Log.d(this.getClass().getName(), "end send");
                     try {

@@ -6,9 +6,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -50,10 +48,7 @@ public class ReceiveScanFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        Animation anim = AnimationUtils.loadAnimation(getActivity(), R.anim.my_rotate);
-        LinearInterpolator lir = new LinearInterpolator();
-        anim.setInterpolator(lir);
-        pb1.setAnimation(anim);
+        pb1.setAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.my_rotate));
     }
 
     @Override

@@ -7,6 +7,8 @@ import android.util.SparseArray;
 
 import java.lang.ref.WeakReference;
 
+import vis.net.FilesTransfer;
+
 /**
  * Created by Vision on 15/7/7.<br>
  * Email:Vision.lsm.2012@gmail.com
@@ -29,13 +31,12 @@ public class DevicesList<E> extends SparseArray {
         public void handleMessage(Message msg) {
             DevicesList devicesList = (DevicesList) mT.get();
             if (devicesList != null) {
-                UserDevice ud = (UserDevice) devicesList.valueAt(msg.what);
-                ud.completed = msg.arg1;
-                ud.state = msg.arg2;
-//                if (ud.completed == 100) {
-////                    Toast.makeText(uda.mContext, "传输完成", Toast.LENGTH_SHORT)
-////                            .show();
-//                }
+//                UserDevice ud = (UserDevice) devicesList.valueAt(msg.what);
+                if (FilesTransfer.DEIVCE_VALID == msg.what) {
+                } else if (FilesTransfer.DEIVCE_INVALID == msg.what) {
+                    //设备无效，删除之
+                    devicesList.remove(msg.arg1);
+                }
                 // notifyDataSetChanged会执行getView函数，更新所有可视item的数据
 //                devicesList.notifyDataSetChanged();
                 devicesList.onDataChangedListener.onDataChanged();
@@ -48,20 +49,23 @@ public class DevicesList<E> extends SparseArray {
     public Handler getHandler() {
         return mHandler;
     }
+
     public void setOnDataChangedListener(OnDataChangedListener onDataChangedListener) {
         this.onDataChangedListener = onDataChangedListener;
     }
 
     public interface OnDataChangedListener {
         void onAdded(int size);
+
         void onDataChanged();
+
         void onRemoved(int size);
     }
 
     @NonNull
     @Override
     public E valueAt(int index) {
-        return (E)super.valueAt(index);
+        return (E) super.valueAt(index);
     }
 
     @Override

@@ -9,14 +9,14 @@
         android:layout_height="150dp"
         android:id="@+id/pb1"
         android:layout_centerInParent="true"
-        android:src="@mipmap/receive_scan_loading_circle" />
+        android:src="@mipmap/loading_circle_yidont" />
 
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/imageView4"
         android:layout_centerInParent="true"
-        android:src="@mipmap/receive_scan_searchbox_magnifier"
+        android:src="@mipmap/ico_yidont"
         android:layout_alignTop="@+id/pb1"
         android:layout_alignLeft="@+id/pb1"
         android:layout_alignBottom="@+id/pb1"
