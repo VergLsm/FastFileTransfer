@@ -46,6 +46,8 @@ public class ShareService extends Service {
         if (mAPHelper.setWifiApEnabled(null, false)) {
             Toast.makeText(this, "热点关闭", Toast.LENGTH_SHORT).show();
         }
+        mAPHelper = null;
+        mShareServer = null;
     }
 
     public void sendFlies(Context context, String[] paths) {

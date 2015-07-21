@@ -40,8 +40,15 @@ public class ReceiveActivity extends FragmentActivity {
                 R.layout.activity_titlebar
         );
 
-        mFragmentManager = getSupportFragmentManager();
         Button btnTitleBarLeft = (Button) findViewById(R.id.titlebar_btnLeft);
+        TextView tvTitle = (TextView) findViewById(R.id.titlebar_tvtitle);
+        tvTitle.setText("我要接收");
+        //---------------------------------------------------------------------------
+
+        if (null == mFragmentManager) {
+            mFragmentManager = getSupportFragmentManager();
+        }
+
         btnTitleBarLeft.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -52,16 +59,15 @@ public class ReceiveActivity extends FragmentActivity {
                 }
             }
         });
-        TextView tvTitle = (TextView) findViewById(R.id.titlebar_tvtitle);
-        tvTitle.setText("我要接收");
-        //---------------------------------------------------------------------------
 
-        mFilesList = new FilesList<UserFile>();
-        mReceiveScanFragment = ReceiveScanFragment.newInstance();
+        if (null == mFilesList) {
+            mFilesList = new FilesList<UserFile>();
+        }
 
         // 载入第一个Fragment
         jumpToFragment(0);
-
+        Intent intent = new Intent(ReceiveActivity.this, ReceiveService.class);
+        bindService(intent, serConn, Context.BIND_AUTO_CREATE);
     }
 
     @Override
@@ -73,8 +79,6 @@ public class ReceiveActivity extends FragmentActivity {
     protected void onResume() {
         super.onResume();
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        Intent intent = new Intent(ReceiveActivity.this, ReceiveService.class);
-        bindService(intent, serConn, Context.BIND_AUTO_CREATE);
     }
 
     @Override
@@ -91,6 +95,8 @@ public class ReceiveActivity extends FragmentActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        mReceiveService.sendLogout();
+        unbindService(serConn);
     }
 
     @Override
@@ -120,11 +126,16 @@ public class ReceiveActivity extends FragmentActivity {
         fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
         switch (fragmentType) {
             case 0: {
+                if (null == mReceiveFragment) {
+                    mReceiveScanFragment = ReceiveScanFragment.newInstance();
+                }
                 fragmentTransaction.replace(R.id.receiveContain, mReceiveScanFragment);
                 break;
             }
             case 1: {
-                mReceiveFragment = ReceiveFragment.newInstance();
+                if (null == mReceiveFragment) {
+                    mReceiveFragment = ReceiveFragment.newInstance();
+                }
                 fragmentTransaction.replace(R.id.receiveContain, mReceiveFragment);
                 //隐藏
 //                fragmentTransaction.hide(mRMFragment);

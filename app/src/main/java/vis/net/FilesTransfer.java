@@ -277,8 +277,6 @@ public class FilesTransfer {
                     }
                 } catch (IOException e) {
                     Log.d("", e.getMessage() + "这个目标设备有问题了");
-                    Toast.makeText(context,"这个目标设备有问题了",Toast.LENGTH_SHORT)
-                            .show();
                     msg = Message.obtain();
                     msg.what = DEIVCE_INVALID;
                     msg.arg1 = ud.ipInt;

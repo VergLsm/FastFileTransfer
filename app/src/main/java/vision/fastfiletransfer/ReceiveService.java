@@ -39,23 +39,19 @@ public class ReceiveService extends Service {
     public ReceiveService() {
     }
 
-    @Override
-    public IBinder onBind(Intent intent) {
-        // TO DO: Return the communication channel to the service.
-        return new ReceiveBinder();
-//        throw new UnsupportedOperationException("Not yet implemented");
-    }
-
     public void setActivity(ReceiveActivity activity) {
         this.mActivity = activity;
     }
 
     public void setFilesList(FilesList<UserFile> filesList) {
         mFilesList = filesList;
+        mReceiveServer = new ReceiveServer(this, mFilesList);
     }
 
     public void setFragment(ReceiveScanFragment receiveScanFragment) {
         mReceiveScanFragment = receiveScanFragment;
+        registerReceiver(wscr, new IntentFilter(WifiManager.WIFI_STATE_CHANGED_ACTION));
+        mWifiHelper.setWifiEnabled(true);
     }
 
     public class ReceiveBinder extends Binder {
@@ -71,11 +67,25 @@ public class ReceiveService extends Service {
 
         mWifiHelper = new WifiHelper(this);
         wscr = new WifiStateChangedReceiver();
-        registerReceiver(wscr, new IntentFilter(WifiManager.WIFI_STATE_CHANGED_ACTION));
-        mWifiHelper.setWifiEnabled(true);
 
-        mReceiveServer = new ReceiveServer(this, mFilesList);
+    }
 
+    @Override
+    public IBinder onBind(Intent intent) {
+        Log.d("service", "onBind()");
+        return new ReceiveBinder();
+    }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        Log.d("service", "onStartCommand()");
+        return super.onStartCommand(intent, flags, startId);
+    }
+
+    @Override
+    public boolean onUnbind(Intent intent) {
+        Log.d("service", "onUnbind()");
+        return super.onUnbind(intent);
     }
 
     @Override
@@ -114,7 +124,6 @@ public class ReceiveService extends Service {
     class WifiStateChangedReceiver extends BroadcastReceiver {
 
         public WifiStateChangedReceiver() {
-            mReceiveScanFragment.setTips("正在打开wifi……");
         }
 
         @Override
@@ -122,21 +131,31 @@ public class ReceiveService extends Service {
             int wifiState = intent.getIntExtra(WifiManager.EXTRA_WIFI_STATE, 0);
             switch (wifiState) {
                 case WifiManager.WIFI_STATE_DISABLING:
+                    Log.d("onReceive()", "WIFI_STATE_DISABLING");
                     break;
                 case WifiManager.WIFI_STATE_DISABLED:
+                    Log.d("onReceive()", "WIFI_STATE_DISABLED");
                     break;
                 case WifiManager.WIFI_STATE_ENABLING:
+                    Log.d("onReceive()", "WIFI_STATE_ENABLING");
+                    if (null != mReceiveScanFragment) {
+                        mReceiveScanFragment.setTips("正在打开wifi……");
+                    }
                     break;
                 case WifiManager.WIFI_STATE_ENABLED:
-                    unregisterReceiver(this);
-                    wscr = null;
+                    Log.d("onReceive()", "WIFI_STATE_ENABLED");
+//                    unregisterReceiver(this);
+//                    wscr = null;
                     srar = new ScanResultsAvailableReceiver();
                     registerReceiver(srar,
                             new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
-                    mReceiveScanFragment.setTips("正在扫描附近热点…");
+                    if (null != mReceiveScanFragment) {
+                        mReceiveScanFragment.setTips("正在扫描附近热点…");
+                    }
                     mWifiHelper.startScan();
                     break;
                 case WifiManager.WIFI_STATE_UNKNOWN:
+                    Log.d("onReceive()", "WIFI_STATE_UNKNOWN");
                     break;
             }
         }
@@ -144,25 +163,27 @@ public class ReceiveService extends Service {
 
     class ScanResultsAvailableReceiver extends BroadcastReceiver {
 
-        private final String TAG = ScanResultsAvailableReceiver.class.getName();
+        private final String TAG = "Scan";
         private int noFindCount = 0;
-        private boolean bln = false;
+        private boolean isEnabledNetwork = false;
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            bln = false;
-            ArrayList<String> al = mWifiHelper.findSSID("YDZS_*");
-            Log.d(TAG, String.valueOf(al.size()));
-            for (int i = 0; i < al.size(); i++) {
-                ssid = al.get(i);
-                mReceiveScanFragment.setTips("尝试连接" + ssid);
-                Log.d(TAG, String.valueOf("尝试连接" + ssid));
-                if (mWifiHelper.addNetwork(WifiHelper.createWifiCfg(ssid))) {   //尝试加入网络
-                    bln = mWifiHelper.enableNetwork(true);      //尝试使能网络
-                    Log.d("bln", String.valueOf(bln));
+//            isEnabledNetwork = false;
+            if (!isEnabledNetwork) {
+                ArrayList<String> al = mWifiHelper.findSSID("YDZS_*");
+                Log.d(TAG, "found:" + String.valueOf(al.size()));
+                for (int i = 0; i < al.size(); i++) {
+                    ssid = al.get(i);
+                    mReceiveScanFragment.setTips("尝试连接" + ssid);
+                    Log.d(TAG, String.valueOf("尝试连接" + ssid));
+                    if (mWifiHelper.addNetwork(WifiHelper.createWifiCfg(ssid))) {   //尝试加入网络
+                        isEnabledNetwork = mWifiHelper.enableNetwork(true);      //尝试使能网络
+                        Log.d("isEnabledNetwork", String.valueOf(isEnabledNetwork));
+                    }
                 }
             }
-            if (!bln) {         //使能网络不成功
+            if (!isEnabledNetwork) {         //使能网络不成功
                 Log.d("noFindCount", String.valueOf(noFindCount));
                 if (++noFindCount < 30) {
                     mReceiveScanFragment.setTips("正在扫描(" + noFindCount + ")…");
@@ -194,13 +215,13 @@ public class ReceiveService extends Service {
         public void onReceive(Context context, Intent intent) {
             NetworkInfo info = intent.getParcelableExtra(WifiManager.EXTRA_NETWORK_INFO);
             if (NetworkInfo.State.CONNECTED.equals(info.getState()) && info.isConnected()) {
-                Log.d(this.getClass().getName(), String.valueOf(info.getState()));
+                Log.d("NetworkChange", String.valueOf(info.getState()));
                 isConnected = true;
                 Toast.makeText(ReceiveService.this, String.valueOf(info.getState()), Toast.LENGTH_SHORT).show();
                 mActivity.jumpToFragment(1);
-                mReceiveServer.sendLogin(mWifiHelper.getServerAddressByStr());
+                sendLogin();
             } else if (isConnected && NetworkInfo.State.DISCONNECTED.equals(info.getState()) && !info.isConnected()) {
-                Log.d(this.getClass().getName(), String.valueOf(info.getState()));
+                Log.d("NetworkChange", String.valueOf(info.getState()));
                 mActivity.jumpToFragment(0);
                 isConnected = false;
 //                mFFTService.disable();

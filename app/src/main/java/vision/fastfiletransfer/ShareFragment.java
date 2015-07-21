@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import vis.DevicesList;
 import vis.UserDevice;
@@ -121,6 +122,8 @@ public class ShareFragment extends Fragment {
                     lvDevices.setVisibility(View.GONE);
                     rlNobody.setVisibility(View.VISIBLE);
 //                    pb.setAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.my_rotate));
+                    Toast.makeText(context, "设备退出或无效", Toast.LENGTH_SHORT)
+                            .show();
                 }
             }
         });
