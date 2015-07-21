@@ -15,8 +15,9 @@ import android.widget.FrameLayout;
 import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
-import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import vis.widget.LoadingView;
 
 /**
  * Created by Vision on 15/7/20.<br>
@@ -89,10 +90,15 @@ public class RMGridFragment extends Fragment {
         pframe.setVisibility(View.GONE);
         pframe.setGravity(Gravity.CENTER);
 
-        ProgressBar progress = new ProgressBar(context, null,
-                android.R.attr.progressBarStyleLarge);
-        pframe.addView(progress, new FrameLayout.LayoutParams(
+//        ProgressBar progress = new ProgressBar(context, null,
+//                android.R.attr.progressBarStyleLarge);
+//        pframe.addView(progress, new FrameLayout.LayoutParams(
+//                ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+
+        LoadingView loadingView = new LoadingView(context);
+        pframe.addView(loadingView, new FrameLayout.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+
 
         root.addView(pframe, new FrameLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));

@@ -4,19 +4,20 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.util.AttributeSet;
 import android.view.View;
 
 import vision.fastfiletransfer.R;
 
 /**
- * TODO: document your custom view class.
+ * LoadingView 加载等待
  */
 public class LoadingView extends View {
 
-//    private String mExampleString; // TODO: use a default from R.string...
-//    private int mExampleColor = Color.RED; // TODO: use a default from R.color...
-//    private float mExampleDimension = 0; // TODO: use a default from R.dimen...
+//    private String mExampleString; // TO DO: use a default from R.string...
+//    private int mExampleColor = Color.RED; // TO DO: use a default from R.color...
+//    private float mExampleDimension = 0; // TO DO: use a default from R.dimen...
 //    private Drawable mExampleDrawable;
 
     //    private TextPaint mTextPaint;
@@ -83,6 +84,12 @@ public class LoadingView extends View {
             if (mProgressImage != null) {
                 mProgressImage.setCallback(this);
             }
+        } else {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                mProgressImage = getResources().getDrawable(R.mipmap.loading_circle_yidont_2, null);
+            } else {
+                mProgressImage = getResources().getDrawable(R.mipmap.loading_circle_yidont_2);
+            }
         }
 
         if (a.hasValue(R.styleable.loadingView_centerIcon)) {
@@ -90,6 +97,12 @@ public class LoadingView extends View {
                     R.styleable.loadingView_centerIcon);
             if (mCenterIcon != null) {
                 mCenterIcon.setCallback(this);
+            }
+        } else {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                mCenterIcon = getResources().getDrawable(R.mipmap.ico_yidont, null);
+            } else {
+                mCenterIcon = getResources().getDrawable(R.mipmap.ico_yidont);
             }
         }
 
@@ -141,7 +154,7 @@ public class LoadingView extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
-        // TODO: consider storing these as member variables to reduce
+        // TO DO: consider storing these as member variables to reduce
         // allocations per draw cycle.
         int paddingLeft = getPaddingLeft();
         int paddingTop = getPaddingTop();
@@ -224,6 +237,13 @@ public class LoadingView extends View {
         }
     }
 
+    public void setProgressImage(Drawable progressImage) {
+        this.mProgressImage = progressImage;
+    }
+
+    public void setCenterIcon(Drawable centerIcon) {
+        this.mCenterIcon = centerIcon;
+    }
 
     /**
      * Gets the example string attribute value.

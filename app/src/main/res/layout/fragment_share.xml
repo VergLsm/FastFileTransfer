@@ -59,10 +59,7 @@
             class="vis.widget.LoadingView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            app:centerIcon="@mipmap/ico_yidont"
-            app:duration="2000"
-            app:progressImage="@mipmap/loading_circle_yidont_2" />
+            android:layout_centerInParent="true" />
 
 
         <TextView
