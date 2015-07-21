@@ -1,8 +1,8 @@
 <resources>
 
     <style name="CustomWindowTitleBackground">
-        <!--item name="android:background">#ff767bd3</item-->
-        <item name="android:background">@mipmap/actionbar_bg</item>
+        <!--item name="android:background">#e0000000</item-->
+        <item name="android:background">@mipmap/titlebar_bg_2</item>
     </style>
 
     <style name="AppTheme" parent="android:Theme.Light">

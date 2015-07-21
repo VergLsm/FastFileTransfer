@@ -1,18 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--已经没用-->
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <!-- 没有焦点时的背景颜色 -->
-    <item android:state_window_focused="false">
+    <!-- item android:state_window_focused="false">
         <shape>
             <gradient android:angle="-90" android:endColor="#E3E3E3" android:startColor="#ffffff" />
         </shape>
-    </item>
+    </item -->
 
     <!-- 非触摸模式下获得焦点并单击时的背景颜色 -->
-    <item android:drawable="@drawable/bg_listview_item_selected" android:state_focused="true" android:state_pressed="true" />
+    <!--item android:drawable="@drawable/bg_listview_item_selected" android:state_focused="true" android:state_pressed="true" /-->
     <!--触摸模式下单击时的背景颜色  -->
-    <item android:drawable="@drawable/bg_listview_item_selected" android:state_focused="false" android:state_pressed="true" />
+    <!--item android:drawable="@drawable/bg_listview_item_selected" android:state_focused="false" android:state_pressed="true" /-->
     <!--选中时的背景颜色  -->
-    <item android:drawable="@drawable/bg_listview_item_selected" android:state_selected="true" />
+    <!--item android:drawable="@drawable/bg_listview_item_selected" android:state_selected="true" /-->
     <!--获得焦点时的背景  颜色-->
-    <item android:drawable="@drawable/bg_listview_item_selected" android:state_focused="true" />
+    <!--item android:drawable="@drawable/bg_listview_item_selected" android:state_focused="true" /-->
 </selector> 

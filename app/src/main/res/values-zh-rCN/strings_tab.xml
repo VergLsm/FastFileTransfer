@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="apk">应用</string>
+    <string name="img">图片</string>
+    <string name="audio">音乐</string>
+    <string name="video">视频</string>
+    <string name="text">文档</string>
+</resources>

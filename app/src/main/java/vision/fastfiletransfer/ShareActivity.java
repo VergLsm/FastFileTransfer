@@ -1,33 +1,37 @@
 package vision.fastfiletransfer;
 
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.SparseArray;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import vis.DevicesList;
 import vis.SelectedFilesQueue;
 import vis.UserDevice;
-import vis.net.protocol.ShareServer;
-import vis.net.wifi.APHelper;
 import vision.resourcemanager.File;
+import vision.resourcemanager.FileFolder;
+import vision.resourcemanager.RMGridFragmentImage;
+import vision.resourcemanager.ResourceManagerInterface;
 
 
-public class ShareActivity extends FragmentActivity {
+public class ShareActivity extends FragmentActivity implements ResourceManagerInterface {
 
-    public static final int RM_FRAGMENT = 0;
-    public static final int SHARE_FRAGMENT = 1;
+    public ShareService shareService;
 
-    private APHelper mAPHelper;
-    //    public FFTService mFFTService;
-    public ShareServer mShareServer;
+    private SparseArray<FileFolder> mImagesFolder;
     /**
      * 文件选择队列
      */
@@ -39,10 +43,16 @@ public class ShareActivity extends FragmentActivity {
 
     private FragmentManager fragmentManager;
     private RMFragment mRMFragment;
+    private TextView tvTitle;
+    private Button btnTitleBarRight;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        //------------------------------------------------------------
+
         requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
         setContentView(R.layout.activity_share);
         getWindow().setFeatureInt(
@@ -62,39 +72,45 @@ public class ShareActivity extends FragmentActivity {
                 }
             }
         });
-        TextView tvTitle = (TextView) findViewById(R.id.titlebar_tvtitle);
+        tvTitle = (TextView) findViewById(R.id.titlebar_tvtitle);
         tvTitle.setText("我要分享");
 
-        mSelectedFilesQueue = new SelectedFilesQueue<File>();
-//        mDevicesList = new SparseArray<UserDevice>();
+        //----------------------------------------------------------------------------
+
+        binderService();
+
+        //----------------------------------------------------------------------------
+
         mDevicesList = new DevicesList<UserDevice>();
 
-        mAPHelper = new APHelper(this);
-        mShareServer = new ShareServer(this, mDevicesList);
-        mShareServer.enable();
 
-        if (!mAPHelper.isApEnabled()) {
-            //开启AP
-            if (mAPHelper.setWifiApEnabled(APHelper.createWifiCfg(APHelper.SSID), true)) {
-                Toast.makeText(ShareActivity.this, "热点开启", Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(ShareActivity.this, "打开热点失败", Toast.LENGTH_SHORT).show();
-            }
-        }
-        jumpToFragment(RM_FRAGMENT);
+
+        btnTitleBarRight = (Button)
+
+                findViewById(R.id.titlebar_btnRight);
+
+        jumpToFragment(RM_FRAGMENT, 0);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+    }
 
     @Override
     protected void onDestroy() {
-//        mFFTService.setOnDataReceivedListener(null);
-//        mFFTService.disable();
-        mShareServer.disable();
-        //关闭AP
-//        if (mShareWifiManager.setWifiApEnabled(false)) {
-        if (mAPHelper.setWifiApEnabled(null, false)) {
-            Toast.makeText(ShareActivity.this, "热点关闭", Toast.LENGTH_SHORT).show();
-        }
+        //----------------------------------------------------------------------------
+
+        unBinderService();
+
+        //----------------------------------------------------------------------------
         super.onDestroy();
     }
 
@@ -120,13 +136,14 @@ public class ShareActivity extends FragmentActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void jumpToFragment(int fragmentType) {
+    @Override
+    public void jumpToFragment(int fragmentType, int indexOfFolder) {
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
         switch (fragmentType) {
             case RM_FRAGMENT: {
                 mRMFragment = RMFragment.newInstance(
-                        RMFragment.TYPE_FILE_TRANSFER,
+                        ResourceManagerInterface.TYPE_FILE_TRANSFER,
                         /*RMFragment.TYPE_RESOURCE_MANAGER,*/
                         RMFragment.PAGE_AUDIO | RMFragment.PAGE_IMAGE | RMFragment.PAGE_APP | RMFragment.PAGE_VIDEO | RMFragment.PAGE_TEXT);
 
@@ -142,6 +159,13 @@ public class ShareActivity extends FragmentActivity {
                 fragmentTransaction.addToBackStack(null);
                 break;
             }
+            case RM_IMAGE_GRID: {
+                RMGridFragmentImage rmGridFragmentImage = RMGridFragmentImage.newInstance(indexOfFolder, null);
+                fragmentTransaction.hide(mRMFragment);
+                fragmentTransaction.add(R.id.shareContain, rmGridFragmentImage);
+                fragmentTransaction.addToBackStack(null);
+                break;
+            }
             default: {
                 return;
             }
@@ -149,4 +173,58 @@ public class ShareActivity extends FragmentActivity {
         fragmentTransaction.commit();
     }
 
+    @Override
+    public SelectedFilesQueue<File> getSelectedFilesQueue() {
+        if (null == mSelectedFilesQueue) {
+            mSelectedFilesQueue = new SelectedFilesQueue<File>();
+        }
+        return this.mSelectedFilesQueue;
+    }
+
+    @Override
+    public SparseArray<FileFolder> getImageFolder() {
+        if (null == mImagesFolder) {
+            mImagesFolder = new SparseArray<FileFolder>();
+        }
+        return mImagesFolder;
+    }
+
+    @Override
+    public void setTitleText(String string) {
+        this.tvTitle.setText(string);
+    }
+
+    @Override
+    public String getTitleText() {
+        return this.tvTitle.getText().toString();
+    }
+
+    @Override
+    public Button getTitleRightBtn() {
+        return this.btnTitleBarRight;
+    }
+
+    //---------------------------------------------------------------------
+
+    private void binderService() {
+        Intent intent = new Intent(this, ShareService.class);
+        bindService(intent, serConn, Context.BIND_AUTO_CREATE);
+    }
+
+    private void unBinderService() {
+        unbindService(serConn);
+    }
+
+    private ServiceConnection serConn = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            shareService = ((ShareService.ShareBinder) service).getService();
+            shareService.setActivity(ShareActivity.this);
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            shareService = null;
+        }
+    };
 }

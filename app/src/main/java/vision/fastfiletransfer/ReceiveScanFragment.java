@@ -6,10 +6,6 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.view.animation.LinearInterpolator;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 
@@ -20,7 +16,6 @@ import android.widget.TextView;
  */
 public class ReceiveScanFragment extends Fragment {
     private TextView tvTips;
-    private ImageView pb1;
 
     public static ReceiveScanFragment newInstance() {
         return new ReceiveScanFragment();
@@ -36,8 +31,6 @@ public class ReceiveScanFragment extends Fragment {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_receive_scan, container, false);
         tvTips = (TextView) rootView.findViewById(R.id.tvTips);
-        pb1 = (ImageView) rootView.findViewById(R.id.pb1);
-
         return rootView;
     }
 
@@ -50,16 +43,11 @@ public class ReceiveScanFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        Animation anim = AnimationUtils.loadAnimation(getActivity(), R.anim.my_rotate);
-        LinearInterpolator lir = new LinearInterpolator();
-        anim.setInterpolator(lir);
-        pb1.setAnimation(anim);
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        pb1.clearAnimation();
     }
 
     /**

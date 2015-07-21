@@ -3,7 +3,7 @@
     android:id="@+id/list_item_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/style_listitem_background"
+    android:background="@color/list_background_color"
     android:gravity="center_vertical"
     android:paddingBottom="5dp"
     android:paddingTop="5dp"
@@ -32,7 +32,7 @@
             android:layout_height="wrap_content"
             android:singleLine="true"
             android:text=""
-            android:textColor="#000000"
+            android:textColor="@color/item_text_color_normal"
             android:textSize="20sp"
             android:layout_marginBottom="10dp" />
 
@@ -47,7 +47,7 @@
                 android:layout_height="wrap_content"
                 android:singleLine="true"
                 android:text=""
-                android:textColor="#ff888888"
+                android:textColor="@color/item_text_color_s"
                 android:textSize="12sp"
                 android:layout_weight="1"
                 android:gravity="left" />
@@ -58,7 +58,7 @@
                 android:layout_height="wrap_content"
                 android:singleLine="true"
                 android:text=""
-                android:textColor="#ff888888"
+                android:textColor="@color/item_text_color_s"
                 android:textSize="12sp"
                 android:autoText="false"
                 android:layout_weight="1"
@@ -70,11 +70,7 @@
 
     <ImageView
         android:id="@+id/ivCheckBox"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
-        android:src="@mipmap/listitem_checkbox_off_normal"
-        android:visibility="visible"
-        android:layout_marginRight="10dp"
-        android:layout_marginLeft="20dp" />
+        android:focusable="true"
+        style="@style/item_checkbox.list" />
 
 </LinearLayout>

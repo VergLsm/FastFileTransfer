@@ -70,7 +70,7 @@ public class AdapterAudio extends AdapterList {
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
-        final FileAudio fileAudio = this.audios.get(position);
+        final FileAudio fileAudio = this.audios.valueAt(position);
 
         holder.layout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -78,11 +78,11 @@ public class AdapterAudio extends AdapterList {
                 if (fileAudio.isSelected) {
                     fileAudio.isSelected = false;
                     mSelectedList.remove(fileAudio);
-                    holder.ivCheckBox.setImageResource(R.mipmap.listitem_checkbox_off_normal);
+                    holder.ivCheckBox.setImageResource(R.mipmap.listitem_checkbox_off);
                 } else {
                     fileAudio.isSelected = true;
                     mSelectedList.add(fileAudio);
-                    holder.ivCheckBox.setImageResource(R.mipmap.listitem_checkbox_on_normal);
+                    holder.ivCheckBox.setImageResource(R.mipmap.listitem_checkbox_on);
                 }
             }
         });
@@ -91,9 +91,9 @@ public class AdapterAudio extends AdapterList {
         holder.size.setText(fileAudio.strSize);
         holder.date.setText(fileAudio.strDate);
         if (fileAudio.isSelected) {
-            holder.ivCheckBox.setImageResource(R.mipmap.listitem_checkbox_on_normal);
+            holder.ivCheckBox.setImageResource(R.mipmap.listitem_checkbox_on);
         } else {
-            holder.ivCheckBox.setImageResource(R.mipmap.listitem_checkbox_off_normal);
+            holder.ivCheckBox.setImageResource(R.mipmap.listitem_checkbox_off);
         }
         return convertView;
     }

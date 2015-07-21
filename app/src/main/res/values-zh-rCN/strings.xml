@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">文件快传</string>
+    <string name="open">打开</string>
+    <string name="share">分享</string>
+    <string name="cancel">取消</string>
+    <string name="delete">删除</string>
+    <string name="res_mag">资源管理</string>
+
+    <string name="send">发送</string>
+
+    <string name="title_activity_resource_manager">资源管理</string>
+</resources>

@@ -73,7 +73,7 @@ public class AdapterText extends AdapterList {
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
-        final FileText file = this.texts.get(position);
+        final FileText file = this.texts.valueAt(position);
 
         holder.layout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -81,11 +81,11 @@ public class AdapterText extends AdapterList {
                 if (file.isSelected) {
                     file.isSelected = false;
                     mSelectedList.remove(file);
-                    holder.ivCheckBox.setImageResource(R.mipmap.listitem_checkbox_off_normal);
+                    holder.ivCheckBox.setImageResource(R.mipmap.listitem_checkbox_off);
                 } else {
                     file.isSelected = true;
                     mSelectedList.add(file);
-                    holder.ivCheckBox.setImageResource(R.mipmap.listitem_checkbox_on_normal);
+                    holder.ivCheckBox.setImageResource(R.mipmap.listitem_checkbox_on);
                 }
             }
         });
@@ -93,9 +93,9 @@ public class AdapterText extends AdapterList {
         holder.size.setText(file.strSize);
         holder.date.setText(file.strDate);
         if (file.isSelected) {
-            holder.ivCheckBox.setImageResource(R.mipmap.listitem_checkbox_on_normal);
+            holder.ivCheckBox.setImageResource(R.mipmap.listitem_checkbox_on);
         } else {
-            holder.ivCheckBox.setImageResource(R.mipmap.listitem_checkbox_off_normal);
+            holder.ivCheckBox.setImageResource(R.mipmap.listitem_checkbox_off);
         }
         return convertView;
     }

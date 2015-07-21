@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
+    android:layout_height="wrap_content"
     android:orientation="horizontal">
 
     <Button
         android:id="@+id/titlebar_btnLeft"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
         android:layout_marginRight="12dp"
@@ -16,13 +16,14 @@
     <Button
         android:id="@+id/titlebar_btnRight"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:layout_marginRight="12.0dip"
-        android:text="发布"
         android:textSize="15.0sp"
-        android:visibility="gone" />
+        android:background="#00000000"
+        android:visibility="gone"
+        android:textColor="#ffffffff" />
 
     <TextView
         android:id="@+id/titlebar_tvtitle"

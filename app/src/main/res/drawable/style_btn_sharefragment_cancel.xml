@@ -4,14 +4,14 @@
     <!--item android:drawable="@mipmap/tips_button_pressed" android:state_pressed="true" /-->
     <item android:state_pressed="false">
         <shape>
-            <solid android:color="#e79429" />
+            <solid android:color="#ffbcbcbc" />
             <corners android:radius="25dp" />
         </shape>
     </item>
     <item android:state_pressed="true">
         <shape>
             <!--色值-->
-            <solid android:color="#f6aa3e" />
+            <solid android:color="#ff9f9f9f" />
             <!--圆角-->
             <corners android:radius="25dp" />
         </shape>

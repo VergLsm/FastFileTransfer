@@ -1,77 +1,77 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" tools:context="vision.fastfiletransfer.ShareFragment">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="vision.fastfiletransfer.ShareFragment">
 
     <ImageView
+        android:id="@+id/imageView2"
         android:layout_width="match_parent"
         android:layout_height="150dp"
-        android:id="@+id/imageView2"
-        android:src="@mipmap/share_fragment_banner"
-        android:scaleType="centerCrop" />
+        android:scaleType="centerCrop"
+        android:src="@mipmap/share_fragment_banner" />
 
     <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/send"
         android:id="@+id/btnSend"
-        android:layout_centerHorizontal="true"
-        android:layout_alignParentEnd="false"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
         android:layout_alignParentBottom="true"
-        android:visibility="visible"
-        android:textSize="18dp" />
+        android:layout_alignParentEnd="false"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:background="@drawable/style_btn_sharefragment_send"
+        android:text="@string/send"
+        android:textSize="18dp"
+        android:visibility="visible" />
 
     <TextView
+        android:id="@+id/tvTips"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="本设备名称"
-        android:id="@+id/tvTips"
+        android:layout_alignBottom="@+id/imageView2"
         android:layout_centerHorizontal="true"
         android:gravity="center_horizontal"
-        android:layout_alignBottom="@+id/imageView2"
+        android:text="本设备名称"
         android:textSize="20dp" />
 
     <ListView
+        android:id="@+id/lvDevices"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/lvDevices"
-        android:layout_alignParentTop="false"
+        android:layout_above="@+id/btnSend"
         android:layout_alignParentLeft="false"
-        android:visibility="gone"
+        android:layout_alignParentTop="false"
         android:layout_below="@+id/imageView2"
-        android:layout_above="@+id/btnSend" />
+        android:visibility="gone" />
 
     <RelativeLayout
+        android:id="@+id/rlNobody"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/imageView2"
         android:layout_above="@+id/btnSend"
-        android:id="@+id/rlNobody">
+        android:layout_below="@+id/imageView2">
 
-        <ImageView
+        <view
+            android:id="@+id/fragment_share_loading"
+            class="vis.widget.LoadingView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/imageView3"
-            android:src="@mipmap/share_fragment_arrow"
-            android:layout_alignParentLeft="false"
-            android:layout_alignParentTop="false"
             android:layout_centerInParent="true" />
 
-        <ProgressBar
-            style="?android:attr/progressBarStyleLarge"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/progressBar"
-            android:layout_centerInParent="true" />
 
         <TextView
+            android:id="@+id/textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="还没有人连接这里！"
-            android:id="@+id/textView"
-            android:layout_above="@+id/progressBar"
+            android:layout_below="@+id/fragment_share_loading"
             android:layout_centerHorizontal="true"
-            android:layout_marginBottom="15dp" />
+            android:layout_centerInParent="true"
+            android:layout_marginBottom="15dp"
+            android:text="还没有人连接这里！"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
     </RelativeLayout>
 
 

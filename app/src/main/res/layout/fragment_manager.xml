@@ -1,5 +1,6 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/fragment_manager"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="vision.fastfiletransfer.RMFragment">
@@ -8,105 +9,40 @@
         android:id="@+id/vp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:focusableInTouchMode="false"
-        android:layout_below="@+id/TAB"
+        android:layout_above="@+id/btnLinearLayout"
         android:layout_alignParentBottom="false"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
-        android:layout_above="@+id/btnLinearLayout">
-    </android.support.v4.view.ViewPager>
+        android:layout_below="@+id/TAB"
+        android:focusableInTouchMode="false"/>
 
     <LinearLayout
-        android:orientation="horizontal"
+        android:id="@+id/TAB"
         android:layout_width="match_parent"
         android:layout_height="38dp"
-        android:id="@+id/TAB"
-        android:background="@drawable/style_tab">
+        android:background="@drawable/style_tab"
+        android:orientation="horizontal">
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="图片"
             android:id="@+id/tab_1"
-            android:layout_weight="1"
-            android:gravity="center_vertical|center_horizontal"
-            android:textSize="20dp"
-            android:visibility="gone" />
+            style="@style/tab_text" />
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="音乐"
             android:id="@+id/tab_2"
-            android:layout_weight="1"
-            android:gravity="center_vertical|center_horizontal"
-            android:textSize="20dp"
-            android:visibility="gone" />
+            style="@style/tab_text" />
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="视频"
             android:id="@+id/tab_3"
-            android:layout_weight="1"
-            android:gravity="center_vertical|center_horizontal"
-            android:textSize="20dp"
-            android:visibility="gone" />
+            style="@style/tab_text" />
+
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="文档"
             android:id="@+id/tab_4"
-            android:layout_weight="1"
-            android:gravity="center_vertical|center_horizontal"
-            android:textSize="20dp"
-            android:visibility="gone" />
+            style="@style/tab_text" />
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="应用"
             android:id="@+id/tab_5"
-            android:layout_weight="1"
-            android:gravity="center_vertical|center_horizontal"
-            android:textSize="20dp"
-            android:visibility="gone" />
+            style="@style/tab_text" />
 
     </LinearLayout>
 
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:id="@+id/btnLinearLayout"
-        android:visibility="gone">
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="分享"
-            android:id="@+id/btnLeft"
-            android:layout_weight="1"
-            android:background="@drawable/style_btn_sharefragment_share"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
-            android:textSize="20dp" />
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="取消"
-            android:id="@+id/btnRight"
-            android:layout_weight="1"
-            android:background="@drawable/style_btn_sharefragment_cancel"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
-            android:textSize="20dp" />
-    </LinearLayout>
 </RelativeLayout>

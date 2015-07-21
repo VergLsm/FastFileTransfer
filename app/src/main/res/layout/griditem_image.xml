@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/grid_image_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/list_background_color">
+
+    <ImageView
+        android:id="@+id/grid_item_iv"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_centerHorizontal="true"
+        android:src="@mipmap/listitem_icon_image"
+        android:scaleType="centerCrop" />
+
+    <ImageView
+        android:id="@+id/grid_item_cb"
+        style="@style/item_checkbox.grid"
+        android:layout_alignBottom="@+id/grid_item_iv"
+        android:layout_alignRight="@+id/grid_item_iv" />
+</RelativeLayout>

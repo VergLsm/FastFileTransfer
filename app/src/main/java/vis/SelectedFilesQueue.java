@@ -1,5 +1,7 @@
 package vis;
 
+import android.support.annotation.Nullable;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -25,8 +27,11 @@ public class SelectedFilesQueue<T> {
         return b;
     }
 
-    public boolean remove(T t) {
-        boolean b = data.remove(t);
+    public boolean remove(@Nullable T t) {
+        boolean b = false;
+        if (null != t) {
+            b = data.remove(t);
+        }
         this.onDataChangedListener.onRemovedListener(data.size());
         return b;
     }
@@ -44,8 +49,8 @@ public class SelectedFilesQueue<T> {
         return strings;
     }
 
-    public void removeAll() {
-        data.removeAll(data);
+    public void clear() {
+        data.clear();
     }
 
     public int size() {

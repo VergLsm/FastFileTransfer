@@ -5,4 +5,5 @@ package vision.resourcemanager;
  * Email:Vision.lsm.2012@gmail.com
  */
 public class FileImage extends File {
+    public int fatherID;
 }

@@ -3,45 +3,50 @@ package vision.fastfiletransfer;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class MainActivity extends FragmentActivity {
 
     private Button btnShare;
     private Button btnReceive;
     private TextView tvModel;
+    private TextView tvInvite;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_CUSTOM_TITLE); //声明使用自定义标题
+        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_main);
-        //设置窗体样式
-        getWindow().setFeatureInt(
-                Window.FEATURE_CUSTOM_TITLE,  //设置此样式为自定义样式
-                R.layout.activity_titlebar //设置对应的布局
-        );//自定义布局赋值
-        Button btnTitleBarLeft = (Button) findViewById(R.id.titlebar_btnLeft);
+
+        LayoutInflater inflater = getLayoutInflater();
+        View rootView = inflater.inflate(R.layout.activity_titlebar, null, false);
+        RelativeLayout top = (RelativeLayout) findViewById(R.id.activity_main_top);
+        top.addView(rootView);
+        Button btnTitleBarLeft = (Button) rootView.findViewById(R.id.titlebar_btnLeft);
+        TextView tvTitle = (TextView) rootView.findViewById(R.id.titlebar_tvtitle);
+        tvTitle.setText("文件快传");
+
+        tvModel = (TextView) findViewById(R.id.tvModel);
+        btnShare = (Button) findViewById(R.id.btnShare);
+        btnReceive = (Button) findViewById(R.id.btnReceive);
+        tvInvite = (TextView) findViewById(R.id.tvInvite);
+        tvModel.setText("本机: " + android.os.Build.MODEL.replaceAll("\\s|-", ""));
+//        Log.d("SSID:", android.os.Build.MODEL.replaceAll("\\s|-", ""));
+
         btnTitleBarLeft.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
             }
         });
-        TextView tvTitle = (TextView) findViewById(R.id.titlebar_tvtitle);
-        tvTitle.setText("文件快传");
-
-        tvModel = (TextView) findViewById(R.id.tvModel);
-        btnShare = (Button) findViewById(R.id.btnLeft);
-        btnReceive = (Button) findViewById(R.id.btnReceive);
-        tvModel.setText("本机: " + android.os.Build.MODEL.replaceAll("\\s|-", ""));
-        Log.d("SSID:", android.os.Build.MODEL.replaceAll("\\s|-", ""));
         btnShare.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -54,6 +59,13 @@ public class MainActivity extends FragmentActivity {
             public void onClick(View v) {
                 Intent receiveIntent = new Intent(MainActivity.this, ReceiveActivity.class);
                 startActivity(receiveIntent);
+            }
+        });
+        tvInvite.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(MainActivity.this, "分享些啥？", Toast.LENGTH_SHORT)
+                        .show();
             }
         });
     }

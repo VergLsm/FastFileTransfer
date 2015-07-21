@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="apk" >app</string>
+    <string name="img">image</string>
+    <string name="audio">audio</string>
+    <string name="video">video</string>
+    <string name="text">text</string>
+</resources>

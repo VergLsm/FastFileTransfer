@@ -54,9 +54,10 @@ public class ShareServer {
                     //设备登入
                     UserDevice us = new UserDevice();
                     us.ip = byteArray2IpAddress(address);
+                    us.port = 2223;
                     us.name = new String(sp.getData());
-                    int ip = byteArray2Int(address);
-                    shareServer.mDevicesList.put(ip, us);
+                    us.ipInt = byteArray2Int(address);
+                    shareServer.mDevicesList.put(us.ipInt, us);
                     Log.d("Login", us.ip + "->" + new String(sp.getData()));
                 } else if (sp.getCmdByByte() == SwapPackage.LOGOUT) {
                     int ip = byteArray2Int(address);
@@ -70,7 +71,7 @@ public class ShareServer {
 
     public ShareServer(Context context, DevicesList<UserDevice> devicesList) {
         mDevicesList = devicesList;
-        mCommandsTransfer = new CommandsTransfer(2222);
+        mCommandsTransfer =  CommandsTransfer.getInstance();
         mFilesTransfer = new FilesTransfer(context, FilesTransfer.SERVICE_RECEIVE);
 //        mAdapter = new UserDevicesAdapter(context, devicesList);
         //把适配器的handler交给mFilesTransfer，以便transfer控制适配器
@@ -109,17 +110,9 @@ public class ShareServer {
             Toast.makeText(context, "没有设备连接", Toast.LENGTH_SHORT).show();
         } else {
             //发送文件
+            mFilesTransfer.sendFile(files,mDevicesList);
 //            Toast.makeText(context, file.toString(), Toast.LENGTH_SHORT).show();
 //            for (int i = 0, nsize = mAdapter.getCount(); i < nsize; i++) {
-            for (int i = 0, nsize = mDevicesList.size(); i < nsize; i++) {
-//                UserDevice ud = (UserDevice) mAdapter.getObject(i);
-                UserDevice ud = (UserDevice) mDevicesList.valueAt(i);
-                if (ud.state != UserDevice.TRANSFER_STATE_TRANSFERRING) {
-                    ud.state = UserDevice.TRANSFER_STATE_TRANSFERRING;
-                    mFilesTransfer.sendFile(i, files, ud.ip, 2223);
-                    Log.d(this.getClass().getName(), ud.ip + ":2333->" + files.toString());
-                }
-            }
         }
     }
 

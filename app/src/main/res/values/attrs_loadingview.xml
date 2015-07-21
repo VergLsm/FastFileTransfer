@@ -1,0 +1,8 @@
+<resources>
+    <declare-styleable name="loadingView">
+        <attr name="progressImage" format="reference"/>
+        <attr name="centerIcon" format="reference" />
+        <attr name="centerIconDimension" format="dimension" />
+        <attr name="duration" format="integer" />
+    </declare-styleable>
+</resources>

@@ -29,7 +29,7 @@ public class ReceiveServer {
     private String targetAddress;
 
     public ReceiveServer(Context context, FilesList<UserFile> filesList) {
-        mCommandsTransfer = new CommandsTransfer(2222);
+        mCommandsTransfer =  CommandsTransfer.getInstance();
         mFilesTransfer = new FilesTransfer(context, FilesTransfer.SERVICE_RECEIVE);
 //        if (SERVICE_SHARE == serviceType) {
 //            mAdapter = new UserDevicesAdapter(context, mDevicesList);

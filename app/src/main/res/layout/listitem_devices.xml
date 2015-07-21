@@ -4,7 +4,7 @@
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:gravity="center_vertical"
-    android:background="@drawable/style_listitem_background"
+    android:background="@color/list_background_color"
     android:paddingBottom="5dp"
     android:paddingTop="5dp" >
 
@@ -31,14 +31,14 @@
             android:layout_height="wrap_content"
             android:singleLine="true"
             android:text=""
-            android:textColor="#000000"
+            android:textColor="@color/item_text_color_normal"
             android:textSize="20sp" />
 
         <TextView
             android:id="@+id/app_tips"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="#000000"
+            android:textColor="@color/item_text_color_s"
             android:visibility="visible"
             android:textSize="15sp" />
 
