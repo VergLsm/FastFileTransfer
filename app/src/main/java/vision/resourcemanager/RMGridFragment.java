@@ -18,6 +18,7 @@ import android.widget.ListAdapter;
 import android.widget.TextView;
 
 import vis.widget.LoadingView;
+import vision.fastfiletransfer.R;
 
 /**
  * Created by Vision on 15/7/20.<br>
@@ -81,7 +82,7 @@ public class RMGridFragment extends Fragment {
         final Context context = getActivity();
 
         FrameLayout root = new FrameLayout(context);
-
+        root.setBackgroundResource(R.color.list_background_color);
         // ------------------------------------------------------------------
 
         LinearLayout pframe = new LinearLayout(context);

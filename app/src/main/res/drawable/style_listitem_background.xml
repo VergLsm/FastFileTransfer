@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--已经没用-->
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <!-- 没有焦点时的背景颜色 -->
     <!-- item android:state_window_focused="false">

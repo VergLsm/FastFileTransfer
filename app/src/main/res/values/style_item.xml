@@ -2,6 +2,7 @@
 <resources>
     <color name="item_text_color_normal">#ff313131</color>
     <color name="item_text_color_s">#ff888888</color>
+    <color name="list_background_color">#ffededed</color>
 
     <style name="item_checkbox">
         <item name="android:layout_width">30dp</item>

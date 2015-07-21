@@ -38,7 +38,7 @@ public class RMListFragment extends ListFragment {
         final Context context = getActivity();
 
         FrameLayout root = new FrameLayout(context);
-
+        root.setBackgroundResource(R.color.list_background_color);
         // ------------------------------------------------------------------
 
         LinearLayout pframe = new LinearLayout(context);

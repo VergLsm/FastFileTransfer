@@ -4,7 +4,7 @@
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:gravity="center_vertical"
-    android:background="@drawable/style_listitem_background"
+    android:background="@color/list_background_color"
     android:paddingBottom="5dp"
     android:paddingTop="5dp" >
 

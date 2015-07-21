@@ -3,16 +3,17 @@
     android:id="@+id/fragment_grid_image"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/list_background_color"
     tools:context="vision.resourcemanager.RMGridFragmentImage">
 
     <GridView
         android:id="@+id/imageGrid"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:horizontalSpacing="5dp"
+        android:horizontalSpacing="3dp"
         android:numColumns="3"
         android:scrollbars="none"
         android:stretchMode="columnWidth"
-        android:verticalSpacing="5dp" />
+        android:verticalSpacing="3dp" />
 
 </FrameLayout>
