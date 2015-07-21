@@ -54,6 +54,11 @@
             android:enabled="true"
             android:exported="true" >
         </service>
+        <service
+            android:name=".ReceiveService"
+            android:enabled="true"
+            android:exported="true" >
+        </service>
     </application>
 
 </manifest>
