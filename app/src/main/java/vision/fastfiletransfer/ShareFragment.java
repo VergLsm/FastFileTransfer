@@ -108,7 +108,6 @@ public class ShareFragment extends Fragment {
             public void onAdded(int size) {
                 lvDevices.setVisibility(View.VISIBLE);
                 rlNobody.setVisibility(View.GONE);
-//                pb.clearAnimation();
             }
 
             @Override
@@ -121,9 +120,6 @@ public class ShareFragment extends Fragment {
                 if (size == 0) {
                     lvDevices.setVisibility(View.GONE);
                     rlNobody.setVisibility(View.VISIBLE);
-//                    pb.setAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.my_rotate));
-                    Toast.makeText(context, "设备退出或无效", Toast.LENGTH_SHORT)
-                            .show();
                 }
             }
         });

@@ -1,9 +1,11 @@
 package vis;
 
+import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
 import android.util.SparseArray;
+import android.widget.Toast;
 
 import java.lang.ref.WeakReference;
 
@@ -19,6 +21,11 @@ public class DevicesList<E> extends SparseArray {
      * 交给其它线程控制的Handler
      */
     private Handler mHandler = new MyHandler<DevicesList>(this);
+    private Context mContext;
+
+    public DevicesList(Context context) {
+        mContext = context;
+    }
 
     private static class MyHandler<T> extends Handler {
         private final WeakReference<T> mT;
@@ -75,6 +82,8 @@ public class DevicesList<E> extends SparseArray {
             onDataChangedListener.onAdded(this.size());
             onDataChangedListener.onDataChanged();
         }
+        Toast.makeText(mContext, "新设备连接", Toast.LENGTH_SHORT)
+                .show();
     }
 
     @Override
@@ -84,5 +93,7 @@ public class DevicesList<E> extends SparseArray {
             onDataChangedListener.onRemoved(this.size());
             onDataChangedListener.onDataChanged();
         }
+        Toast.makeText(mContext, "设备退出或无效", Toast.LENGTH_SHORT)
+                .show();
     }
 }

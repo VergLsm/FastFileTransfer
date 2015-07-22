@@ -81,9 +81,7 @@ public class ShareActivity extends FragmentActivity implements ResourceManagerIn
 
         //----------------------------------------------------------------------------
 
-        mDevicesList = new DevicesList<UserDevice>();
-
-
+        mDevicesList = new DevicesList<UserDevice>(this);
 
         btnTitleBarRight = (Button)
 
