@@ -30,12 +30,10 @@ public class ReceiveService extends Service {
     private boolean isConnected = false;
     private boolean isEnabledNetwork = false;
 
-    private String ssid;
     private FilesList<UserFile> mFilesList;
 
 
     private ReceiveScanFragment mReceiveScanFragment;
-    private ReceiveFragment mReceiveFragment;
     private ReceiveActivity mActivity;
 
     public ReceiveService() {
@@ -168,6 +166,7 @@ public class ReceiveService extends Service {
 
         private final String TAG = "Scan";
         private int noFindCount = 0;
+        private String ssid;
 
         @Override
         public void onReceive(Context context, Intent intent) {

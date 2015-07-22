@@ -128,6 +128,13 @@ public class FilesTransfer {
 
     public void stopReceiving() {
         this.isReceiving = false;
+        try {
+            if (mServerSocket != null) {
+                mServerSocket.close();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         executorService.shutdown();
     }
 
@@ -155,12 +162,12 @@ public class FilesTransfer {
             inputByte = new byte[1024];
             try {
                 mServerSocket = new ServerSocket(port);
-                mServerSocket.setSoTimeout(2000);
+//                mServerSocket.setSoTimeout(2000);
                 while (isReceiving) {
                     try {
                         Log.d(this.getClass().getName(), "accepting the connect");
                         mSocket = mServerSocket.accept();
-                        mSocket.setSoTimeout(2000);
+//                        mSocket.setSoTimeout(2000);
                         Log.d(this.getClass().getName(), "start translate");
                         din = new DataInputStream(mSocket.getInputStream());
                         userFile = new UserFile();
@@ -206,9 +213,6 @@ public class FilesTransfer {
                     fout.close();
                 if (mSocket != null)
                     mSocket.close();
-                if (mServerSocket != null) {
-                    mServerSocket.close();
-                }
                 Log.d(this.getClass().getName(), "end all thing");
             } catch (IOException e) {
                 Log.d("Exception", "IOException");
