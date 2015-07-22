@@ -63,7 +63,7 @@ public class ReceiveService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        Log.d("service", "onCreate()");
+//        Log.d("service", "onCreate()");
 
         mWifiHelper = new WifiHelper(this);
         wscr = new WifiStateChangedReceiver();
@@ -72,28 +72,29 @@ public class ReceiveService extends Service {
 
     @Override
     public IBinder onBind(Intent intent) {
-        Log.d("service", "onBind()");
+//        Log.d("service", "onBind()");
         return new ReceiveBinder();
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.d("service", "onStartCommand()");
+//        Log.d("service", "onStartCommand()");
         return super.onStartCommand(intent, flags, startId);
     }
 
     @Override
     public boolean onUnbind(Intent intent) {
-        Log.d("service", "onUnbind()");
+//        Log.d("service", "onUnbind()");
         return super.onUnbind(intent);
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Log.d("service", "onDestroy()");
+//        Log.d("service", "onDestroy()");
 
         mWifiHelper.removeNetwork();
+        mWifiHelper.operateAllNetwork(true);
 
         if (wscr != null) {
             unregisterReceiver(wscr);
@@ -153,6 +154,7 @@ public class ReceiveService extends Service {
                     if (null != mReceiveScanFragment) {
                         mReceiveScanFragment.setTips("正在扫描附近热点…");
                     }
+                    mWifiHelper.operateAllNetwork(false);
                     mWifiHelper.startScan();
                     break;
                 case WifiManager.WIFI_STATE_UNKNOWN:

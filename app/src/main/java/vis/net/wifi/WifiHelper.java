@@ -37,6 +37,23 @@ public class WifiHelper {
 //        }
     }
 
+    public boolean operateAllNetwork(boolean operate) {
+        boolean operationSucceeded = false;
+        List<WifiConfiguration> configured = mWifiManager.getConfiguredNetworks();
+        for (WifiConfiguration wifiConfiguration : configured) {
+            if (operate) {
+                if (mWifiManager.enableNetwork(wifiConfiguration.networkId, false)) {
+                    operationSucceeded = true;
+                }
+            } else {
+                if (mWifiManager.disableNetwork(wifiConfiguration.networkId)) {
+                    operationSucceeded = true;
+                }
+            }
+        }
+        return operationSucceeded;
+    }
+
     public boolean startScan() {
         return mWifiManager.startScan();
     }
@@ -54,6 +71,12 @@ public class WifiHelper {
 //        mWifiManager.disconnect();
         //加入网络
         return mWifiManager.enableNetwork(targetNetID, b);
+    }
+
+    // 禁用一个链接
+    public boolean disableNetWordLick(int NetId) {
+        mWifiManager.disableNetwork(NetId);
+        return mWifiManager.disconnect();
     }
 
     /**
