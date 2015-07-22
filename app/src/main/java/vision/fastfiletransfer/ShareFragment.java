@@ -11,7 +11,6 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import vis.DevicesList;
 import vis.UserDevice;
@@ -166,8 +165,9 @@ public class ShareFragment extends Fragment {
         btnSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String[] paths = ((ShareActivity) context).mSelectedFilesQueue.getPaths();
-                ((ShareActivity) context).shareService.sendFlies(context, paths);
+//                String[] paths = ((ShareActivity) context).mSelectedFilesQueue.getPaths();
+//                ((ShareActivity) context).shareService.sendFlies(context, paths);
+                ((ShareActivity) context).shareService.sendFlies();
             }
         });
     }

@@ -10,6 +10,7 @@ import java.io.File;
 import java.lang.ref.WeakReference;
 
 import vis.DevicesList;
+import vis.SelectedFilesQueue;
 import vis.UserDevice;
 import vis.net.CommandsTransfer;
 import vis.net.FilesTransfer;
@@ -71,7 +72,7 @@ public class ShareServer {
 
     public ShareServer(Context context, DevicesList<UserDevice> devicesList) {
         mDevicesList = devicesList;
-        mCommandsTransfer =  CommandsTransfer.getInstance();
+        mCommandsTransfer = CommandsTransfer.getInstance();
         mFilesTransfer = new FilesTransfer(context, FilesTransfer.SERVICE_RECEIVE);
 //        mAdapter = new UserDevicesAdapter(context, devicesList);
         //把适配器的handler交给mFilesTransfer，以便transfer控制适配器
@@ -81,6 +82,12 @@ public class ShareServer {
         // 当数据发生变化时，通知DevicesList，然后再刷新界面
         mFilesTransfer.setCallbackHandler(devicesList.getHandler());
     }
+
+
+    public void sendFlies(DevicesList<UserDevice> mDevicesList, SelectedFilesQueue<vision.resourcemanager.File> selectedFilesQueue) {
+        mFilesTransfer.sendFile(mDevicesList,selectedFilesQueue);
+    }
+
 
     public void sendFlies(Context context, String[] paths) {
         if (null != paths && paths.length != 0) {
@@ -110,7 +117,7 @@ public class ShareServer {
             Toast.makeText(context, "没有设备连接", Toast.LENGTH_SHORT).show();
         } else {
             //发送文件
-            mFilesTransfer.sendFile(files,mDevicesList);
+            mFilesTransfer.sendFile(files, mDevicesList);
 //            Toast.makeText(context, file.toString(), Toast.LENGTH_SHORT).show();
 //            for (int i = 0, nsize = mAdapter.getCount(); i < nsize; i++) {
         }

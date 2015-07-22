@@ -75,13 +75,14 @@ public class ShareActivity extends FragmentActivity implements ResourceManagerIn
         tvTitle = (TextView) findViewById(R.id.titlebar_tvtitle);
         tvTitle.setText("我要分享");
 
+        mSelectedFilesQueue = new SelectedFilesQueue<File>();
+        mDevicesList = new DevicesList<UserDevice>(this);
+
         //----------------------------------------------------------------------------
 
         binderService();
 
         //----------------------------------------------------------------------------
-
-        mDevicesList = new DevicesList<UserDevice>(this);
 
         btnTitleBarRight = (Button)
 
@@ -173,9 +174,6 @@ public class ShareActivity extends FragmentActivity implements ResourceManagerIn
 
     @Override
     public SelectedFilesQueue<File> getSelectedFilesQueue() {
-        if (null == mSelectedFilesQueue) {
-            mSelectedFilesQueue = new SelectedFilesQueue<File>();
-        }
         return this.mSelectedFilesQueue;
     }
 
@@ -217,6 +215,7 @@ public class ShareActivity extends FragmentActivity implements ResourceManagerIn
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             shareService = ((ShareService.ShareBinder) service).getService();
+            shareService.setSthing(mSelectedFilesQueue,mDevicesList);
             shareService.setActivity(ShareActivity.this);
         }
 

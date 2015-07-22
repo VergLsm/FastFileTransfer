@@ -22,6 +22,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import vis.DevicesList;
+import vis.SelectedFilesQueue;
 import vis.UserDevice;
 import vis.UserFile;
 
@@ -74,6 +75,11 @@ public class FilesTransfer {
      * @param ud    用户对象
      */
     public void sendFile(int index, File[] files, UserDevice ud) {
+        executorService.execute(new Sender(index, files, ud));
+    }
+
+
+    public void sendFile(DevicesList<UserDevice> devicesList, SelectedFilesQueue<vision.resourcemanager.File> selectedFilesQueue) {
         executorService.execute(new Sender(index, files, ud));
     }
 
