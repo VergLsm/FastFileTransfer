@@ -6,6 +6,7 @@ import vis.FilesList;
 import vis.UserFile;
 import vis.net.CommandsTransfer;
 import vis.net.FilesTransfer;
+import vision.fastfiletransfer.R;
 
 /**
  * Created by Vision on 15/7/8.<br>
@@ -19,6 +20,7 @@ public class ReceiveServer {
      * 文件传输类
      */
     private final FilesTransfer mFilesTransfer;
+    private final String recFolder;
     /**
      * 命令传输类
      */
@@ -29,7 +31,7 @@ public class ReceiveServer {
     private String targetAddress;
 
     public ReceiveServer(Context context, FilesList<UserFile> filesList) {
-        mCommandsTransfer =  CommandsTransfer.getInstance();
+        mCommandsTransfer = CommandsTransfer.getInstance();
         mFilesTransfer = new FilesTransfer(context, FilesTransfer.SERVICE_RECEIVE);
 //        if (SERVICE_SHARE == serviceType) {
 //            mAdapter = new UserDevicesAdapter(context, mDevicesList);
@@ -43,6 +45,7 @@ public class ReceiveServer {
         // 当数据发生变化时，通知DevicesList，然后再刷新界面
 //        mFilesTransfer.setCallbackHandler(mAdapter.getHandler());
         mFilesTransfer.setCallbackHandler(filesList.getHandler());
+        recFolder = context.getResources().getString(R.string.recFolder);
     }
 
     /**
@@ -64,11 +67,12 @@ public class ReceiveServer {
     public void sendLogin(String address, int port) {
         this.targetAddress = address;
         if (!mFilesTransfer.isReceiving()) {
-            mFilesTransfer.receiveFile(2223, "/FFT");
+            mFilesTransfer.receiveFile(2223, recFolder);
         }
         SwapPackage sp = new SwapPackage(address, port, SwapPackage.LOGIN, LOCALNAME);
         mCommandsTransfer.send(sp);
     }
+
     /**
      * 发送登出信息
      */
@@ -76,6 +80,7 @@ public class ReceiveServer {
         //默认端口2222
         sendLogout(this.targetAddress, 2222);
     }
+
     /**
      * 发送登出信息
      *
