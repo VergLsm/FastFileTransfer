@@ -25,7 +25,8 @@
         android:background="@drawable/style_btn_sharefragment_send"
         android:text="@string/send"
         android:textSize="18dp"
-        android:visibility="visible" />
+        android:visibility="visible"
+        android:textColor="#ffffffff" />
 
     <TextView
         android:id="@+id/tvTips"
