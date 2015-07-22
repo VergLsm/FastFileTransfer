@@ -28,6 +28,8 @@ public class ReceiveService extends Service {
     private ReceiveServer mReceiveServer;
 
     private boolean isConnected = false;
+    private boolean isEnabledNetwork = false;
+
     private String ssid;
     private FilesList<UserFile> mFilesList;
 
@@ -113,12 +115,13 @@ public class ReceiveService extends Service {
     public void sendLogin() {
         if (isConnected) {
             mReceiveServer.sendLogin(mWifiHelper.getServerAddressByStr());
-        } else {
         }
     }
 
     public void sendLogout() {
-        mReceiveServer.sendLogout();
+        if (isConnected) {
+            mReceiveServer.sendLogout();
+        }
     }
 
     class WifiStateChangedReceiver extends BroadcastReceiver {
@@ -165,7 +168,6 @@ public class ReceiveService extends Service {
 
         private final String TAG = "Scan";
         private int noFindCount = 0;
-        private boolean isEnabledNetwork = false;
 
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -224,6 +226,8 @@ public class ReceiveService extends Service {
                 Log.d("NetworkChange", String.valueOf(info.getState()));
                 mActivity.jumpToFragment(0);
                 isConnected = false;
+                isEnabledNetwork = false;
+                mWifiHelper.startScan();
 //                mFFTService.disable();
 //                isConnected = false;
 //                unregisterReceiver(this);
