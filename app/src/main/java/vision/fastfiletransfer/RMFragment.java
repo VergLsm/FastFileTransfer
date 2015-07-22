@@ -701,11 +701,11 @@ public class RMFragment extends Fragment {
                     file.type = UserFile.TYPE_APP;
                     file.strSize = UserFile.bytes2kb(new File(file.data).length());
                     file.strDate = file.data.substring(file.data.lastIndexOf("/") + 1);
-                    try {
-                        file.data = getActivity().getPackageManager().getApplicationInfo("vision.fastfiletransfer", 0).sourceDir;
-                    } catch (PackageManager.NameNotFoundException e) {
-                        e.printStackTrace();
-                    }
+//                    try {
+//                        file.data = getActivity().getPackageManager().getApplicationInfo("vision.fastfiletransfer", 0).sourceDir;
+//                    } catch (PackageManager.NameNotFoundException e) {
+//                        e.printStackTrace();
+//                    }
                     apps.put(j++, file);
                 }
             }
