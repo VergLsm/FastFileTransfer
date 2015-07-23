@@ -3,6 +3,7 @@ package vision.fastfiletransfer;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
@@ -424,8 +425,11 @@ public class RMFragment extends Fragment {
         }
 
         protected SparseArray<?> doInBackground(Void... params) {
-
-            Cursor curImage = getActivity().getContentResolver().query(
+            Context context = getActivity();
+            if (null == context) {
+                return null;
+            }
+            Cursor cursor = context.getContentResolver().query(
                     MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
                     new String[]{
                             MediaStore.Images.ImageColumns._ID,
@@ -438,32 +442,27 @@ public class RMFragment extends Fragment {
                     null,
                     null,
                     MediaStore.Images.Media.DATE_MODIFIED + " DESC");
-
-            if (curImage.moveToFirst()) {
-
+            if (cursor.moveToFirst()) {
                 imagesFolder = mListener.getImageFolder();
                 FileFolder folder;
                 FileImage file;
                 int folderID = 0;
                 String folderName;
-
                 do {
                     file = new FileImage();
-                    file.data = curImage.getString(curImage.getColumnIndex(MediaStore.Images.Media.DATA));
+                    file.data = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA));
                     if (!new File(file.data).exists()) {
                         continue;
                     }
-                    file.oid = curImage.getLong(curImage.getColumnIndex(MediaStore.Images.Media._ID));
+                    file.oid = cursor.getLong(cursor.getColumnIndex(MediaStore.Images.Media._ID));
                     file.type = UserFile.TYPE_IMAGE;
-                    file.size = curImage.getLong(curImage.getColumnIndex(MediaStore.Images.Media.SIZE));
+                    file.size = cursor.getLong(cursor.getColumnIndex(MediaStore.Images.Media.SIZE));
                     file.strSize = UserFile.bytes2kb(file.size);
-                    file.name = curImage.getString(curImage.getColumnIndex(MediaStore.Images.ImageColumns.DISPLAY_NAME));
-                    file.date = curImage.getLong(curImage.getColumnIndex(MediaStore.Images.Media.DATE_MODIFIED));
+                    file.name = cursor.getString(cursor.getColumnIndex(MediaStore.Images.ImageColumns.DISPLAY_NAME));
+                    file.date = cursor.getLong(cursor.getColumnIndex(MediaStore.Images.Media.DATE_MODIFIED));
                     file.strDate = UserFile.dateFormat(file.date);
-
-                    folderName = curImage.getString(curImage.getColumnIndex(MediaStore.Images.ImageColumns.BUCKET_DISPLAY_NAME));
+                    folderName = cursor.getString(cursor.getColumnIndex(MediaStore.Images.ImageColumns.BUCKET_DISPLAY_NAME));
                     folder = null;
-
                     //遍历文件夹数组，找到相对应文件夹
                     for (int i = 0, nsize = imagesFolder.size(); i < nsize; i++) {
                         FileFolder fileFolder = imagesFolder.valueAt(i);
@@ -472,7 +471,6 @@ public class RMFragment extends Fragment {
                             break;
                         }
                     }
-
                     //对应文件夹不存在
                     if (null == folder) {
                         //新建
@@ -482,26 +480,29 @@ public class RMFragment extends Fragment {
                         folder.mImages = new SparseArray<FileImage>();
                         imagesFolder.put(folderID++, folder);
                     }
-
                     file.id = folder.mImages.size();
                     file.fatherID = folder.id;
                     folder.mImages.put(file.id, file);
                     if (folder.oid == 0) {
                         folder.oid = folder.mImages.valueAt(0).oid;
                     }
-
-                } while (curImage.moveToNext());
+                } while (cursor.moveToNext());
             }
-
-            curImage.close();
+            cursor.close();
             return imagesFolder;
         }
 
-
         @Override
         protected void onPostExecute(SparseArray<?> sparseArray) {
-            mAdapterList.setData(sparseArray);
-            ((ListFragment) mFragment).setListAdapter(mAdapterList);
+            if (null == sparseArray) {
+                return;
+            }
+            if (null != mAdapterList) {
+                mAdapterList.setData(sparseArray);
+            }
+            if (null != mFragment) {
+                ((ListFragment) mFragment).setListAdapter(mAdapterList);
+            }
         }
     }
 
@@ -517,7 +518,11 @@ public class RMFragment extends Fragment {
 
         protected SparseArray<?> doInBackground(Void... params) {
             audios = new SparseArray<FileAudio>();
-            Cursor curAudio = getActivity().getContentResolver().query(
+            Context context = getActivity();
+            if (null == context) {
+                return null;
+            }
+            Cursor cursor = context.getContentResolver().query(
                     MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
                     new String[]{
                             MediaStore.Audio.Media._ID,
@@ -527,28 +532,28 @@ public class RMFragment extends Fragment {
                             MediaStore.Audio.Media.DATE_ADDED,
                             MediaStore.Audio.Media.DATE_MODIFIED
                     }, null, null, null);
-            if (curAudio.moveToFirst()) {
+            if (cursor.moveToFirst()) {
                 FileAudio file;
                 int i = 0;
                 do {
                     file = new FileAudio();
 //                    fileAudio.id = curAudio.getLong(curAudio.getColumnIndex(MediaStore.Audio.Media._ID));
                     file.id = i;
-                    file.data = curAudio.getString(curAudio.getColumnIndex(MediaStore.Audio.Media.DATA));
+                    file.data = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DATA));
                     if (!new File(file.data).exists()) {
                         continue;
                     }
                     file.type = UserFile.TYPE_AUDIO;
-                    file.size = curAudio.getLong(curAudio.getColumnIndex(MediaStore.Audio.Media.SIZE));
+                    file.size = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.SIZE));
                     file.strSize = UserFile.bytes2kb(file.size);
-                    file.name = curAudio.getString(curAudio
+                    file.name = cursor.getString(cursor
                             .getColumnIndex(MediaStore.Audio.Media.DISPLAY_NAME));
-                    file.date = curAudio.getLong(curAudio.getColumnIndex(MediaStore.Audio.Media.DATE_MODIFIED));
+                    file.date = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.DATE_MODIFIED));
                     file.strDate = UserFile.dateFormat(file.date);
                     this.audios.put(i++, file);
-                } while (curAudio.moveToNext());
+                } while (cursor.moveToNext());
             }
-            curAudio.close();
+            cursor.close();
             mFileAudio = audios;
             return audios;
         }
@@ -556,8 +561,15 @@ public class RMFragment extends Fragment {
 
         @Override
         protected void onPostExecute(SparseArray<?> sparseArray) {
-            mAdapterList.setData(sparseArray);
-            ((ListFragment) mFragment).setListAdapter(mAdapterList);
+            if (null == sparseArray) {
+                return;
+            }
+            if (null != mAdapterList) {
+                mAdapterList.setData(sparseArray);
+            }
+            if (null != mFragment) {
+                ((ListFragment) mFragment).setListAdapter(mAdapterList);
+            }
         }
     }
 
@@ -573,7 +585,11 @@ public class RMFragment extends Fragment {
 
         protected SparseArray<?> doInBackground(Void... params) {
             videos = new SparseArray<FileVideo>();
-            Cursor curVideo = getActivity().getContentResolver().query(
+            Context context = getActivity();
+            if (null == context) {
+                return null;
+            }
+            Cursor cursor = context.getContentResolver().query(
                     MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
                     new String[]{
                             MediaStore.Video.Media._ID,
@@ -585,28 +601,28 @@ public class RMFragment extends Fragment {
                     null,
                     null,
                     MediaStore.Video.Media.DATE_MODIFIED + " DESC");
-            if (curVideo.moveToFirst()) {
+            if (cursor.moveToFirst()) {
                 FileVideo file;
                 int i = 0;
                 do {
                     file = new FileVideo();
-                    file.oid = curVideo.getLong(curVideo.getColumnIndex(MediaStore.Video.Media._ID));
+                    file.oid = cursor.getLong(cursor.getColumnIndex(MediaStore.Video.Media._ID));
                     file.id = i;
-                    file.data = curVideo.getString(curVideo.getColumnIndex(MediaStore.Video.Media.DATA));
+                    file.data = cursor.getString(cursor.getColumnIndex(MediaStore.Video.Media.DATA));
                     if (!new File(file.data).exists()) {
                         continue;
                     }
                     file.type = UserFile.TYPE_VIDEO;
-                    file.size = curVideo.getLong(curVideo.getColumnIndex(MediaStore.Video.Media.SIZE));
+                    file.size = cursor.getLong(cursor.getColumnIndex(MediaStore.Video.Media.SIZE));
                     file.strSize = UserFile.bytes2kb(file.size);
-                    file.name = curVideo.getString(curVideo
+                    file.name = cursor.getString(cursor
                             .getColumnIndex(MediaStore.Video.Media.DISPLAY_NAME));
-                    file.date = curVideo.getLong(curVideo.getColumnIndex(MediaStore.Audio.Media.DATE_MODIFIED));
+                    file.date = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.DATE_MODIFIED));
                     file.strDate = UserFile.dateFormat(file.date);
                     this.videos.put(i++, file);
-                } while (curVideo.moveToNext());
+                } while (cursor.moveToNext());
             }
-            curVideo.close();
+            cursor.close();
             mFileVideo = videos;
             return videos;
         }
@@ -614,8 +630,15 @@ public class RMFragment extends Fragment {
 
         @Override
         protected void onPostExecute(SparseArray<?> sparseArray) {
-            mAdapterList.setData(sparseArray);
-            ((ListFragment) mFragment).setListAdapter(mAdapterList);
+            if (null == sparseArray) {
+                return;
+            }
+            if (null != mAdapterList) {
+                mAdapterList.setData(sparseArray);
+            }
+            if (null != mFragment) {
+                ((ListFragment) mFragment).setListAdapter(mAdapterList);
+            }
         }
 
     }
@@ -636,7 +659,11 @@ public class RMFragment extends Fragment {
         @TargetApi(Build.VERSION_CODES.HONEYCOMB)
         protected SparseArray<?> doInBackground(Void... params) {
             texts = new SparseArray<>();
-            Cursor curText = getActivity().getContentResolver().query(
+            Context context = getActivity();
+            if (null == context) {
+                return null;
+            }
+            Cursor cursor = context.getContentResolver().query(
                     MediaStore.Files.getContentUri("external"),
                     new String[]{
                             MediaStore.Files.FileColumns._ID,
@@ -648,35 +675,42 @@ public class RMFragment extends Fragment {
                     MediaStore.Files.FileColumns.MIME_TYPE + " LIKE ?",
                     new String[]{"text/%"},
                     null);
-            if (curText.moveToFirst()) {
+            if (cursor.moveToFirst()) {
                 FileText file;
                 int i = 0;
                 do {
                     file = new FileText();
 //                    file.id = curText.getLong(curText.getColumnIndex(MediaStore.Files.FileColumns._ID));
                     file.id = i;
-                    file.data = curText.getString(curText.getColumnIndex(MediaStore.Files.FileColumns.DATA));
+                    file.data = cursor.getString(cursor.getColumnIndex(MediaStore.Files.FileColumns.DATA));
                     if (!new File(file.data).exists()) {
                         continue;
                     }
                     file.type = UserFile.TYPE_TEXT;
-                    file.size = curText.getLong(curText.getColumnIndex(MediaStore.Files.FileColumns.SIZE));
+                    file.size = cursor.getLong(cursor.getColumnIndex(MediaStore.Files.FileColumns.SIZE));
                     file.strSize = UserFile.bytes2kb(file.size);
                     file.name = file.data.substring(file.data.lastIndexOf("/") + 1);
-                    file.date = curText.getLong(curText.getColumnIndex(MediaStore.Files.FileColumns.DATE_MODIFIED));
+                    file.date = cursor.getLong(cursor.getColumnIndex(MediaStore.Files.FileColumns.DATE_MODIFIED));
                     file.strDate = UserFile.dateFormat(file.date);
                     this.texts.put(i++, file);
-                } while (curText.moveToNext());
+                } while (cursor.moveToNext());
             }
-            curText.close();
+            cursor.close();
             mFileText = texts;
             return texts;
         }
 
         @Override
         protected void onPostExecute(SparseArray<?> sparseArray) {
-            mAdapterList.setData(sparseArray);
-            ((ListFragment) mFragment).setListAdapter(mAdapterList);
+            if (null == sparseArray) {
+                return;
+            }
+            if (null != mAdapterList) {
+                mAdapterList.setData(sparseArray);
+            }
+            if (null != mFragment) {
+                ((ListFragment) mFragment).setListAdapter(mAdapterList);
+            }
         }
 
     }
@@ -693,7 +727,11 @@ public class RMFragment extends Fragment {
 
         protected SparseArray<?> doInBackground(Void... params) {
             apps = new SparseArray<FileApp>();
-            PackageManager packageManager = getActivity().getPackageManager();
+            Context context = getActivity();
+            if (null == context) {
+                return null;
+            }
+            PackageManager packageManager = context.getPackageManager();
             List<ApplicationInfo> applicationInfos = packageManager.getInstalledApplications(0);
 
             FileApp file;
@@ -733,9 +771,15 @@ public class RMFragment extends Fragment {
 
         @Override
         protected void onPostExecute(SparseArray<?> sparseArray) {
-            mAdapterList.setData(sparseArray);
-//            ((RMGridFragmentApp) mFragment).setGridAdapter(mAdapterList);
-            ((RMGridFragment) mFragment).setGridAdapter(mAdapterList);
+            if (null == sparseArray) {
+                return;
+            }
+            if (null != mAdapterList) {
+                mAdapterList.setData(sparseArray);
+            }
+            if (null != mFragment) {
+                ((RMGridFragment) mFragment).setGridAdapter(mAdapterList);
+            }
         }
 
     }

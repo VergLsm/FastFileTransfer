@@ -98,7 +98,7 @@ public class UserFilesAdapter extends BaseAdapter {
                     public void onClick(View v) {
                         Toast.makeText(mContext, userFile.name, Toast.LENGTH_SHORT)
                                 .show();
-                        OpenFile.openFile(mContext, Environment.getExternalStorageDirectory().getPath() + "/FFT/" + userFile.name);
+                        OpenFile.openFile(mContext, Environment.getExternalStorageDirectory().getPath() + mContext.getResources().getString(R.string.recFolder) + "/" + userFile.name);
                     }
                 });
                 break;

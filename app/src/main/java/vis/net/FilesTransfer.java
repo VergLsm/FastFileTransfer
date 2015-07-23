@@ -187,6 +187,13 @@ public class FilesTransfer {
                         int i = 1;
                         while ((file = new File(dir.getPath() + "/" + userFile.name)).exists()) {
                             userFile.name = userFile.name.replaceAll("(\\(\\d*\\))?\\.", "(" + String.valueOf(i++) + ").");
+//                            int dotIndex = userFile.name.lastIndexOf(".");
+//                            if (dotIndex < 0) {
+//                                userFile.name = userFile.name + "(" + String.valueOf(i) + ")";
+//                                break;
+//                            } else {
+//                                String name = userFile.name.substring(0,);
+//                            }
                         }
                         Log.d("isExists", file.getPath());
                         fout = new FileOutputStream(file);

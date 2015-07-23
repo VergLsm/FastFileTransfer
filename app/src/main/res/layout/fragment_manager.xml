@@ -5,17 +5,6 @@
     android:layout_height="match_parent"
     tools:context="vision.fastfiletransfer.RMFragment">
 
-    <android.support.v4.view.ViewPager
-        android:id="@+id/vp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/btnLinearLayout"
-        android:layout_alignParentBottom="false"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
-        android:layout_below="@+id/TAB"
-        android:focusableInTouchMode="false"/>
-
     <LinearLayout
         android:id="@+id/TAB"
         android:layout_width="match_parent"
@@ -44,5 +33,22 @@
             style="@style/tab_text" />
 
     </LinearLayout>
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/vp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/btnLinearLayout"
+        android:layout_alignParentBottom="false"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/TAB"
+        android:focusableInTouchMode="false"/>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:id="@+id/rm_bottom_buttom"></FrameLayout>
 
 </RelativeLayout>
