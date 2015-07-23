@@ -80,7 +80,7 @@ public class FilesTransfer {
 
 
     public void sendFile(DevicesList<UserDevice> devicesList, SelectedFilesQueue<vision.resourcemanager.File> selectedFilesQueue) {
-        executorService.execute(new Sender(index, files, ud));
+//        executorService.execute(new Sender(index, files, ud));
     }
 
 

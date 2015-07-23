@@ -12,6 +12,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.ListFragment;
 import android.support.v4.view.ViewPager;
 import android.util.SparseArray;
@@ -83,6 +84,8 @@ public class RMFragment extends Fragment {
     private View.OnClickListener mDeleteFileListener;
 
     private ResourceManagerInterface mListener;
+    private ShareFragment mShareFragment;
+
 
     /**
      * Use this factory method to create a new instance of
@@ -149,7 +152,18 @@ public class RMFragment extends Fragment {
             mShareListener = new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mListener.jumpToFragment(ResourceManagerInterface.SHARE_FRAGMENT, 0);
+//                    mListener.jumpToFragment(ResourceManagerInterface.SHARE_FRAGMENT, 0);
+                    if (null == mShareFragment) {
+                        mShareFragment = ShareFragment.newInstance(null, null);
+                    }
+                    FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+                    fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+                    //隐藏
+                    fragmentTransaction.hide(RMFragment.this);
+                    fragmentTransaction.add(R.id.shareContain, mShareFragment);
+                    //这里可以回退
+                    fragmentTransaction.addToBackStack(null);
+                    fragmentTransaction.commit();
                 }
             };
         } else if (ResourceManagerInterface.TYPE_RESOURCE_MANAGER == type) {
