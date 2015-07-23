@@ -31,9 +31,14 @@ public class UserDevice {
     public int fileTotal;
 
     /**
-     * 当前发送文件
+     * 当前发送文件序号
      */
     public int currentFile;
+
+    /**
+     * 当前发送文件名字
+     */
+    public String currentFileName;
     /**
      * 完成百分比
      */

@@ -263,18 +263,23 @@ public class FilesTransfer {
         public void run() {
             ud.fileTotal = mSelectedFilesQueue.size();
             ud.currentFile = 0;
-            for (UserFile userFile : mSelectedFilesQueue.data) {
+            for (UserFile uf : mSelectedFilesQueue.data) {
                 ud.currentFile++;
+                ud.currentFileName = uf.name;
                 sendLength = completionPercentage = 0;
 //                Log.d(this.getClass().getName(), "start send files :" + file.length());
                 try {
                     socket = new Socket();
                     socket.connect(new InetSocketAddress(ud.ip, ud.port), 1000);
                     dout = new DataOutputStream(socket.getOutputStream());
-                    File file = new File(userFile.data);
+                    File file = new File(uf.data);
                     fin = new FileInputStream(file);
                     sendByte = new byte[1024];
-                    dout.writeUTF(userFile.name);
+                    if (UserFile.TYPE_APP == uf.type) {
+                        dout.writeUTF(uf.name + ".apk");
+                    } else {
+                        dout.writeUTF(uf.name);
+                    }
                     dout.writeLong(file.length());
                     while ((length = fin.read(sendByte, 0, sendByte.length)) > 0) {
                         dout.write(sendByte, 0, length);

@@ -9,6 +9,7 @@ import android.net.NetworkInfo;
 import android.net.wifi.WifiManager;
 import android.os.Binder;
 import android.os.IBinder;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -30,9 +31,7 @@ public class ReceiveService extends Service {
     private boolean isConnected = false;
     private boolean isEnabledNetwork = false;
 
-    private FilesList<UserFile> mFilesList;
-
-
+    private ReceiveFragment mReceiveFragment;
     private ReceiveScanFragment mReceiveScanFragment;
     private ReceiveActivity mActivity;
 
@@ -44,12 +43,7 @@ public class ReceiveService extends Service {
     }
 
     public void setFilesList(FilesList<UserFile> filesList) {
-        mFilesList = filesList;
-        mReceiveServer = new ReceiveServer(this, mFilesList);
-    }
-
-    public void setFragment(ReceiveScanFragment receiveScanFragment) {
-        mReceiveScanFragment = receiveScanFragment;
+        mReceiveServer = new ReceiveServer(this, filesList);
         registerReceiver(wscr, new IntentFilter(WifiManager.WIFI_STATE_CHANGED_ACTION));
         mWifiHelper.setWifiEnabled(true);
     }
@@ -63,7 +57,7 @@ public class ReceiveService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-//        Log.d("service", "onCreate()");
+        Log.d("service", "onCreate()");
 
         mWifiHelper = new WifiHelper(this);
         wscr = new WifiStateChangedReceiver();
@@ -72,26 +66,26 @@ public class ReceiveService extends Service {
 
     @Override
     public IBinder onBind(Intent intent) {
-//        Log.d("service", "onBind()");
+        Log.d("service", "onBind()");
         return new ReceiveBinder();
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-//        Log.d("service", "onStartCommand()");
+        Log.d("service", "onStartCommand()");
         return super.onStartCommand(intent, flags, startId);
     }
 
     @Override
     public boolean onUnbind(Intent intent) {
-//        Log.d("service", "onUnbind()");
+        Log.d("service", "onUnbind()");
         return super.onUnbind(intent);
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-//        Log.d("service", "onDestroy()");
+        Log.d("service", "onDestroy()");
 
         mWifiHelper.removeNetwork();
         mWifiHelper.operateAllNetwork(true);
@@ -123,6 +117,32 @@ public class ReceiveService extends Service {
         }
     }
 
+    public void jumpToFragment(int fragmentType) {
+        FragmentTransaction fragmentTransaction = mActivity.getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+        switch (fragmentType) {
+            case 0: {
+                if (null == mReceiveScanFragment) {
+                    mReceiveScanFragment = ReceiveScanFragment.newInstance();
+                }
+                fragmentTransaction.replace(R.id.receiveContain, mReceiveScanFragment);
+                break;
+            }
+            case 1: {
+                if (null == mReceiveFragment) {
+                    mReceiveFragment = ReceiveFragment.newInstance();
+                }
+                fragmentTransaction.replace(R.id.receiveContain, mReceiveFragment);
+                break;
+            }
+            default: {
+                return;
+            }
+        }
+        fragmentTransaction.commit();
+    }
+
+
     class WifiStateChangedReceiver extends BroadcastReceiver {
 
         public WifiStateChangedReceiver() {
@@ -133,19 +153,19 @@ public class ReceiveService extends Service {
             int wifiState = intent.getIntExtra(WifiManager.EXTRA_WIFI_STATE, 0);
             switch (wifiState) {
                 case WifiManager.WIFI_STATE_DISABLING:
-                    Log.d("onReceive()", "WIFI_STATE_DISABLING");
+//                    Log.d("onReceive()", "WIFI_STATE_DISABLING");
                     break;
                 case WifiManager.WIFI_STATE_DISABLED:
-                    Log.d("onReceive()", "WIFI_STATE_DISABLED");
+//                    Log.d("onReceive()", "WIFI_STATE_DISABLED");
                     break;
                 case WifiManager.WIFI_STATE_ENABLING:
-                    Log.d("onReceive()", "WIFI_STATE_ENABLING");
+//                    Log.d("onReceive()", "WIFI_STATE_ENABLING");
                     if (null != mReceiveScanFragment) {
                         mReceiveScanFragment.setTips("正在打开wifi……");
                     }
                     break;
                 case WifiManager.WIFI_STATE_ENABLED:
-                    Log.d("onReceive()", "WIFI_STATE_ENABLED");
+//                    Log.d("onReceive()", "WIFI_STATE_ENABLED");
 //                    unregisterReceiver(this);
 //                    wscr = null;
                     srar = new ScanResultsAvailableReceiver();
@@ -221,11 +241,11 @@ public class ReceiveService extends Service {
                 Log.d("NetworkChange", String.valueOf(info.getState()));
                 isConnected = true;
                 Toast.makeText(ReceiveService.this, String.valueOf(info.getState()), Toast.LENGTH_SHORT).show();
-                mActivity.jumpToFragment(1);
+                jumpToFragment(1);
                 sendLogin();
             } else if (isConnected && NetworkInfo.State.DISCONNECTED.equals(info.getState()) && !info.isConnected()) {
                 Log.d("NetworkChange", String.valueOf(info.getState()));
-                mActivity.jumpToFragment(0);
+                jumpToFragment(0);
                 isConnected = false;
                 isEnabledNetwork = false;
                 mWifiHelper.startScan();

@@ -63,6 +63,7 @@ public class UserDevicesAdapter extends BaseAdapter {
                     .findViewById(R.id.app_tips);
             holder.size = (TextProgress) convertView
                     .findViewById(R.id.app_size_progressBar);
+            holder.currentFile = (TextView) convertView.findViewById(R.id.currentFile);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
@@ -79,17 +80,21 @@ public class UserDevicesAdapter extends BaseAdapter {
         switch (ud.state) {
             case UserDevice.TRANSFER_STATE_NORMAL:
                 holder.tips.setText("就绪");
+                holder.currentFile.setVisibility(View.GONE);
                 break;
             case UserDevice.TRANSFER_STATE_TRANSFERRING:
                 holder.size.setVisibility(View.VISIBLE);
                 holder.tips.setVisibility(View.GONE);
                 holder.sendTips.setText("(" + ud.currentFile + "/" + ud.fileTotal + ")");
                 holder.size.setProgress(ud.completed);
+                holder.currentFile.setVisibility(View.VISIBLE);
+                holder.currentFile.setText(ud.currentFileName);
                 break;
             case UserDevice.TRANSFER_STATE_FINISH:
                 holder.tips.setText("传输完成");
                 holder.tips.setVisibility(View.VISIBLE);
                 holder.size.setVisibility(View.GONE);
+                holder.currentFile.setVisibility(View.GONE);
                 break;
         }
         return convertView;
@@ -105,6 +110,7 @@ public class UserDevicesAdapter extends BaseAdapter {
         TextView sendTips;
         TextView tips;
         TextProgress size;
+        TextView currentFile;
     }
 
 }

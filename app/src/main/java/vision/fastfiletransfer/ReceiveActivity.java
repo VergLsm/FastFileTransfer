@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -24,9 +23,6 @@ import vis.UserFile;
 public class ReceiveActivity extends FragmentActivity {
 
     private FragmentManager mFragmentManager;
-    private ReceiveScanFragment mReceiveScanFragment;
-    private ReceiveFragment mReceiveFragment;
-
     public FilesList<UserFile> mFilesList;
 
     @Override
@@ -63,9 +59,6 @@ public class ReceiveActivity extends FragmentActivity {
         if (null == mFilesList) {
             mFilesList = new FilesList<UserFile>();
         }
-
-        // 载入第一个Fragment
-        jumpToFragment(0);
         Intent intent = new Intent(ReceiveActivity.this, ReceiveService.class);
         bindService(intent, serConn, Context.BIND_AUTO_CREATE);
     }
@@ -121,45 +114,16 @@ public class ReceiveActivity extends FragmentActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void jumpToFragment(int fragmentType) {
-        FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
-        fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-        switch (fragmentType) {
-            case 0: {
-                if (null == mReceiveFragment) {
-                    mReceiveScanFragment = ReceiveScanFragment.newInstance();
-                }
-                fragmentTransaction.replace(R.id.receiveContain, mReceiveScanFragment);
-                break;
-            }
-            case 1: {
-                if (null == mReceiveFragment) {
-                    mReceiveFragment = ReceiveFragment.newInstance();
-                }
-                fragmentTransaction.replace(R.id.receiveContain, mReceiveFragment);
-                //隐藏
-//                fragmentTransaction.hide(mRMFragment);
-//                fragmentTransaction.add(R.id.shareContain, mShareFragment);
-                //这里可以回退
-//                fragmentTransaction.addToBackStack(null);
-                break;
-            }
-            default: {
-                return;
-            }
-        }
-        fragmentTransaction.commit();
-    }
-
-
     private ReceiveService mReceiveService;
     private ServiceConnection serConn = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
+//            Log.d("ServiceConnection", "onServiceConnected()");
             mReceiveService = ((ReceiveService.ReceiveBinder) service).getService();
             mReceiveService.setActivity(ReceiveActivity.this);
+            // 载入第一个Fragment
+            mReceiveService.jumpToFragment(0);
             mReceiveService.setFilesList(mFilesList);
-            mReceiveService.setFragment(mReceiveScanFragment);
         }
 
         @Override

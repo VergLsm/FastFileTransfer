@@ -55,6 +55,7 @@ public class ShareServer {
                     UserDevice us = new UserDevice();
                     us.ip = byteArray2IpAddress(address);
                     us.port = 2223;
+                    us.state = UserDevice.TRANSFER_STATE_NORMAL;
                     us.name = new String(sp.getData());
                     us.ipInt = byteArray2Int(address);
                     shareServer.mDevicesList.put(us.ipInt, us);
@@ -84,7 +85,7 @@ public class ShareServer {
 
 
     public void sendFlies(DevicesList<UserDevice> mDevicesList, SelectedFilesQueue<UserFile> selectedFilesQueue) {
-        mFilesTransfer.sendFile(mDevicesList,selectedFilesQueue);
+        mFilesTransfer.sendFile(mDevicesList, selectedFilesQueue);
     }
 
 
