@@ -13,7 +13,6 @@ import android.widget.TextView;
 import vis.FilesList;
 import vis.UserFile;
 import vis.UserFilesAdapter;
-import vis.net.protocol.ReceiveServer;
 
 
 /**
@@ -30,6 +29,7 @@ public class ReceiveFragment extends Fragment {
     private ListView lvFiles;
     private FilesList<UserFile> mFilesList;
     private ImageView ivArrow;
+    private CharSequence mTitle;
 
     public static ReceiveFragment newInstance() {
         ReceiveFragment fragment = new ReceiveFragment();
@@ -57,7 +57,7 @@ public class ReceiveFragment extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        tvName.setText(new String(ReceiveServer.LOCALNAME));
+        tvName.setText(mTitle);
 
         mFilesList = ((ReceiveActivity) getActivity()).mFilesList;
         mUserFilesAdapter = new UserFilesAdapter(getActivity(), mFilesList);
@@ -83,9 +83,11 @@ public class ReceiveFragment extends Fragment {
      *
      * @param text 更新信息
      */
-    public void setTips(CharSequence text) {
-        if (tvTips != null) {
-            tvTips.setText(text);
+    public void setTitle(CharSequence text) {
+        if (tvName != null) {
+            tvName.setText(text);
+        }else{
+            mTitle = text;
         }
     }
 

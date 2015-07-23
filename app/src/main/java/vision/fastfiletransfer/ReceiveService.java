@@ -35,6 +35,8 @@ public class ReceiveService extends Service {
     private ReceiveScanFragment mReceiveScanFragment;
     private ReceiveActivity mActivity;
 
+    private String ssid;
+
     public ReceiveService() {
     }
 
@@ -188,7 +190,6 @@ public class ReceiveService extends Service {
 
         private final String TAG = "Scan";
         private int noFindCount = 0;
-        private String ssid;
 
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -243,6 +244,7 @@ public class ReceiveService extends Service {
                 Toast.makeText(ReceiveService.this, String.valueOf(info.getState()), Toast.LENGTH_SHORT).show();
                 jumpToFragment(1);
                 sendLogin();
+                mReceiveFragment.setTitle("已连接：" + ssid.substring(5, ssid.length() - 6));
             } else if (isConnected && NetworkInfo.State.DISCONNECTED.equals(info.getState()) && !info.isConnected()) {
                 Log.d("NetworkChange", String.valueOf(info.getState()));
                 jumpToFragment(0);
