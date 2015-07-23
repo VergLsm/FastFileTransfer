@@ -25,14 +25,25 @@
         android:gravity="center_vertical"
         android:orientation="vertical" >
 
-        <TextView
-            android:id="@+id/name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:singleLine="true"
-            android:text=""
-            android:textColor="@color/item_text_color_normal"
-            android:textSize="20sp" />
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:textColor="@color/item_text_color_normal"
+                android:textSize="20sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/listitem_devices_tips"
+                android:layout_marginLeft="5dp" />
+        </LinearLayout>
 
         <TextView
             android:id="@+id/app_tips"

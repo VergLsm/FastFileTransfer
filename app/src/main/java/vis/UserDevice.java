@@ -24,11 +24,16 @@ public class UserDevice {
     public int port;
 
     public String name;
-    /**
-     * 已下载大小
-     */
-//    public int downloadSize;
 
+    /**
+     * 发送文件总数
+     */
+    public int fileTotal;
+
+    /**
+     * 当前发送文件
+     */
+    public int currentFile;
     /**
      * 完成百分比
      */

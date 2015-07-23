@@ -58,6 +58,7 @@ public class UserDevicesAdapter extends BaseAdapter {
                     .findViewById(R.id.image);
             holder.name = (TextView) convertView
                     .findViewById(R.id.name);
+            holder.sendTips = (TextView) convertView.findViewById(R.id.listitem_devices_tips);
             holder.tips = (TextView) convertView
                     .findViewById(R.id.app_tips);
             holder.size = (TextProgress) convertView
@@ -70,19 +71,20 @@ public class UserDevicesAdapter extends BaseAdapter {
         // 这里position和app.id的值是相等的
 //        final UserDevice userDevice = mDevicesList.get(position);
         //这里并不关心key，不能用get(key)
-        final UserDevice userDevice = mDevicesList.valueAt(position);
-        holder.name.setText(userDevice.name);
+        final UserDevice ud = mDevicesList.valueAt(position);
+        holder.name.setText(ud.name);
 //        Drawable drawable = mContext.getResources().getDrawable(R.mipmap.app_icon);
 //        holder.icon.setImageDrawable(drawable);
 
-        switch (userDevice.state) {
+        switch (ud.state) {
             case UserDevice.TRANSFER_STATE_NORMAL:
                 holder.tips.setText("就绪");
                 break;
             case UserDevice.TRANSFER_STATE_TRANSFERRING:
                 holder.size.setVisibility(View.VISIBLE);
                 holder.tips.setVisibility(View.GONE);
-                holder.size.setProgress(userDevice.completed);
+                holder.sendTips.setText("(" + ud.currentFile + "/" + ud.fileTotal + ")");
+                holder.size.setProgress(ud.completed);
                 break;
             case UserDevice.TRANSFER_STATE_FINISH:
                 holder.tips.setText("传输完成");
@@ -100,6 +102,7 @@ public class UserDevicesAdapter extends BaseAdapter {
         LinearLayout layout;
         ImageView icon;
         TextView name;
+        TextView sendTips;
         TextView tips;
         TextProgress size;
     }

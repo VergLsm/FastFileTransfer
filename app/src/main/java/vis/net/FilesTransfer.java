@@ -261,7 +261,10 @@ public class FilesTransfer {
 
         @Override
         public void run() {
+            ud.fileTotal = mSelectedFilesQueue.size();
+            ud.currentFile = 0;
             for (UserFile userFile : mSelectedFilesQueue.data) {
+                ud.currentFile++;
                 sendLength = completionPercentage = 0;
 //                Log.d(this.getClass().getName(), "start send files :" + file.length());
                 try {
