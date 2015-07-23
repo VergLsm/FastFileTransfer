@@ -13,11 +13,10 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import vis.SelectedFilesQueue;
-import vision.resourcemanager.File;
+import vis.UserFile;
 import vision.resourcemanager.FileFolder;
 import vision.resourcemanager.RMGridFragmentImage;
 import vision.resourcemanager.ResourceManagerInterface;
-
 
 public class ResourceManagerActivity extends FragmentActivity implements ResourceManagerInterface {
 
@@ -30,7 +29,7 @@ public class ResourceManagerActivity extends FragmentActivity implements Resourc
     /**
      * 文件选择队列
      */
-    public SelectedFilesQueue<File> mSelectedFilesQueue;
+    public SelectedFilesQueue<UserFile> mSelectedFilesQueue;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -112,9 +111,9 @@ public class ResourceManagerActivity extends FragmentActivity implements Resourc
     }
 
     @Override
-    public SelectedFilesQueue<File> getSelectedFilesQueue() {
+    public SelectedFilesQueue<UserFile> getSelectedFilesQueue() {
         if (null == mSelectedFilesQueue) {
-            mSelectedFilesQueue = new SelectedFilesQueue<File>();
+            mSelectedFilesQueue = new SelectedFilesQueue<UserFile>();
         }
         return this.mSelectedFilesQueue;
     }

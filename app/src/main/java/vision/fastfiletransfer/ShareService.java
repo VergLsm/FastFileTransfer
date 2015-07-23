@@ -1,7 +1,6 @@
 package vision.fastfiletransfer;
 
 import android.app.Service;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
@@ -10,14 +9,14 @@ import android.widget.Toast;
 import vis.DevicesList;
 import vis.SelectedFilesQueue;
 import vis.UserDevice;
+import vis.UserFile;
 import vis.net.protocol.ShareServer;
 import vis.net.wifi.APHelper;
-import vision.resourcemanager.File;
 
 public class ShareService extends Service {
     private APHelper mAPHelper;
     public ShareServer mShareServer;
-    private SelectedFilesQueue<File> mSelectedFilesQueue;
+    private SelectedFilesQueue<UserFile> mSelectedFilesQueue;
     private DevicesList<UserDevice> mDevicesList;
 
     public ShareService() {
@@ -56,9 +55,9 @@ public class ShareService extends Service {
         mShareServer = null;
     }
 
-    public void sendFlies(Context context, String[] paths) {
-        mShareServer.sendFlies(context, paths);
-    }
+//    public void sendFlies(Context context, String[] paths) {
+//        mShareServer.sendFlies(context, paths);
+//    }
 
     public void sendFlies() {
         if (mDevicesList.size() == 0) {
@@ -72,7 +71,7 @@ public class ShareService extends Service {
         mShareServer.sendFlies(mDevicesList,mSelectedFilesQueue);
     }
 
-    public void setSthing(SelectedFilesQueue<File> selectedFilesQueue, DevicesList<UserDevice> devicesList) {
+    public void setSthing(SelectedFilesQueue<UserFile> selectedFilesQueue, DevicesList<UserDevice> devicesList) {
         mSelectedFilesQueue = selectedFilesQueue;
         mDevicesList = devicesList;
     }

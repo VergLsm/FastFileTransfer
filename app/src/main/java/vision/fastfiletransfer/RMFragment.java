@@ -62,7 +62,7 @@ public class RMFragment extends Fragment {
     private int page;
     private int pageCount;
 
-    private SelectedFilesQueue<vision.resourcemanager.File> mSelectedList;
+    private SelectedFilesQueue<UserFile> mSelectedList;
 
     private Fragment[] mFragments;
     private AdapterList[] mAdapterLists;
@@ -185,9 +185,9 @@ public class RMFragment extends Fragment {
                                     // 点击“确认”后的操作
                                     boolean delete = false;
                                     Iterator selectedList = mSelectedList.data.iterator();
-                                    vision.resourcemanager.File file;
+                                    UserFile file;
                                     while (selectedList.hasNext()) {
-                                        file = (vision.resourcemanager.File) selectedList.next();
+                                        file = (UserFile) selectedList.next();
                                         File trueFile = new File(file.data);
                                         if (trueFile.exists() && trueFile.delete()) {
                                             switch (file.type) {
@@ -394,7 +394,7 @@ public class RMFragment extends Fragment {
     }
 
     public void cancelAll() {
-        for (vision.resourcemanager.File file : mSelectedList.data) {
+        for (UserFile file : mSelectedList.data) {
             file.isSelected = false;
         }
         SparseArray<FileFolder> fileFolderSparseArray = mListener.getImageFolder();
@@ -450,19 +450,21 @@ public class RMFragment extends Fragment {
                 do {
                     file = new FileImage();
                     file.data = curImage.getString(curImage.getColumnIndex(MediaStore.Images.Media.DATA));
-                    if (!new java.io.File(file.data).exists()) {
+                    if (!new File(file.data).exists()) {
                         continue;
                     }
                     file.oid = curImage.getLong(curImage.getColumnIndex(MediaStore.Images.Media._ID));
                     file.type = UserFile.TYPE_IMAGE;
                     file.size = curImage.getLong(curImage.getColumnIndex(MediaStore.Images.Media.SIZE));
                     file.strSize = UserFile.bytes2kb(file.size);
-                    file.name = curImage.getString(curImage.getColumnIndex(MediaStore.Images.ImageColumns.BUCKET_DISPLAY_NAME));
+                    file.name = curImage.getString(curImage.getColumnIndex(MediaStore.Images.ImageColumns.DISPLAY_NAME));
                     file.date = curImage.getLong(curImage.getColumnIndex(MediaStore.Images.Media.DATE_MODIFIED));
                     file.strDate = UserFile.dateFormat(file.date);
 
                     folderName = curImage.getString(curImage.getColumnIndex(MediaStore.Images.ImageColumns.BUCKET_DISPLAY_NAME));
                     folder = null;
+
+                    //遍历文件夹数组，找到相对应文件夹
                     for (int i = 0, nsize = imagesFolder.size(); i < nsize; i++) {
                         FileFolder fileFolder = imagesFolder.valueAt(i);
                         if (fileFolder.name.equals(folderName)) {
@@ -471,7 +473,9 @@ public class RMFragment extends Fragment {
                         }
                     }
 
+                    //对应文件夹不存在
                     if (null == folder) {
+                        //新建
                         folder = new FileFolder();
                         folder.id = folderID;
                         folder.name = folderName;

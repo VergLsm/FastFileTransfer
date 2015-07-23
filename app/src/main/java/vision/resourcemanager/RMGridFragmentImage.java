@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.GridView;
 
 import vis.SelectedFilesQueue;
+import vis.UserFile;
 import vision.fastfiletransfer.R;
 
 /**
@@ -24,7 +25,7 @@ public class RMGridFragmentImage extends Fragment {
 //    private static final String ARG_PARAM1 = "param1";
     //    private static final String ARG_PARAM2 = "param2";
     private static int INDEXOFFOLDER;
-    private SelectedFilesQueue<vision.resourcemanager.File> mSelectedList;
+    private SelectedFilesQueue<UserFile> mSelectedList;
 
     private String oldTitleName;
     private Button btnTitleRight;

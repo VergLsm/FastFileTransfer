@@ -24,6 +24,8 @@ public class UserFile {
      * id
      */
     public int id;
+    public long oid;
+
     /**
      * file 名
      */
@@ -38,6 +40,7 @@ public class UserFile {
      * file的大小
      */
     public long size;
+    public String strSize = "";
     /**
      * 文件类型
      */
@@ -47,6 +50,8 @@ public class UserFile {
      * 修改时间
      */
     public long date;
+    public String strDate = "";
+
     /**
      * 是否被选中
      */

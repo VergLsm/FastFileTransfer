@@ -21,7 +21,7 @@ import android.widget.TextView;
 import vis.DevicesList;
 import vis.SelectedFilesQueue;
 import vis.UserDevice;
-import vision.resourcemanager.File;
+import vis.UserFile;
 import vision.resourcemanager.FileFolder;
 import vision.resourcemanager.RMGridFragmentImage;
 import vision.resourcemanager.ResourceManagerInterface;
@@ -35,7 +35,7 @@ public class ShareActivity extends FragmentActivity implements ResourceManagerIn
     /**
      * 文件选择队列
      */
-    public SelectedFilesQueue<File> mSelectedFilesQueue;
+    public SelectedFilesQueue<UserFile> mSelectedFilesQueue;
     /**
      * 用户设备接入列表
      */
@@ -75,7 +75,7 @@ public class ShareActivity extends FragmentActivity implements ResourceManagerIn
         tvTitle = (TextView) findViewById(R.id.titlebar_tvtitle);
         tvTitle.setText("我要分享");
 
-        mSelectedFilesQueue = new SelectedFilesQueue<File>();
+        mSelectedFilesQueue = new SelectedFilesQueue<UserFile>();
         mDevicesList = new DevicesList<UserDevice>(this);
 
         //----------------------------------------------------------------------------
@@ -88,7 +88,17 @@ public class ShareActivity extends FragmentActivity implements ResourceManagerIn
 
                 findViewById(R.id.titlebar_btnRight);
 
-        jumpToFragment(RM_FRAGMENT, 0);
+//        jumpToFragment(RM_FRAGMENT, 0);
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+        if (null == mRMFragment) {
+            mRMFragment = RMFragment.newInstance(
+                    ResourceManagerInterface.TYPE_FILE_TRANSFER,
+                        /*RMFragment.TYPE_RESOURCE_MANAGER,*/
+                    RMFragment.PAGE_AUDIO | RMFragment.PAGE_IMAGE | RMFragment.PAGE_APP | RMFragment.PAGE_VIDEO | RMFragment.PAGE_TEXT);
+        }
+        fragmentTransaction.replace(R.id.shareContain, mRMFragment);
+        fragmentTransaction.commit();
     }
 
     @Override
@@ -173,7 +183,7 @@ public class ShareActivity extends FragmentActivity implements ResourceManagerIn
     }
 
     @Override
-    public SelectedFilesQueue<File> getSelectedFilesQueue() {
+    public SelectedFilesQueue<UserFile> getSelectedFilesQueue() {
         return this.mSelectedFilesQueue;
     }
 

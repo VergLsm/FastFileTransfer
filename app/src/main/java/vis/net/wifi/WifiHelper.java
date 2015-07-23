@@ -40,6 +40,9 @@ public class WifiHelper {
     public boolean operateAllNetwork(boolean operate) {
         boolean operationSucceeded = false;
         List<WifiConfiguration> configured = mWifiManager.getConfiguredNetworks();
+        if (null == configured) {
+            return operationSucceeded;
+        }
         for (WifiConfiguration wifiConfiguration : configured) {
             if (operate) {
                 if (mWifiManager.enableNetwork(wifiConfiguration.networkId, false)) {

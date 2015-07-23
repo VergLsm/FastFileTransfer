@@ -4,6 +4,7 @@ import android.util.SparseArray;
 import android.widget.Button;
 
 import vis.SelectedFilesQueue;
+import vis.UserFile;
 
 /**
  * Created by Vision on 15/7/13.<br>
@@ -27,7 +28,7 @@ public interface ResourceManagerInterface {
      *
      * @return 已经选择的文件队列
      */
-    SelectedFilesQueue<File> getSelectedFilesQueue();
+    SelectedFilesQueue<UserFile> getSelectedFilesQueue();
 
     /**
      * 获取图片文件夹数据

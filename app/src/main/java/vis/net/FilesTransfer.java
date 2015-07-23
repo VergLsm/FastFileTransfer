@@ -70,31 +70,36 @@ public class FilesTransfer {
     /**
      * 发送文件，最多可同时发往3个地址
      *
-     * @param index 目标用户序号
-     * @param files 要发送的文件
-     * @param ud    用户对象
+     * @param devicesList        用户对象
+     * @param selectedFilesQueue 要发送的文件
      */
-    public void sendFile(int index, File[] files, UserDevice ud) {
-        executorService.execute(new Sender(index, files, ud));
-    }
-
-
-    public void sendFile(DevicesList<UserDevice> devicesList, SelectedFilesQueue<vision.resourcemanager.File> selectedFilesQueue) {
+//    public void sendFile(int index, SelectedFilesQueue<UserFile> files, UserDevice ud) {
 //        executorService.execute(new Sender(index, files, ud));
-    }
-
-
-    public void sendFile(File[] files, DevicesList<UserDevice> devicesList) {
-        mDevicesList = devicesList;
-        for (int i = 0, nsize = mDevicesList.size(); i < nsize; i++) {
-            UserDevice ud = (UserDevice) mDevicesList.valueAt(i);
+//    }
+    public void sendFile(DevicesList<UserDevice> devicesList, SelectedFilesQueue<UserFile> selectedFilesQueue) {
+        for (int i = 0, nsize = devicesList.size(); i < nsize; i++) {
+            UserDevice ud = (UserDevice) devicesList.valueAt(i);
             if (ud.state != UserDevice.TRANSFER_STATE_TRANSFERRING) {
                 ud.state = UserDevice.TRANSFER_STATE_TRANSFERRING;
-                sendFile(i, files, ud);
-                Log.d(this.getClass().getName(), ud.ip + ":2333->" + files.toString());
+                executorService.execute(new Sender(ud, selectedFilesQueue));
+//                sendFile(i, selectedFilesQueue, ud);
+//                Log.d(this.getClass().getName(), ud.ip + ":2333->" + files.toString());
             }
         }
     }
+
+//
+//    public void sendFile(File[] files, DevicesList<UserDevice> devicesList) {
+//        mDevicesList = devicesList;
+//        for (int i = 0, nsize = mDevicesList.size(); i < nsize; i++) {
+//            UserDevice ud = (UserDevice) mDevicesList.valueAt(i);
+//            if (ud.state != UserDevice.TRANSFER_STATE_TRANSFERRING) {
+//                ud.state = UserDevice.TRANSFER_STATE_TRANSFERRING;
+//                sendFile(i, files, ud);
+//                Log.d(this.getClass().getName(), ud.ip + ":2333->" + files.toString());
+//            }
+//        }
+//    }
 
     /**
      * 接收文件
@@ -227,43 +232,46 @@ public class FilesTransfer {
     }
 
     class Sender implements Runnable {
-        private final UserDevice ud;
+        private UserDevice ud;
+        private SelectedFilesQueue<UserFile> mSelectedFilesQueue;
         private int length = 0;
         private byte[] sendByte = null;
         private Socket socket = null;
         private DataOutputStream dout = null;
         private FileInputStream fin = null;
 
-        private File[] files;
+//        private File[] files;
 
         private long sendLength;
         private int index;
         private int completionPercentage;
 
         /**
-         * @param index 目标用户序号
-         * @param files 要发送的文件
-         * @param ud    用户对象
+         * @param selectedFilesQueue 要发送的文件
+         * @param ud                 用户对象
          */
-        public Sender(int index, File[] files, UserDevice ud) {
-            this.index = index;
-            this.files = files;
+//        public Sender(int index, File[] files, UserDevice ud) {
+//            this.index = index;
+//            this.files = files;
+//        }
+        public Sender(UserDevice ud, SelectedFilesQueue<UserFile> selectedFilesQueue) {
             this.ud = ud;
+            mSelectedFilesQueue = selectedFilesQueue;
         }
 
         @Override
         public void run() {
-            for (File file : files) {
+            for (UserFile userFile : mSelectedFilesQueue.data) {
                 sendLength = completionPercentage = 0;
-                Log.d(this.getClass().getName(), "start send files :" + file.length());
+//                Log.d(this.getClass().getName(), "start send files :" + file.length());
                 try {
                     socket = new Socket();
                     socket.connect(new InetSocketAddress(ud.ip, ud.port), 1000);
                     dout = new DataOutputStream(socket.getOutputStream());
-//                File files = new File("E:\\TU\\DSCF0320.JPG");
+                    File file = new File(userFile.data);
                     fin = new FileInputStream(file);
                     sendByte = new byte[1024];
-                    dout.writeUTF(file.getName());
+                    dout.writeUTF(userFile.name);
                     dout.writeLong(file.length());
                     while ((length = fin.read(sendByte, 0, sendByte.length)) > 0) {
                         dout.write(sendByte, 0, length);
