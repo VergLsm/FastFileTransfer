@@ -8,6 +8,7 @@ import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.GridView;
 
@@ -21,24 +22,18 @@ import vision.fastfiletransfer.R;
  * create an instance of this fragment.
  */
 public class RMGridFragmentImage extends Fragment {
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-//    private static final String ARG_PARAM1 = "param1";
-    //    private static final String ARG_PARAM2 = "param2";
-    private static int INDEXOFFOLDER;
+    private static BaseAdapter folderAdapter;
     private SelectedFilesQueue<UserFile> mSelectedList;
 
     private String oldTitleName;
     private Button btnTitleRight;
-    //    private String mParam1;
-    //    private String mParam2;
+
     private GridView imageGrid;
     private AdapterGridImage mAdapterGridImage;
     private SparseArray<FileImage> mFileImage;
 
     private ResourceManagerInterface mListener;
-//    private LinearLayout btnLinearLayout;
-//    private Button btnLeft;
-//    private Button btnRight;
+    private int indexOfFolder;
 
     /**
      * Use this factory method to create a new instance of
@@ -49,19 +44,14 @@ public class RMGridFragmentImage extends Fragment {
      *
      * @return A new instance of fragment RMGridFragmentImage.
      */
-    public static RMGridFragmentImage newInstance(int indexOfFolder, String param2) {
-        RMGridFragmentImage fragment = new RMGridFragmentImage();
-        INDEXOFFOLDER = indexOfFolder;
-//        Log.d("", String.valueOf(indexOfFolder));
-//        Bundle args = new Bundle(); //ArrayMap<String, Object> mMap = null;
-//        args.putString(ARG_PARAM1, null);
-////        args.putString(ARG_PARAM2, param2);
-//        fragment.setArguments(args);
+    public static RMGridFragmentImage newInstance(int indexOfFolder, BaseAdapter folderAdapter) {
+        RMGridFragmentImage.folderAdapter = folderAdapter;
+        RMGridFragmentImage fragment = new RMGridFragmentImage(indexOfFolder);
         return fragment;
     }
 
-    public RMGridFragmentImage() {
-        // Required empty public constructor
+    public RMGridFragmentImage(int indexOfFolder) {
+        this.indexOfFolder = indexOfFolder;
     }
 
     @Override
@@ -78,10 +68,6 @@ public class RMGridFragmentImage extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        if (getArguments() != null) {
-//            mParam1 = getArguments().getString(ARG_PARAM1);
-////            mParam2 = getArguments().getString(ARG_PARAM2);
-//        }
         mSelectedList = mListener.getSelectedFilesQueue();
         btnTitleRight = mListener.getTitleRightBtn();
     }
@@ -91,20 +77,7 @@ public class RMGridFragmentImage extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_grid_image, container, false);
-//        tvSelectAll = (TextView) rootView.findViewById(R.id.tvSelectAll);
         imageGrid = (GridView) rootView.findViewById(R.id.imageGrid);
-//        View botBut = inflater.inflate(R.layout.bottom_rm_buttom, container, false);
-//        btnLinearLayout = (LinearLayout)
-//                botBut.findViewById(R.id.btnLinearLayout);
-//        btnLinearLayout.setVisibility(View.VISIBLE);
-//        btnLeft = (Button)
-//                botBut.findViewById(R.id.btnLeft);
-//        btnRight = (Button)
-//                botBut.findViewById(R.id.btnRight);
-//        RelativeLayout relativeLayout = (RelativeLayout)
-//                rootView.findViewById(R.id.fragment_grid_image);
-//        relativeLayout.addView(botBut);
-        //TODO 要在文件里显示按钮
         return rootView;
     }
 
@@ -112,7 +85,7 @@ public class RMGridFragmentImage extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        final FileFolder fileFolder = mListener.getImageFolder().valueAt(INDEXOFFOLDER);
+        final FileFolder fileFolder = mListener.getImageFolder().valueAt(indexOfFolder);
         SparseArray<FileImage> fileImage = fileFolder.mImages;
 
 //        tvTitle.setText(fileFolder.name);
@@ -142,6 +115,7 @@ public class RMGridFragmentImage extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         mListener.setTitleText(oldTitleName);
+        folderAdapter.notifyDataSetChanged();
         btnTitleRight.setVisibility(View.GONE);
     }
 

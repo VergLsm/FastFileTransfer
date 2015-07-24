@@ -23,7 +23,6 @@ import vis.SelectedFilesQueue;
 import vis.UserDevice;
 import vis.UserFile;
 import vision.resourcemanager.FileFolder;
-import vision.resourcemanager.RMGridFragmentImage;
 import vision.resourcemanager.ResourceManagerInterface;
 
 
@@ -95,7 +94,7 @@ public class ShareActivity extends FragmentActivity implements ResourceManagerIn
             mRMFragment = RMFragment.newInstance(
                     ResourceManagerInterface.TYPE_FILE_TRANSFER,
                         /*RMFragment.TYPE_RESOURCE_MANAGER,*/
-                    RMFragment.PAGE_AUDIO | RMFragment.PAGE_IMAGE | RMFragment.PAGE_APP | RMFragment.PAGE_VIDEO | RMFragment.PAGE_TEXT);
+                    ResourceManagerInterface.PAGE_AUDIO | ResourceManagerInterface.PAGE_IMAGE | ResourceManagerInterface.PAGE_APP | ResourceManagerInterface.PAGE_VIDEO | ResourceManagerInterface.PAGE_TEXT);
         }
         fragmentTransaction.replace(R.id.shareContain, mRMFragment);
         fragmentTransaction.commit();
@@ -154,7 +153,7 @@ public class ShareActivity extends FragmentActivity implements ResourceManagerIn
                 mRMFragment = RMFragment.newInstance(
                         ResourceManagerInterface.TYPE_FILE_TRANSFER,
                         /*RMFragment.TYPE_RESOURCE_MANAGER,*/
-                        RMFragment.PAGE_AUDIO | RMFragment.PAGE_IMAGE | RMFragment.PAGE_APP | RMFragment.PAGE_VIDEO | RMFragment.PAGE_TEXT);
+                        ResourceManagerInterface.PAGE_AUDIO | ResourceManagerInterface.PAGE_IMAGE | ResourceManagerInterface.PAGE_APP | ResourceManagerInterface.PAGE_VIDEO | ResourceManagerInterface.PAGE_TEXT);
 
                 fragmentTransaction.replace(R.id.shareContain, mRMFragment);
                 break;
@@ -165,13 +164,6 @@ public class ShareActivity extends FragmentActivity implements ResourceManagerIn
                 fragmentTransaction.hide(mRMFragment);
                 fragmentTransaction.add(R.id.shareContain, mShareFragment);
                 //这里可以回退
-                fragmentTransaction.addToBackStack(null);
-                break;
-            }
-            case RM_IMAGE_GRID: {
-                RMGridFragmentImage rmGridFragmentImage = RMGridFragmentImage.newInstance(indexOfFolder, null);
-                fragmentTransaction.hide(mRMFragment);
-                fragmentTransaction.add(R.id.shareContain, rmGridFragmentImage);
                 fragmentTransaction.addToBackStack(null);
                 break;
             }

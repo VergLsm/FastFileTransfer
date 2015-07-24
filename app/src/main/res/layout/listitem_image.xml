@@ -71,6 +71,8 @@
     <ImageView
         android:id="@+id/ivCheckBox"
         android:focusable="true"
-        style="@style/item_checkbox.list" />
+        style="@style/item_checkbox.list"
+        android:layout_height="match_parent"
+        android:scaleType="fitCenter" />
 
 </LinearLayout>

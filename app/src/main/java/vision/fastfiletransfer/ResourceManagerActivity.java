@@ -15,7 +15,6 @@ import android.widget.TextView;
 import vis.SelectedFilesQueue;
 import vis.UserFile;
 import vision.resourcemanager.FileFolder;
-import vision.resourcemanager.RMGridFragmentImage;
 import vision.resourcemanager.ResourceManagerInterface;
 
 public class ResourceManagerActivity extends FragmentActivity implements ResourceManagerInterface {
@@ -92,15 +91,8 @@ public class ResourceManagerActivity extends FragmentActivity implements Resourc
                 mRMFragment = RMFragment.newInstance(
                         /*RMFragment.TYPE_FILE_TRANSFER,*/
                         ResourceManagerInterface.TYPE_RESOURCE_MANAGER,
-                        RMFragment.PAGE_AUDIO | RMFragment.PAGE_IMAGE /*| RMFragment.PAGE_APP*/ | RMFragment.PAGE_VIDEO | RMFragment.PAGE_TEXT);
+                        ResourceManagerInterface.PAGE_AUDIO | ResourceManagerInterface.PAGE_IMAGE /*| RMFragment.PAGE_APP*/ | ResourceManagerInterface.PAGE_VIDEO | ResourceManagerInterface.PAGE_TEXT);
                 fragmentTransaction.replace(R.id.rmContain, mRMFragment);
-                break;
-            }
-            case RM_IMAGE_GRID: {
-                RMGridFragmentImage rmGridFragmentImage = RMGridFragmentImage.newInstance(indexOfFolder, null);
-                fragmentTransaction.hide(mRMFragment);
-                fragmentTransaction.add(R.id.rmContain, rmGridFragmentImage);
-                fragmentTransaction.addToBackStack(null);
                 break;
             }
             default: {

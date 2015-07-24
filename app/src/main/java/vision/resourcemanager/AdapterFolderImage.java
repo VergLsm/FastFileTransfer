@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import vis.SelectedFilesQueue;
 import vision.fastfiletransfer.R;
+import vision.fastfiletransfer.RMFragment;
 
 /**
  * Created by Vision on 15/6/30.<br>
@@ -23,11 +24,13 @@ public class AdapterFolderImage extends AdapterList {
 
     private SparseArray<FileFolder> imagesFolder;
     private Context mContext;
+    private RMFragment rmFragment;
     private SelectedFilesQueue mSelectedList;
 
-    public AdapterFolderImage(Context context, SelectedFilesQueue selectedList) {
+    public AdapterFolderImage(Context context, RMFragment rmFragment, SelectedFilesQueue selectedList) {
         super(context);
         this.mContext = context;
+        this.rmFragment = rmFragment;
         this.mSelectedList = selectedList;
     }
 
@@ -97,7 +100,7 @@ public class AdapterFolderImage extends AdapterList {
         holder.layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((ResourceManagerInterface) mContext).jumpToFragment(ResourceManagerInterface.RM_IMAGE_GRID, file.id);
+                rmFragment.jumpInFolder(file.id);
             }
         });
 
