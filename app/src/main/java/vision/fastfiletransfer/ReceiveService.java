@@ -1,5 +1,6 @@
 package vision.fastfiletransfer;
 
+import android.support.v4.app.Fragment;
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -9,6 +10,8 @@ import android.net.NetworkInfo;
 import android.net.wifi.WifiManager;
 import android.os.Binder;
 import android.os.IBinder;
+import android.support.annotation.IdRes;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.widget.Toast;
@@ -19,6 +22,7 @@ import vis.FilesList;
 import vis.UserFile;
 import vis.net.protocol.ReceiveServer;
 import vis.net.wifi.WifiHelper;
+import vision.resourcemanager.RMGridFragment;
 
 public class ReceiveService extends Service {
     private WifiStateChangedReceiver wscr;
@@ -35,13 +39,17 @@ public class ReceiveService extends Service {
     private ReceiveScanFragment mReceiveScanFragment;
     private ReceiveActivity mActivity;
 
+    private ArrayList<String> mAllAP;
     private String ssid;
+    private FragmentManager mFragmentManager;
+    private RMGridFragment mMultipleResultsFragment;
 
     public ReceiveService() {
     }
 
     public void setActivity(ReceiveActivity activity) {
         this.mActivity = activity;
+        mFragmentManager = mActivity.getSupportFragmentManager();
     }
 
     public void setFilesList(FilesList<UserFile> filesList) {
@@ -119,8 +127,24 @@ public class ReceiveService extends Service {
         }
     }
 
+    public boolean connectAP(String ssid) {
+        Log.d("connectAP()", String.valueOf("尝试连接" + ssid));
+        boolean isEnable=false;
+        if (mWifiHelper.addNetwork(WifiHelper.createWifiCfg(ssid))) {   //尝试加入网络
+            isEnable = mWifiHelper.enableNetwork(true);      //尝试使能网络
+            Log.d("isEnable", String.valueOf(isEnable));
+        }
+        return isEnable;
+    }
+
+    public void jumpToFragment(@IdRes int containerViewId, Fragment fragment) {
+        FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
+        fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+        fragmentTransaction.replace(containerViewId, fragment).commit();
+    }
+
     public void jumpToFragment(int fragmentType) {
-        FragmentTransaction fragmentTransaction = mActivity.getSupportFragmentManager().beginTransaction();
+        FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
         fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
         switch (fragmentType) {
             case 0: {
@@ -130,7 +154,7 @@ public class ReceiveService extends Service {
                 fragmentTransaction.replace(R.id.receiveContain, mReceiveScanFragment);
                 break;
             }
-            case 1: {
+            case 2: {
                 if (null == mReceiveFragment) {
                     mReceiveFragment = ReceiveFragment.newInstance();
                 }
@@ -195,12 +219,25 @@ public class ReceiveService extends Service {
         public void onReceive(Context context, Intent intent) {
 //            isEnabledNetwork = false;
             if (!isEnabledNetwork) {
-                ArrayList<String> al = mWifiHelper.findSSID("YDZS_*");
-                Log.d(TAG, "found:" + String.valueOf(al.size()));
-                for (int i = 0; i < al.size(); i++) {
-                    ssid = al.get(i);
+                mAllAP = mWifiHelper.findSSID("YDZS_*");
+                Log.d(TAG, "found:" + String.valueOf(mAllAP.size()));
+
+                if (mAllAP.size() == 1) {
+                    connectAP(mAllAP.get(0));
+                }else{
+                    if (null == mMultipleResultsFragment) {
+                        mMultipleResultsFragment = new RMGridFragment();
+                    }
+                    if (null == mMultipleResultsFragment.getGridAdapter()) {
+//                        mMultipleResultsFragment.setGridAdapter();
+                    }
+//
+                    jumpToFragment(R.id.receiveContain, mMultipleResultsFragment);
+                }
+
+                for (int i = 0; i < mAllAP.size(); i++) {
+                    ssid = mAllAP.get(i);
                     mReceiveScanFragment.setTips("尝试连接" + ssid);
-                    Log.d(TAG, String.valueOf("尝试连接" + ssid));
                     if (mWifiHelper.addNetwork(WifiHelper.createWifiCfg(ssid))) {   //尝试加入网络
                         isEnabledNetwork = mWifiHelper.enableNetwork(true);      //尝试使能网络
                         Log.d("isEnabledNetwork", String.valueOf(isEnabledNetwork));
@@ -242,7 +279,7 @@ public class ReceiveService extends Service {
                 Log.d("NetworkChange", String.valueOf(info.getState()));
                 isConnected = true;
                 Toast.makeText(ReceiveService.this, String.valueOf(info.getState()), Toast.LENGTH_SHORT).show();
-                jumpToFragment(1);
+                jumpToFragment(2);
                 sendLogin();
                 mReceiveFragment.setTitle("已连接：" + ssid.substring(5, ssid.length() - 6));
             } else if (isConnected && NetworkInfo.State.DISCONNECTED.equals(info.getState()) && !info.isConnected()) {
