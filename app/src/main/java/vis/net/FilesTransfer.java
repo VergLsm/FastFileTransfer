@@ -163,15 +163,7 @@ public class FilesTransfer {
                         File file;
                         int i = 1;
                         while ((file = new File(dir.getPath() + "/" + userFile.name)).exists()) {
-                            //FIXME 这个重命算法还不完善，如果文件名中有多个'.'就会发生多次替换
-                            userFile.name = userFile.name.replaceAll("(\\(\\d*\\))?\\.", "(" + String.valueOf(i++) + ").");
-//                            int dotIndex = userFile.name.lastIndexOf(".");
-//                            if (dotIndex < 0) {
-//                                userFile.name = userFile.name + "(" + String.valueOf(i) + ")";
-//                                break;
-//                            } else {
-//                                String name = userFile.name.substring(0,);
-//                            }
+                            userFile.name = replaceLast(userFile.name, "(\\(\\d*\\))?\\.", "(" + String.valueOf(i++) + ").");
                         }
                         Log.d("isExists", file.getPath());
                         fout = new FileOutputStream(file);
@@ -214,6 +206,18 @@ public class FilesTransfer {
                 Log.d("Exception", "IOException");
             }
         }
+    }
+
+    /**
+     * lang
+     *
+     * @param text        源文本
+     * @param regex       正则匹配
+     * @param replacement 匹配替换
+     * @return 替换结果
+     */
+    public static String replaceLast(String text, String regex, String replacement) {
+        return text.replaceFirst("(?s)" + regex + "(?!.*?" + regex + ")", replacement);
     }
 
     class Sender implements Runnable {
