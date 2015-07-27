@@ -10,7 +10,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
+import java.lang.ref.SoftReference;
+
 import vis.SelectedFilesQueue;
+import vis.widget.FasterGridView;
 import vision.fastfiletransfer.R;
 
 /**
@@ -22,11 +25,22 @@ public class AdapterGridImage extends AdapterList {
     private SparseArray<FileImage> fileImageSparseArray;
     private SelectedFilesQueue mSelectedList;
     private FileFolder mFileFolder;
+    private SparseArray<SoftReference<Bitmap>> imageCaches;
 
     public AdapterGridImage(Context context, FileFolder fileFolder, SelectedFilesQueue selectedList) {
         super(context);
         mFileFolder = fileFolder;
         this.mSelectedList = selectedList;
+        imageCaches = new SparseArray<SoftReference<Bitmap>>();
+    }
+
+    @Override
+    protected void finalize() throws Throwable {
+        super.finalize();
+        fileImageSparseArray = null;
+        mSelectedList = null;
+        mFileFolder = null;
+        imageCaches = null;
     }
 
     @Override
@@ -61,7 +75,11 @@ public class AdapterGridImage extends AdapterList {
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
-
+        if (parent instanceof FasterGridView) {
+            if (0 == position && ((FasterGridView) parent).isOnMeasure()) {
+                return convertView;
+            }
+        }
         final FileImage file = this.fileImageSparseArray.valueAt(position);
 
         holder.layout.setOnClickListener(new View.OnClickListener() {
@@ -94,10 +112,23 @@ public class AdapterGridImage extends AdapterList {
         } else {
             holder.ivCheckBox.setImageResource(R.mipmap.listitem_checkbox_off);
         }
-        holder.image.setImageResource(R.mipmap.listitem_icon_image);
         holder.image.setTag(file.oid);
-        new LoadImage(holder.image, file.oid)
-                .execute();
+
+        SoftReference<Bitmap> sb = imageCaches.get(position);
+        if (null != sb) {
+            Bitmap bitmap = sb.get();
+            if (null != bitmap) {
+                holder.image.setImageBitmap(bitmap);
+            } else {
+                holder.image.setImageResource(R.mipmap.listitem_icon_image);
+                new LoadImage(holder.image, position, file.oid)
+                        .execute();
+            }
+        } else {
+            holder.image.setImageResource(R.mipmap.listitem_icon_image);
+            new LoadImage(holder.image, position, file.oid)
+                    .execute();
+        }
         return convertView;
     }
 
@@ -116,17 +147,20 @@ public class AdapterGridImage extends AdapterList {
     private class LoadImage extends AsyncTask<Void, Void, Void> {
 
         private ImageView iv;
+        private int position;
         private long origId;
         private Bitmap bm;
 
-        public LoadImage(ImageView iv, long origId) {
+        public LoadImage(ImageView iv, int position, long origId) {
             this.iv = iv;
+            this.position = position;
             this.origId = origId;
         }
 
         @Override
         protected Void doInBackground(Void... params) {
             bm = MediaStore.Images.Thumbnails.getThumbnail(cr, origId, MediaStore.Images.Thumbnails.MICRO_KIND, null);
+            imageCaches.put(position, new SoftReference<Bitmap>(bm));
             return null;
         }
 

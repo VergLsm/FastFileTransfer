@@ -12,6 +12,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.lang.ref.SoftReference;
+
 import vis.SelectedFilesQueue;
 import vision.fastfiletransfer.R;
 import vision.fastfiletransfer.RMFragment;
@@ -26,13 +28,26 @@ public class AdapterFolderImage extends AdapterList {
     private Context mContext;
     private RMFragment rmFragment;
     private SelectedFilesQueue mSelectedList;
+    private SparseArray<SoftReference<Bitmap>> imageCaches;
 
     public AdapterFolderImage(Context context, RMFragment rmFragment, SelectedFilesQueue selectedList) {
         super(context);
         this.mContext = context;
         this.rmFragment = rmFragment;
         this.mSelectedList = selectedList;
+        imageCaches = new SparseArray<SoftReference<Bitmap>>();
     }
+
+    @Override
+    protected void finalize() throws Throwable {
+        super.finalize();
+        imagesFolder = null;
+        mSelectedList = null;
+        mContext = null;
+        rmFragment = null;
+        imageCaches = null;
+    }
+
 
     @Override
     public void setData(SparseArray<?> data) {
@@ -80,7 +95,6 @@ public class AdapterFolderImage extends AdapterList {
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
-            holder.image.setImageResource(R.mipmap.listitem_icon_image);
         }
 
         final FileFolder file = this.imagesFolder.valueAt(position);
@@ -118,8 +132,21 @@ public class AdapterFolderImage extends AdapterList {
         }
 
         holder.image.setTag(file.oid);
-        new LoadImage(holder.image, file.oid)
-                .execute();
+        SoftReference<Bitmap> sb = imageCaches.get(position);
+        if (null != sb) {
+            Bitmap bitmap = sb.get();
+            if (null != bitmap) {
+                holder.image.setImageBitmap(bitmap);
+            }else{
+                holder.image.setImageResource(R.mipmap.listitem_icon_image);
+                new LoadImage(holder.image, position, file.oid)
+                        .execute();
+            }
+        } else {
+            holder.image.setImageResource(R.mipmap.listitem_icon_image);
+            new LoadImage(holder.image, position, file.oid)
+                    .execute();
+        }
 
         return convertView;
     }
@@ -139,17 +166,20 @@ public class AdapterFolderImage extends AdapterList {
     private class LoadImage extends AsyncTask<Void, Void, Void> {
 
         private ImageView iv;
+        private int position;
         private long origId;
         private Bitmap bm;
 
-        public LoadImage(ImageView iv, long origId) {
+        public LoadImage(ImageView iv, int position, long origId) {
             this.iv = iv;
+            this.position = position;
             this.origId = origId;
         }
 
         @Override
         protected Void doInBackground(Void... params) {
             bm = MediaStore.Images.Thumbnails.getThumbnail(cr, origId, MediaStore.Images.Thumbnails.MICRO_KIND, null);
+            imageCaches.put(position, new SoftReference<Bitmap>(bm));
             return null;
         }
 

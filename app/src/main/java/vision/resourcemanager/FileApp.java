@@ -9,5 +9,5 @@ import vis.UserFile;
  * Email:Vision.lsm.2012@gmail.com
  */
 public class FileApp extends UserFile {
-    public Drawable icon;
+    public Drawable icon;//FIXME 这里应该处理为软引用，防止内存溢出
 }
