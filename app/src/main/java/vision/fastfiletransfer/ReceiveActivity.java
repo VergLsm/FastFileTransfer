@@ -121,8 +121,6 @@ public class ReceiveActivity extends FragmentActivity {
 //            Log.d("ServiceConnection", "onServiceConnected()");
             mReceiveService = ((ReceiveService.ReceiveBinder) service).getService();
             mReceiveService.setActivity(ReceiveActivity.this);
-            // 载入第一个Fragment
-            mReceiveService.jumpToFragment(0);
             mReceiveService.setFilesList(mFilesList);
         }
 

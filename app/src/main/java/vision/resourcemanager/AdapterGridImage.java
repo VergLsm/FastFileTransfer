@@ -1,15 +1,12 @@
 package vision.resourcemanager;
 
-import android.content.ContentResolver;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.provider.MediaStore;
 import android.util.SparseArray;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
@@ -20,20 +17,15 @@ import vision.fastfiletransfer.R;
  * Created by Vision on 15/7/13.<br>
  * Email:Vision.lsm.2012@gmail.com
  */
-public class AdapterGridImage extends BaseAdapter {
+public class AdapterGridImage extends AdapterList {
 
-    private final LayoutInflater inflater;
-    protected ContentResolver cr;
     private SparseArray<FileImage> fileImageSparseArray;
     private SelectedFilesQueue mSelectedList;
     private FileFolder mFileFolder;
 
-
     public AdapterGridImage(Context context, FileFolder fileFolder, SelectedFilesQueue selectedList) {
+        super(context);
         mFileFolder = fileFolder;
-        this.inflater = (LayoutInflater) context
-                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        cr = context.getContentResolver();
         this.mSelectedList = selectedList;
     }
 
@@ -115,8 +107,9 @@ public class AdapterGridImage extends BaseAdapter {
         ImageView ivCheckBox;
     }
 
-    public void setData(SparseArray<FileImage> sparseArray) {
-        this.fileImageSparseArray = sparseArray;
+    @Override
+    public void setData(SparseArray<?> sparseArray) {
+        this.fileImageSparseArray = (SparseArray<FileImage>) sparseArray;
         this.notifyDataSetChanged();
     }
 
