@@ -2,7 +2,9 @@ package vision.fastfiletransfer;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -12,6 +14,8 @@ import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.io.File;
 
 public class MainActivity extends FragmentActivity {
 
@@ -51,14 +55,19 @@ public class MainActivity extends FragmentActivity {
             @Override
             public void onClick(View v) {
                 Intent shareIntent = new Intent(MainActivity.this, ShareActivity.class);
+                shareIntent.putExtra("hasSDcard", checkSDcard(getResources().getString(R.string.recFolder)));
                 startActivity(shareIntent);
             }
         });
         btnReceive.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent receiveIntent = new Intent(MainActivity.this, ReceiveActivity.class);
-                startActivity(receiveIntent);
+                if (checkSDcard(getResources().getString(R.string.recFolder))) {
+                    Intent receiveIntent = new Intent(MainActivity.this, ReceiveActivity.class);
+                    startActivity(receiveIntent);
+                } else {
+                    Toast.makeText(MainActivity.this, "请检查SD卡是否正确安装", Toast.LENGTH_SHORT).show();
+                }
             }
         });
         tvInvite.setOnClickListener(new View.OnClickListener() {
@@ -99,4 +108,33 @@ public class MainActivity extends FragmentActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+    public boolean checkSDcard(String dirName) {
+        boolean isOK = false;
+        if (Environment.getExternalStorageState().equals(
+                Environment.MEDIA_MOUNTED)) {
+//            Log.d(this.getClass().getName(), Environment.getExternalStorageState());
+            File dir = new File(Environment.getExternalStorageDirectory().getPath() + dirName);
+            if (!dir.exists()) {            //文件夹不存在
+                if (dir.mkdirs()) {         //创建文件夹
+//                    Toast.makeText(this.context, "创建文件夹成功", Toast.LENGTH_SHORT).show();
+                    Log.d(this.getClass().getName(), "created document success");
+                }
+            }
+            if (dir.exists()) {             //已经存在或者已经创建成功
+                if (dir.canWrite()) {       //可以写入
+                    Log.d(this.getClass().getName(), "the dir is OK!");
+                    isOK = true;
+                } else {
+                    Log.e(this.getClass().getName(), "the dir can not write");
+                }
+            } else {
+                Log.d(this.getClass().getName(), "没有这个目录");
+            }
+        } else {
+            Log.d(this.getClass().getName(), "请检查SD卡是否正确安装");
+        }
+        return isOK;
+    }
+
 }

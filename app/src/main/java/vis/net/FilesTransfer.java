@@ -5,7 +5,6 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
-import android.widget.Toast;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -107,30 +106,8 @@ public class FilesTransfer {
      * @param dirName 文件存放位置，文件夹名
      */
     public void receiveFile(int port, String dirName) {
-        if (Environment.getExternalStorageState().equals(
-                Environment.MEDIA_MOUNTED)) {
-//            Log.d(this.getClass().getName(), Environment.getExternalStorageState());
-            File dir = new File(Environment.getExternalStorageDirectory().getPath() + dirName);
-            if (!dir.exists()) {            //文件夹不存在
-                if (dir.mkdirs()) {         //创建文件夹
-//                    Toast.makeText(this.context, "创建文件夹成功", Toast.LENGTH_SHORT).show();
-                    Log.d(this.getClass().getName(), "created document success");
-                }
-            }
-            if (dir.exists()) {             //已经存在或者已经创建成功
-                if (dir.canWrite()) {       //可以写入
-                    Log.d(this.getClass().getName(), "the dir is OK!");
-                    executorService.execute(new Receiver(port, dir));
-                } else {
-                    Log.e(this.getClass().getName(), "the dir can not write");
-                }
-            } else {
-                Log.d(this.getClass().getName(), "没有这个目录");
-            }
-        } else {
-            Toast.makeText(this.context, "请检查SD卡是否正确安装", Toast.LENGTH_SHORT).show();
-            Log.e(this.getClass().getName(), "请检查SD卡是否正确安装");
-        }
+        File dir = new File(Environment.getExternalStorageDirectory().getPath() + dirName);
+        executorService.execute(new Receiver(port, dir));
     }
 
     public boolean isReceiving() {
@@ -186,6 +163,7 @@ public class FilesTransfer {
                         File file;
                         int i = 1;
                         while ((file = new File(dir.getPath() + "/" + userFile.name)).exists()) {
+                            //FIXME 这个重命算法还不完善，如果文件名中有多个'.'就会发生多次替换
                             userFile.name = userFile.name.replaceAll("(\\(\\d*\\))?\\.", "(" + String.valueOf(i++) + ").");
 //                            int dotIndex = userFile.name.lastIndexOf(".");
 //                            if (dotIndex < 0) {

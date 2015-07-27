@@ -91,10 +91,14 @@ public class ShareActivity extends FragmentActivity implements ResourceManagerIn
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
         if (null == mRMFragment) {
+            int page = ResourceManagerInterface.PAGE_APP;
+            if (getIntent().getBooleanExtra("hasSDcard", false)) {
+                page |= ResourceManagerInterface.PAGE_AUDIO | ResourceManagerInterface.PAGE_IMAGE | ResourceManagerInterface.PAGE_VIDEO | ResourceManagerInterface.PAGE_TEXT;
+            }
             mRMFragment = RMFragment.newInstance(
                     ResourceManagerInterface.TYPE_FILE_TRANSFER,
                         /*RMFragment.TYPE_RESOURCE_MANAGER,*/
-                    ResourceManagerInterface.PAGE_AUDIO | ResourceManagerInterface.PAGE_IMAGE | ResourceManagerInterface.PAGE_APP | ResourceManagerInterface.PAGE_VIDEO | ResourceManagerInterface.PAGE_TEXT);
+                    page);
         }
         fragmentTransaction.replace(R.id.shareContain, mRMFragment);
         fragmentTransaction.commit();
@@ -217,7 +221,7 @@ public class ShareActivity extends FragmentActivity implements ResourceManagerIn
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             shareService = ((ShareService.ShareBinder) service).getService();
-            shareService.setSthing(mSelectedFilesQueue,mDevicesList);
+            shareService.setSthing(mSelectedFilesQueue, mDevicesList);
             shareService.setActivity(ShareActivity.this);
         }
 
