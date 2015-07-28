@@ -85,7 +85,7 @@ public class RMGridFragmentImage extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        final FileFolder fileFolder = mListener.getImageFolder().valueAt(indexOfFolder);
+        final FileFolder fileFolder = mListener.getImageFolder().get(indexOfFolder);
         SparseArray<FileImage> fileImage = fileFolder.mImages;
 
 //        tvTitle.setText(fileFolder.name);
