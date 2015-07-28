@@ -157,6 +157,9 @@ public class CommandsTransfer {
      */
     private void stopReceiver() {
         isReceive = false;
+        if (!mDatagramSocket.isClosed()) {
+            mDatagramSocket.close();
+        }
     }
 
     /**
@@ -196,15 +199,15 @@ public class CommandsTransfer {
                 sendPacket = new DatagramPacket(msg, msg.length, InetAddress.getByName(address),
                         port);
             } catch (UnknownHostException e) {
-                e.printStackTrace();
+                Log.d("Sender", "UnknownHostException");
             } catch (SocketException e) {
-                e.printStackTrace();
+                Log.d("Sender", "SocketException");
             }
             try {
                 mDatagramSocket.send(sendPacket);
                 Log.d("send", new String(msg));
             } catch (IOException e) {
-                e.printStackTrace();
+                Log.d("Sender","IOException");
             } finally {
                 if (!mDatagramSocket.isClosed()) {
                     mDatagramSocket.close();
@@ -223,7 +226,7 @@ public class CommandsTransfer {
         public void run() {
             try {
                 mDatagramSocket = new DatagramSocket(recvPort);
-                mDatagramSocket.setSoTimeout(1000);
+//                mDatagramSocket.setSoTimeout(1000);
             } catch (SocketException e) {
                 e.printStackTrace();
             }
@@ -240,14 +243,11 @@ public class CommandsTransfer {
                     mHandler.sendMessage(msg);
                     Log.i("received", new String((byte[]) objects[0]) + "->" + new String(receivePacket.getData()).trim());
                 } catch (IOException e) {
-                    Log.d("", "I am receiving!");
+                    Log.d("", "IOException");
                 }
             }
             Log.d("", "I am closing!");
             isEndReceive = true;
-            if (!mDatagramSocket.isClosed()) {
-                mDatagramSocket.close();
-            }
             executorService.shutdown();
             CommandsTransfer.single = null;
         }

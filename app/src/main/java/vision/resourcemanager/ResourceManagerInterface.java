@@ -4,6 +4,7 @@ import android.util.SparseArray;
 import android.widget.Button;
 
 import vis.SelectedFilesQueue;
+import vis.UserFile;
 
 /**
  * Created by Vision on 15/7/13.<br>
@@ -11,13 +12,18 @@ import vis.SelectedFilesQueue;
  */
 public interface ResourceManagerInterface {
 
+    int PAGE_IMAGE = 0x01;
+    int PAGE_AUDIO = 0x02;
+    int PAGE_VIDEO = 0x04;
+    int PAGE_TEXT = 0x08;
+    int PAGE_APP = 0x10;
+
     byte TYPE_RESOURCE_MANAGER = 1;
     byte TYPE_FILE_TRANSFER = 2;
 
 
     int RM_FRAGMENT = 0;
     int SHARE_FRAGMENT = 1;
-    int RM_IMAGE_GRID = 2;
 
 
 //    void onFragmentInteraction(int arg1, int indexOfFolder);
@@ -27,7 +33,7 @@ public interface ResourceManagerInterface {
      *
      * @return 已经选择的文件队列
      */
-    SelectedFilesQueue<File> getSelectedFilesQueue();
+    SelectedFilesQueue<UserFile> getSelectedFilesQueue();
 
     /**
      * 获取图片文件夹数据

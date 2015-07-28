@@ -3,12 +3,13 @@ package vision.resourcemanager;
 import android.util.SparseArray;
 
 import vis.SelectedFilesQueue;
+import vis.UserFile;
 
 /**
  * Created by Vision on 15/7/14.<br>
  * Email:Vision.lsm.2012@gmail.com
  */
-public class FileFolder extends File {
+public class FileFolder extends UserFile {
     public SparseArray<FileImage> mImages;
     public int selected;
 

@@ -25,7 +25,7 @@ public class LoadingView extends View {
 //    private float mTextHeight;
     private Drawable mProgressImage;
     private Drawable mCenterIcon;
-    private float mCenterIconDimension = 70;
+    private float mCenterIconDimension = 60;
     private float mProgressAngle = 0;
     private boolean isRunningProgress = false;
     private int mDuration = 1000;
@@ -72,7 +72,7 @@ public class LoadingView extends View {
 
         mCenterIconDimension = a.getDimension(
                 R.styleable.loadingView_centerIconDimension,
-                mCenterIconDimension);
+                mCenterIconDimension * getResources().getDisplayMetrics().density);
 
         mDuration = a.getInt(
                 R.styleable.loadingView_duration,
@@ -136,14 +136,14 @@ public class LoadingView extends View {
         int specWidthSize;
         if (specHeightMode == MeasureSpec.AT_MOST) {
 //            specHeightSize = MeasureSpec.getSize(heightMeasureSpec);
-            specHeightSize = 70;
+            specHeightSize = (int) (60 * getResources().getDisplayMetrics().density);
         } else {
             specHeightSize = getDefaultSize(getSuggestedMinimumHeight(), heightMeasureSpec);
         }
 
         if (specWidthMode == MeasureSpec.AT_MOST) {
 //            specWidthSize = MeasureSpec.getSize(widthMeasureSpec);
-            specWidthSize = 70;
+            specWidthSize = (int) (60 * getResources().getDisplayMetrics().density);
         } else {
             specWidthSize = getDefaultSize(getSuggestedMinimumWidth(), widthMeasureSpec);
         }

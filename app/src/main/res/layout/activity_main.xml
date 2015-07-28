@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/tvModel"
-        android:src="@drawable/activity_main_banner"
+        android:src="@mipmap/activity_main_banner_7"
         android:scaleType="centerCrop" />
 
     <Button
@@ -74,5 +74,16 @@
         android:id="@+id/activity_main_top"
         android:layout_width="match_parent"
         android:layout_height="50dp"></RelativeLayout>
+
+    <ImageView
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:src="@mipmap/activity_main_banner_8"
+        android:id="@+id/textView4"
+        android:layout_alignBottom="@+id/imageView"
+        android:layout_centerHorizontal="true"
+        android:textColor="#ffd8f4f1"
+        android:layout_marginBottom="20dp"
+        android:adjustViewBounds="true" />
 
 </RelativeLayout>

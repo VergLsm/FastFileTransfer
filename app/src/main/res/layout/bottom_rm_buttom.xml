@@ -5,7 +5,7 @@
     android:layout_height="wrap_content"
     android:layout_alignParentBottom="true"
     android:id="@+id/btnLinearLayout"
-    android:visibility="gone">
+    android:visibility="visible">
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

@@ -1,40 +1,46 @@
 package vision.resourcemanager;
 
-import android.content.ContentResolver;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.provider.MediaStore;
 import android.util.SparseArray;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
+import java.lang.ref.SoftReference;
+
 import vis.SelectedFilesQueue;
+import vis.widget.FasterGridView;
 import vision.fastfiletransfer.R;
 
 /**
  * Created by Vision on 15/7/13.<br>
  * Email:Vision.lsm.2012@gmail.com
  */
-public class AdapterGridImage extends BaseAdapter {
+public class AdapterGridImage extends AdapterList {
 
-    private final LayoutInflater inflater;
-    protected ContentResolver cr;
     private SparseArray<FileImage> fileImageSparseArray;
     private SelectedFilesQueue mSelectedList;
     private FileFolder mFileFolder;
-
+    private SparseArray<SoftReference<Bitmap>> imageCaches;
 
     public AdapterGridImage(Context context, FileFolder fileFolder, SelectedFilesQueue selectedList) {
+        super(context);
         mFileFolder = fileFolder;
-        this.inflater = (LayoutInflater) context
-                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        cr = context.getContentResolver();
         this.mSelectedList = selectedList;
+        imageCaches = new SparseArray<SoftReference<Bitmap>>();
+    }
+
+    @Override
+    protected void finalize() throws Throwable {
+        super.finalize();
+        fileImageSparseArray = null;
+        mSelectedList = null;
+        mFileFolder = null;
+        imageCaches = null;
     }
 
     @Override
@@ -69,7 +75,11 @@ public class AdapterGridImage extends BaseAdapter {
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
-
+        if (parent instanceof FasterGridView) {
+            if (0 == position && ((FasterGridView) parent).isOnMeasure()) {
+                return convertView;
+            }
+        }
         final FileImage file = this.fileImageSparseArray.valueAt(position);
 
         holder.layout.setOnClickListener(new View.OnClickListener() {
@@ -102,10 +112,23 @@ public class AdapterGridImage extends BaseAdapter {
         } else {
             holder.ivCheckBox.setImageResource(R.mipmap.listitem_checkbox_off);
         }
-        holder.image.setImageResource(R.mipmap.listitem_icon_image);
         holder.image.setTag(file.oid);
-        new LoadImage(holder.image, file.oid)
-                .execute();
+
+        SoftReference<Bitmap> sb = imageCaches.get(position);
+        if (null != sb) {
+            Bitmap bitmap = sb.get();
+            if (null != bitmap) {
+                holder.image.setImageBitmap(bitmap);
+            } else {
+                holder.image.setImageResource(R.mipmap.listitem_icon_image);
+                new LoadImage(holder.image, position, file.oid)
+                        .execute();
+            }
+        } else {
+            holder.image.setImageResource(R.mipmap.listitem_icon_image);
+            new LoadImage(holder.image, position, file.oid)
+                    .execute();
+        }
         return convertView;
     }
 
@@ -115,25 +138,29 @@ public class AdapterGridImage extends BaseAdapter {
         ImageView ivCheckBox;
     }
 
-    public void setData(SparseArray<FileImage> sparseArray) {
-        this.fileImageSparseArray = sparseArray;
+    @Override
+    public void setData(SparseArray<?> sparseArray) {
+        this.fileImageSparseArray = (SparseArray<FileImage>) sparseArray;
         this.notifyDataSetChanged();
     }
 
     private class LoadImage extends AsyncTask<Void, Void, Void> {
 
         private ImageView iv;
+        private int position;
         private long origId;
         private Bitmap bm;
 
-        public LoadImage(ImageView iv, long origId) {
+        public LoadImage(ImageView iv, int position, long origId) {
             this.iv = iv;
+            this.position = position;
             this.origId = origId;
         }
 
         @Override
         protected Void doInBackground(Void... params) {
             bm = MediaStore.Images.Thumbnails.getThumbnail(cr, origId, MediaStore.Images.Thumbnails.MICRO_KIND, null);
+            imageCaches.put(position, new SoftReference<Bitmap>(bm));
             return null;
         }
 

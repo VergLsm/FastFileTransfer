@@ -107,7 +107,6 @@ public class ShareFragment extends Fragment {
             public void onAdded(int size) {
                 lvDevices.setVisibility(View.VISIBLE);
                 rlNobody.setVisibility(View.GONE);
-//                pb.clearAnimation();
             }
 
             @Override
@@ -120,7 +119,6 @@ public class ShareFragment extends Fragment {
                 if (size == 0) {
                     lvDevices.setVisibility(View.GONE);
                     rlNobody.setVisibility(View.VISIBLE);
-//                    pb.setAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.my_rotate));
                 }
             }
         });
@@ -148,8 +146,8 @@ public class ShareFragment extends Fragment {
         } else {
             this.btnSend.setEnabled(true);
             this.btnSend.setText(
-                    "已选择" + ((ShareActivity) context)
-                            .mSelectedFilesQueue.size() + "个文件"
+                    "轻触这里发送(" + ((ShareActivity) context)
+                            .mSelectedFilesQueue.size() + ")"
             );
         }
     }
@@ -167,8 +165,7 @@ public class ShareFragment extends Fragment {
         btnSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String[] paths = ((ShareActivity) context).mSelectedFilesQueue.getPaths();
-                ((ShareActivity) context).shareService.sendFlies(context, paths);
+                ((ShareActivity) context).shareService.sendFlies();
             }
         });
     }

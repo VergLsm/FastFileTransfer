@@ -4,13 +4,13 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
-import android.widget.Toast;
 
-import java.io.File;
 import java.lang.ref.WeakReference;
 
 import vis.DevicesList;
+import vis.SelectedFilesQueue;
 import vis.UserDevice;
+import vis.UserFile;
 import vis.net.CommandsTransfer;
 import vis.net.FilesTransfer;
 
@@ -55,6 +55,7 @@ public class ShareServer {
                     UserDevice us = new UserDevice();
                     us.ip = byteArray2IpAddress(address);
                     us.port = 2223;
+                    us.state = UserDevice.TRANSFER_STATE_NORMAL;
                     us.name = new String(sp.getData());
                     us.ipInt = byteArray2Int(address);
                     shareServer.mDevicesList.put(us.ipInt, us);
@@ -71,7 +72,7 @@ public class ShareServer {
 
     public ShareServer(Context context, DevicesList<UserDevice> devicesList) {
         mDevicesList = devicesList;
-        mCommandsTransfer =  CommandsTransfer.getInstance();
+        mCommandsTransfer = CommandsTransfer.getInstance();
         mFilesTransfer = new FilesTransfer(context, FilesTransfer.SERVICE_RECEIVE);
 //        mAdapter = new UserDevicesAdapter(context, devicesList);
         //把适配器的handler交给mFilesTransfer，以便transfer控制适配器
@@ -82,39 +83,45 @@ public class ShareServer {
         mFilesTransfer.setCallbackHandler(devicesList.getHandler());
     }
 
-    public void sendFlies(Context context, String[] paths) {
-        if (null != paths && paths.length != 0) {
-            File[] files = new File[paths.length];
-            for (int i = 0; i < paths.length; i++) {
-                Log.d("Paths", paths[i]);
-                files[i] = new File(paths[i]);
-            }
-            sendFlies(context, files);
-        } else {
-            Toast.makeText(context, "没有选择文件", Toast.LENGTH_SHORT).show();
-        }
+
+    public void sendFlies(DevicesList<UserDevice> mDevicesList, SelectedFilesQueue<UserFile> selectedFilesQueue) {
+        mFilesTransfer.sendFile(mDevicesList, selectedFilesQueue);
     }
 
-    /**
-     * 发送文件信息
-     *
-     * @param context 上下文
-     * @param files   文件
-     */
-    public void sendFlies(Context context, File[] files) {
-        if (null == files) {
-            Toast.makeText(context, "没有选择文件", Toast.LENGTH_SHORT).show();
-//        } else if (mAdapter.getCount() == 0) {
-        } else if (mDevicesList.size() == 0) {
 
-            Toast.makeText(context, "没有设备连接", Toast.LENGTH_SHORT).show();
-        } else {
-            //发送文件
-            mFilesTransfer.sendFile(files,mDevicesList);
-//            Toast.makeText(context, file.toString(), Toast.LENGTH_SHORT).show();
-//            for (int i = 0, nsize = mAdapter.getCount(); i < nsize; i++) {
-        }
-    }
+//    public void sendFlies(Context context, String[] paths) {
+//        if (null != paths && paths.length != 0) {
+//            File[] files = new File[paths.length];
+//            for (int i = 0; i < paths.length; i++) {
+//                Log.d("Paths", paths[i]);
+//                files[i] = new File(paths[i]);
+//            }
+//            sendFlies(context, files);
+//        } else {
+//            Toast.makeText(context, "没有选择文件", Toast.LENGTH_SHORT).show();
+//        }
+//    }
+
+//    /**
+//     * 发送文件信息
+//     *
+//     * @param context 上下文
+//     * @param files   文件
+//     */
+//    public void sendFlies(Context context, File[] files) {
+//        if (null == files) {
+//            Toast.makeText(context, "没有选择文件", Toast.LENGTH_SHORT).show();
+////        } else if (mAdapter.getCount() == 0) {
+//        } else if (mDevicesList.size() == 0) {
+//
+//            Toast.makeText(context, "没有设备连接", Toast.LENGTH_SHORT).show();
+//        } else {
+//            //发送文件
+//            mFilesTransfer.sendFile(files, mDevicesList);
+////            Toast.makeText(context, file.toString(), Toast.LENGTH_SHORT).show();
+////            for (int i = 0, nsize = mAdapter.getCount(); i < nsize; i++) {
+//        }
+//    }
 
     public void enable() {
         mCommandsTransfer.setCallbackHandler(this.mCommandHandler);

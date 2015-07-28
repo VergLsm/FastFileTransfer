@@ -21,9 +21,8 @@ import android.widget.TextView;
 import vis.DevicesList;
 import vis.SelectedFilesQueue;
 import vis.UserDevice;
-import vision.resourcemanager.File;
+import vis.UserFile;
 import vision.resourcemanager.FileFolder;
-import vision.resourcemanager.RMGridFragmentImage;
 import vision.resourcemanager.ResourceManagerInterface;
 
 
@@ -35,7 +34,7 @@ public class ShareActivity extends FragmentActivity implements ResourceManagerIn
     /**
      * 文件选择队列
      */
-    public SelectedFilesQueue<File> mSelectedFilesQueue;
+    public SelectedFilesQueue<UserFile> mSelectedFilesQueue;
     /**
      * 用户设备接入列表
      */
@@ -75,21 +74,34 @@ public class ShareActivity extends FragmentActivity implements ResourceManagerIn
         tvTitle = (TextView) findViewById(R.id.titlebar_tvtitle);
         tvTitle.setText("我要分享");
 
+        mSelectedFilesQueue = new SelectedFilesQueue<UserFile>();
+        mDevicesList = new DevicesList<UserDevice>(this);
+
         //----------------------------------------------------------------------------
 
         binderService();
 
         //----------------------------------------------------------------------------
 
-        mDevicesList = new DevicesList<UserDevice>();
-
-
-
         btnTitleBarRight = (Button)
 
                 findViewById(R.id.titlebar_btnRight);
 
-        jumpToFragment(RM_FRAGMENT, 0);
+//        jumpToFragment(RM_FRAGMENT, 0);
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+        if (null == mRMFragment) {
+            int page = ResourceManagerInterface.PAGE_APP;
+            if (getIntent().getBooleanExtra("hasSDcard", false)) {
+                page |= ResourceManagerInterface.PAGE_AUDIO | ResourceManagerInterface.PAGE_IMAGE | ResourceManagerInterface.PAGE_VIDEO | ResourceManagerInterface.PAGE_TEXT;
+            }
+            mRMFragment = RMFragment.newInstance(
+                    ResourceManagerInterface.TYPE_FILE_TRANSFER,
+                        /*RMFragment.TYPE_RESOURCE_MANAGER,*/
+                    page);
+        }
+        fragmentTransaction.replace(R.id.shareContain, mRMFragment);
+        fragmentTransaction.commit();
     }
 
     @Override
@@ -145,7 +157,7 @@ public class ShareActivity extends FragmentActivity implements ResourceManagerIn
                 mRMFragment = RMFragment.newInstance(
                         ResourceManagerInterface.TYPE_FILE_TRANSFER,
                         /*RMFragment.TYPE_RESOURCE_MANAGER,*/
-                        RMFragment.PAGE_AUDIO | RMFragment.PAGE_IMAGE | RMFragment.PAGE_APP | RMFragment.PAGE_VIDEO | RMFragment.PAGE_TEXT);
+                        ResourceManagerInterface.PAGE_AUDIO | ResourceManagerInterface.PAGE_IMAGE | ResourceManagerInterface.PAGE_APP | ResourceManagerInterface.PAGE_VIDEO | ResourceManagerInterface.PAGE_TEXT);
 
                 fragmentTransaction.replace(R.id.shareContain, mRMFragment);
                 break;
@@ -159,13 +171,6 @@ public class ShareActivity extends FragmentActivity implements ResourceManagerIn
                 fragmentTransaction.addToBackStack(null);
                 break;
             }
-            case RM_IMAGE_GRID: {
-                RMGridFragmentImage rmGridFragmentImage = RMGridFragmentImage.newInstance(indexOfFolder, null);
-                fragmentTransaction.hide(mRMFragment);
-                fragmentTransaction.add(R.id.shareContain, rmGridFragmentImage);
-                fragmentTransaction.addToBackStack(null);
-                break;
-            }
             default: {
                 return;
             }
@@ -174,10 +179,7 @@ public class ShareActivity extends FragmentActivity implements ResourceManagerIn
     }
 
     @Override
-    public SelectedFilesQueue<File> getSelectedFilesQueue() {
-        if (null == mSelectedFilesQueue) {
-            mSelectedFilesQueue = new SelectedFilesQueue<File>();
-        }
+    public SelectedFilesQueue<UserFile> getSelectedFilesQueue() {
         return this.mSelectedFilesQueue;
     }
 
@@ -219,6 +221,7 @@ public class ShareActivity extends FragmentActivity implements ResourceManagerIn
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             shareService = ((ShareService.ShareBinder) service).getService();
+            shareService.setSthing(mSelectedFilesQueue, mDevicesList);
             shareService.setActivity(ShareActivity.this);
         }
 

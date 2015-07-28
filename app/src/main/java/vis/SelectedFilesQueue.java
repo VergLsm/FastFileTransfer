@@ -5,8 +5,6 @@ import android.support.annotation.Nullable;
 import java.util.HashSet;
 import java.util.Set;
 
-import vision.resourcemanager.File;
-
 /**
  * 已经选择的文件队列
  * Created by Vision on 15/7/2.<br>
@@ -44,7 +42,7 @@ public class SelectedFilesQueue<T> {
         String[] strings = new String[data.size()];
         int i = 0;
         for (T t : data) {
-            strings[i++] = ((File) t).data;
+            strings[i++] = ((UserFile) t).data;
         }
         return strings;
     }

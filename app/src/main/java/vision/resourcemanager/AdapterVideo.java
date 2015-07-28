@@ -11,6 +11,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.lang.ref.SoftReference;
+
 import vis.SelectedFilesQueue;
 import vision.fastfiletransfer.R;
 
@@ -22,10 +24,20 @@ public class AdapterVideo extends AdapterList {
 
     private SparseArray<FileVideo> videos;
     private SelectedFilesQueue mSelectedList;
+    private SparseArray<SoftReference<Bitmap>> imageCaches;
 
     public AdapterVideo(Context context, SelectedFilesQueue selectedList) {
         super(context);
         this.mSelectedList = selectedList;
+        imageCaches = new SparseArray<SoftReference<Bitmap>>();
+    }
+
+    @Override
+    protected void finalize() throws Throwable {
+        super.finalize();
+        videos = null;
+        mSelectedList = null;
+        imageCaches = null;
     }
 
     @Override
@@ -75,7 +87,6 @@ public class AdapterVideo extends AdapterList {
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
-            holder.image.setImageResource(R.mipmap.listitem_icon_video);
         }
         final FileVideo file = this.videos.valueAt(position);
 
@@ -103,8 +114,21 @@ public class AdapterVideo extends AdapterList {
         }
 
         holder.image.setTag(file.oid);
-        new LoadImage(holder.image, file.oid)
-                .execute();
+        SoftReference<Bitmap> sb = imageCaches.get(position);
+        if (null != sb) {
+            Bitmap bitmap = sb.get();
+            if (null != bitmap) {
+                holder.image.setImageBitmap(bitmap);
+            }else{
+                holder.image.setImageResource(R.mipmap.listitem_icon_video);
+                new LoadImage(holder.image, position, file.oid)
+                        .execute();
+            }
+        } else {
+            holder.image.setImageResource(R.mipmap.listitem_icon_video);
+            new LoadImage(holder.image, position, file.oid)
+                    .execute();
+        }
 
         return convertView;
     }
@@ -125,17 +149,20 @@ public class AdapterVideo extends AdapterList {
     private class LoadImage extends AsyncTask<Void, Void, Void> {
 
         private ImageView iv;
+        private int position;
         private long origId;
         private Bitmap bm;
 
-        public LoadImage(ImageView iv, long origId) {
+        public LoadImage(ImageView iv, int position, long origId) {
             this.iv = iv;
+            this.position = position;
             this.origId = origId;
         }
 
         @Override
         protected Void doInBackground(Void... params) {
             bm = MediaStore.Video.Thumbnails.getThumbnail(cr, origId, MediaStore.Video.Thumbnails.MICRO_KIND, null);
+            imageCaches.put(position, new SoftReference<Bitmap>(bm));
             return null;
         }
 

@@ -15,7 +15,7 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
-    <android:uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
     <application
         android:allowBackup="true"
@@ -51,6 +51,11 @@
 
         <service
             android:name=".ShareService"
+            android:enabled="true"
+            android:exported="true" >
+        </service>
+        <service
+            android:name=".ReceiveService"
             android:enabled="true"
             android:exported="true" >
         </service>

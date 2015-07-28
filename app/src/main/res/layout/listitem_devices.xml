@@ -3,56 +3,75 @@
     android:id="@+id/list_item_layout"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:gravity="center_vertical"
     android:background="@color/list_background_color"
+    android:gravity="center_vertical"
     android:paddingBottom="5dp"
-    android:paddingTop="5dp" >
+    android:paddingTop="5dp"
+    android:orientation="horizontal">
 
     <ImageView
         android:id="@+id/image"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
         android:adjustViewBounds="false"
-        android:src="@mipmap/listitem_share_icon_phone"
-        android:layout_marginRight="5dp" />
+        android:src="@mipmap/listitem_share_icon_phone" />
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="wrap_content"
         android:layout_marginLeft="5dp"
         android:layout_weight="1"
         android:gravity="center_vertical"
-        android:orientation="vertical" >
+        android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:singleLine="true"
-            android:text=""
-            android:textColor="@color/item_text_color_normal"
-            android:textSize="20sp" />
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:text=""
+                android:textColor="@color/item_text_color_normal"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/listitem_devices_tips"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp" />
+        </LinearLayout>
 
         <TextView
             android:id="@+id/app_tips"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/item_text_color_s"
-            android:visibility="visible"
-            android:textSize="15sp" />
+            android:textSize="15sp"
+            android:visibility="visible" />
 
         <vis.widget.TextProgress
             android:id="@+id/app_size_progressBar"
+            style="@android:style/Widget.ProgressBar.Horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="gone"
-            android:max="100"
             android:layout_marginRight="10dp"
-            style="@android:style/Widget.ProgressBar.Horizontal" />
+            android:max="100"
+            android:visibility="gone" />
 
-
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/currentFile" />
     </LinearLayout>
+
+
+</LinearLayout>
 
     <!--Button
         android:id="@+id/download_btn"
@@ -65,4 +84,3 @@
         android:textColor="#ffffffff"
         android:textSize="12sp" /-->
 
-</LinearLayout>
