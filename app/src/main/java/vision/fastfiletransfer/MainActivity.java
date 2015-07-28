@@ -1,6 +1,7 @@
 package vision.fastfiletransfer;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.FragmentActivity;
@@ -77,6 +78,9 @@ public class MainActivity extends FragmentActivity {
                         .show();
             }
         });
+        sendBroadcast(new Intent(
+                Intent.ACTION_MEDIA_MOUNTED,
+                Uri.parse("file://" + Environment.getExternalStorageDirectory())));
     }
 
     @Override
