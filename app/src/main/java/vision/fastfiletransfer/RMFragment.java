@@ -260,6 +260,10 @@ public class RMFragment extends Fragment {
                         fileFolder.mImages.remove(file.id);
                         if (fileFolder.mImages.size() == 0) {
                             saff.remove(fileFolder.id);
+                        } else {
+                            if (fileFolder.oid == file.oid) {
+                                fileFolder.oid = fileFolder.mImages.valueAt(0).oid;
+                            }
                         }
                         fileFolder.selected--;
                         break;

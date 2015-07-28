@@ -4,13 +4,12 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.provider.MediaStore;
+import android.support.v4.util.LruCache;
 import android.util.SparseArray;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-
-import java.lang.ref.SoftReference;
 
 import vis.SelectedFilesQueue;
 import vis.widget.FasterGridView;
@@ -25,13 +24,30 @@ public class AdapterGridImage extends AdapterList {
     private SparseArray<FileImage> fileImageSparseArray;
     private SelectedFilesQueue mSelectedList;
     private FileFolder mFileFolder;
-    private SparseArray<SoftReference<Bitmap>> imageCaches;
+    /**
+     * 缓存Image的类，当存储Image的大小大于LruCache设定的值，系统自动释放内存
+     */
+    private LruCache<Long, Bitmap> mMemoryCache;
 
     public AdapterGridImage(Context context, FileFolder fileFolder, SelectedFilesQueue selectedList) {
         super(context);
         mFileFolder = fileFolder;
         this.mSelectedList = selectedList;
-        imageCaches = new SparseArray<SoftReference<Bitmap>>();
+
+        //获取系统分配给每个应用程序的最大内存，每个应用系统分配32M
+        int maxMemory = (int) Runtime.getRuntime().maxMemory();
+        int mCacheSize = maxMemory / 8;
+        //给LruCache分配1/8 4M
+        mMemoryCache = new LruCache<Long, Bitmap>(mCacheSize) {
+
+            //必须重写此方法，来测量Bitmap的大小
+            @Override
+            protected int sizeOf(Long key, Bitmap value) {
+                return value.getRowBytes() * value.getHeight();
+            }
+
+        };
+
     }
 
     @Override
@@ -40,7 +56,7 @@ public class AdapterGridImage extends AdapterList {
         fileImageSparseArray = null;
         mSelectedList = null;
         mFileFolder = null;
-        imageCaches = null;
+        mMemoryCache = null;
     }
 
     @Override
@@ -114,19 +130,12 @@ public class AdapterGridImage extends AdapterList {
         }
         holder.image.setTag(file.oid);
 
-        SoftReference<Bitmap> sb = imageCaches.get(position);
-        if (null != sb) {
-            Bitmap bitmap = sb.get();
-            if (null != bitmap) {
-                holder.image.setImageBitmap(bitmap);
-            } else {
-                holder.image.setImageResource(R.mipmap.listitem_icon_image);
-                new LoadImage(holder.image, position, file.oid)
-                        .execute();
-            }
+        Bitmap bitmap = mMemoryCache.get(file.oid);
+        if (null != bitmap) {
+            holder.image.setImageBitmap(bitmap);
         } else {
             holder.image.setImageResource(R.mipmap.listitem_icon_image);
-            new LoadImage(holder.image, position, file.oid)
+            new LoadImage(holder.image, file.oid)
                     .execute();
         }
         return convertView;
@@ -147,20 +156,18 @@ public class AdapterGridImage extends AdapterList {
     private class LoadImage extends AsyncTask<Void, Void, Void> {
 
         private ImageView iv;
-        private int position;
         private long origId;
         private Bitmap bm;
 
-        public LoadImage(ImageView iv, int position, long origId) {
+        public LoadImage(ImageView iv, long origId) {
             this.iv = iv;
-            this.position = position;
             this.origId = origId;
         }
 
         @Override
         protected Void doInBackground(Void... params) {
             bm = MediaStore.Images.Thumbnails.getThumbnail(cr, origId, MediaStore.Images.Thumbnails.MICRO_KIND, null);
-            imageCaches.put(position, new SoftReference<Bitmap>(bm));
+            mMemoryCache.put(origId, bm);
             return null;
         }
 

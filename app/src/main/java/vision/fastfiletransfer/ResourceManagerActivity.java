@@ -1,6 +1,9 @@
 package vision.fastfiletransfer;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -58,6 +61,10 @@ public class ResourceManagerActivity extends FragmentActivity implements Resourc
 
         btnTitleBarRight = (Button) findViewById(R.id.titlebar_btnRight);
 
+        // 必须在查找前进行全盘的扫描，否则新加入的图片是无法得到显示的(加入对sd卡操作的权限)
+        sendBroadcast(new Intent(
+                Intent.ACTION_MEDIA_MOUNTED,
+                Uri.parse("file://" + Environment.getExternalStorageDirectory())));
     }
 
     @Override
