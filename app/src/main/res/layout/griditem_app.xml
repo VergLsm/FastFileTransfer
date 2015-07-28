@@ -9,12 +9,12 @@
 
     <ImageView
         android:id="@+id/image"
-        android:layout_width="70dp"
-        android:layout_height="70dp"
+        android:layout_width="75dp"
+        android:layout_height="75dp"
         android:layout_centerHorizontal="true"
         android:layout_marginLeft="5dip"
         android:adjustViewBounds="false"
-        android:padding="5dp"
+        android:padding="10dp"
         android:scaleType="centerCrop"
         android:src="@mipmap/listitem_icon_app" />
 
