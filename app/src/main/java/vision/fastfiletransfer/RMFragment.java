@@ -258,6 +258,9 @@ public class RMFragment extends Fragment {
                         SparseArray<FileFolder> saff = mListener.getImageFolder();
                         FileFolder fileFolder = saff.get(((FileImage) file).fatherID);
                         fileFolder.mImages.remove(file.id);
+                        if (fileFolder.oid == file.oid) {
+                            fileFolder.oid = fileFolder.mImages.valueAt(0).oid;
+                        }
                         if (fileFolder.mImages.size() == 0) {
                             saff.remove(fileFolder.id);
                         }

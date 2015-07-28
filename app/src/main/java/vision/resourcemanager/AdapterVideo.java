@@ -114,19 +114,19 @@ public class AdapterVideo extends AdapterList {
         }
 
         holder.image.setTag(file.oid);
-        SoftReference<Bitmap> sb = imageCaches.get(position);
+        SoftReference<Bitmap> sb = imageCaches.get(file.id);
         if (null != sb) {
             Bitmap bitmap = sb.get();
             if (null != bitmap) {
                 holder.image.setImageBitmap(bitmap);
             }else{
                 holder.image.setImageResource(R.mipmap.listitem_icon_video);
-                new LoadImage(holder.image, position, file.oid)
+                new LoadImage(holder.image, file.id, file.oid)
                         .execute();
             }
         } else {
             holder.image.setImageResource(R.mipmap.listitem_icon_video);
-            new LoadImage(holder.image, position, file.oid)
+            new LoadImage(holder.image, file.id, file.oid)
                     .execute();
         }
 
@@ -149,20 +149,20 @@ public class AdapterVideo extends AdapterList {
     private class LoadImage extends AsyncTask<Void, Void, Void> {
 
         private ImageView iv;
-        private int position;
+        private int id;
         private long origId;
         private Bitmap bm;
 
-        public LoadImage(ImageView iv, int position, long origId) {
+        public LoadImage(ImageView iv, int id, long origId) {
             this.iv = iv;
-            this.position = position;
+            this.id = id;
             this.origId = origId;
         }
 
         @Override
         protected Void doInBackground(Void... params) {
             bm = MediaStore.Video.Thumbnails.getThumbnail(cr, origId, MediaStore.Video.Thumbnails.MICRO_KIND, null);
-            imageCaches.put(position, new SoftReference<Bitmap>(bm));
+            imageCaches.put(id, new SoftReference<Bitmap>(bm));
             return null;
         }
 
