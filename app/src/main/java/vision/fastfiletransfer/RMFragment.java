@@ -255,8 +255,13 @@ public class RMFragment extends Fragment {
             if (trueFile.exists() && trueFile.delete()) {
                 switch (file.type) {
                     case UserFile.TYPE_IMAGE: {
-                        mListener.getImageFolder().valueAt(((FileImage) file).fatherID).mImages.remove(file.id);
-                        mListener.getImageFolder().valueAt(((FileImage) file).fatherID).selected--;
+                        SparseArray<FileFolder> saff = mListener.getImageFolder();
+                        FileFolder fileFolder = saff.get(((FileImage) file).fatherID);
+                        fileFolder.mImages.remove(file.id);
+                        if (fileFolder.mImages.size() == 0) {
+                            saff.remove(fileFolder.id);
+                        }
+                        fileFolder.selected--;
                         break;
                     }
                     case UserFile.TYPE_AUDIO: {

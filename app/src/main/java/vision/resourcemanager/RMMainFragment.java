@@ -236,6 +236,7 @@ public class RMMainFragment extends Fragment {
                     file.fatherID = folder.id;
                     folder.mImages.put(file.id, file);
                     if (folder.oid == 0) {
+                        //设置相册的封面图片
                         folder.oid = folder.mImages.valueAt(0).oid;
                     }
                 } while (cursor.moveToNext());
