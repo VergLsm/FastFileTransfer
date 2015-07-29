@@ -1,7 +1,9 @@
 package vision.fastfiletransfer;
 
 import android.content.Intent;
+import android.media.MediaScannerConnection;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.FragmentActivity;
@@ -64,9 +66,13 @@ public class ResourceManagerActivity extends FragmentActivity implements Resourc
 
         if (ResourceManager.checkSDcard(getResources().getString(R.string.recFolder))) {
             // 必须在查找前进行全盘的扫描，否则新加入的图片是无法得到显示的(加入对sd卡操作的权限)
-            sendBroadcast(new Intent(
-                    Intent.ACTION_MEDIA_MOUNTED,
-                    Uri.parse("file://" + Environment.getExternalStorageDirectory())));
+            if (Build.VERSION.SDK_INT == Build.VERSION_CODES.KITKAT) {
+                MediaScannerConnection.scanFile(this, new String[]{Environment.getExternalStorageDirectory() + ""}, null, null);
+            } else {
+                sendBroadcast(new Intent(
+                        Intent.ACTION_MEDIA_MOUNTED,
+                        Uri.parse("file://" + Environment.getExternalStorageDirectory() + "")));
+            }
         } else {
             Toast.makeText(this, "请检查SD卡是否正确安装", Toast.LENGTH_SHORT).show();
             finish();

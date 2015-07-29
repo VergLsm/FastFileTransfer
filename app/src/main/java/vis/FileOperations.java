@@ -9,6 +9,7 @@ import android.widget.Toast;
 import java.io.File;
 
 /**
+ * 文件操作类<br>
  * Created by Vision on 15/7/8.<br>
  * Email:Vision.lsm.2012@gmail.com
  */

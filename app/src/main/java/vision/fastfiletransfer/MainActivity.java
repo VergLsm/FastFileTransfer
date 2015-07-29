@@ -1,7 +1,9 @@
 package vision.fastfiletransfer;
 
 import android.content.Intent;
+import android.media.MediaScannerConnection;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.FragmentActivity;
@@ -76,9 +78,13 @@ public class MainActivity extends FragmentActivity {
 //                        .show();
             }
         });
-        sendBroadcast(new Intent(
-                Intent.ACTION_MEDIA_MOUNTED,
-                Uri.parse("file://" + Environment.getExternalStorageDirectory() + getResources().getString(R.string.recFolder))));
+        if (Build.VERSION.SDK_INT == Build.VERSION_CODES.KITKAT) {
+            MediaScannerConnection.scanFile(this, new String[]{Environment.getExternalStorageDirectory() + getResources().getString(R.string.recFolder)}, null, null);
+        } else {
+            sendBroadcast(new Intent(
+                    Intent.ACTION_MEDIA_MOUNTED,
+                    Uri.parse("file://" + Environment.getExternalStorageDirectory() + getResources().getString(R.string.recFolder))));
+        }
     }
 
     @Override
@@ -94,7 +100,7 @@ public class MainActivity extends FragmentActivity {
         intent.putExtra(Intent.EXTRA_SUBJECT, "分享");
         intent.putExtra(Intent.EXTRA_TEXT, "【亿动手机助手】\n 打电话不要钱,wifi免费连,你下载,我送钱！" + share + "(请用浏览器打开下载安装)");
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(Intent.createChooser(intent,"请选择"));
+        startActivity(Intent.createChooser(intent, "请选择"));
 
     }
 }

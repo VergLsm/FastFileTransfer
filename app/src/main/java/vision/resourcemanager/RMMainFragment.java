@@ -31,6 +31,8 @@ import vision.fastfiletransfer.R;
  * A simple {@link Fragment} subclass.
  */
 public class RMMainFragment extends Fragment {
+    private static final String ARG_PARAM1 = "type";
+    private static final String ARG_PARAM2 = "page";
 
     private ViewPager vp;
     private Fragment[] mFragments;
@@ -44,24 +46,34 @@ public class RMMainFragment extends Fragment {
     private TextView[] tab;
     private int pageCount;
 
-    private RMFragment rmFragment;
     private byte type;
     private int page;
     private SelectedFilesQueue<UserFile> mSelectedList;
 
     public BaseAdapter imageFolderAdapter;
 
-    public RMMainFragment(RMFragment rmFragment, byte type, int page, SelectedFilesQueue<UserFile> mSelectedList) {
-        this.rmFragment = rmFragment;
+    public static RMMainFragment newInstance(byte type, int page) {
+        RMMainFragment fragment = new RMMainFragment();
+        Bundle bundle = new Bundle();
+        bundle.putByte(ARG_PARAM1, type);
+        bundle.putInt(ARG_PARAM2, page);
+        fragment.setArguments(bundle);
+        return fragment;
+    }
+
+    public RMMainFragment() {
         // Required empty public constructor
-        this.type = type;
-        this.page = page;
-        this.mSelectedList = mSelectedList;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            type = getArguments().getByte(ARG_PARAM1);
+            page = getArguments().getInt(ARG_PARAM2);
+        }
+
+        mSelectedList = ((ResourceManagerInterface) getActivity()).getSelectedFilesQueue();
 
         if (android.os.Build.VERSION.SDK_INT < 11) {
             // 低版本手机兼容
@@ -111,7 +123,7 @@ public class RMMainFragment extends Fragment {
             pageIndex++;
         }
         if ((page & ResourceManagerInterface.PAGE_IMAGE) != 0) {
-            mAdapterLists[pageIndex] = new AdapterFolderImage(getActivity(), rmFragment, mSelectedList);
+            mAdapterLists[pageIndex] = new AdapterFolderImage(getActivity(), this, mSelectedList);
             tab[pageIndex].setText(R.string.img);
             new RefreshImageDirList(mFragments[pageIndex], mAdapterLists[pageIndex]).execute();
             pageIndex++;
@@ -162,6 +174,16 @@ public class RMMainFragment extends Fragment {
             }
         });
 
+    }
+
+    /**
+     * 跳进相册
+     *
+     * @param folderId 要跳到的相册的ID
+     */
+    public void jumpInFolder(int folderId) {
+        RMGridFragmentImage rmGridFragmentImage = RMGridFragmentImage.newInstance(folderId, imageFolderAdapter);
+        getActivity().getSupportFragmentManager().beginTransaction().hide(this).add(R.id.mainContain, rmGridFragmentImage).addToBackStack(null).commit();
     }
 
     /**

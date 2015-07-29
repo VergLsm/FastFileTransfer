@@ -14,15 +14,32 @@ import vision.fastfiletransfer.R;
  * A simple {@link Fragment} subclass.
  */
 public class RMBottomButtonFragment extends Fragment {
+    private static final String ARG_PARAM1 = "type";
+
     public Button btnLeft;
     public Button btnRight;
-    private RMFragment rmFragment;
+//    private RMFragment rmFragment;
     private byte type;
 
-    public RMBottomButtonFragment(RMFragment rmFragment, byte type) {
+    public static RMBottomButtonFragment newInstance(byte type) {
+        RMBottomButtonFragment fragment = new RMBottomButtonFragment();
+        Bundle args = new Bundle();
+        args.putByte(ARG_PARAM1, type);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    public RMBottomButtonFragment() {
         // Required empty public constructor
-        this.rmFragment = rmFragment;
-        this.type = type;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            type = getArguments().getByte(ARG_PARAM1);
+        }
+
     }
 
     @Override
@@ -39,7 +56,6 @@ public class RMBottomButtonFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
 
         if (ResourceManagerInterface.TYPE_FILE_TRANSFER == type) {
             btnLeft.setOnClickListener(rmFragment.mShareListener);

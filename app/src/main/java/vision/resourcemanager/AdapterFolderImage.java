@@ -24,7 +24,7 @@ public class AdapterFolderImage extends AdapterList {
 
     private SparseArray<FileFolder> imagesFolder;
     private Context mContext;
-    private RMFragment rmFragment;
+    private RMMainFragment rmMainFragment;
     private SelectedFilesQueue mSelectedList;
 
     /**
@@ -32,10 +32,10 @@ public class AdapterFolderImage extends AdapterList {
      */
     private LruCache<Long, Bitmap> mMemoryCache;
 
-    public AdapterFolderImage(Context context, RMFragment rmFragment, SelectedFilesQueue selectedList) {
+    public AdapterFolderImage(Context context, RMMainFragment rmMainFragment, SelectedFilesQueue selectedList) {
         super(context);
         this.mContext = context;
-        this.rmFragment = rmFragment;
+        this.rmMainFragment = rmMainFragment;
         this.mSelectedList = selectedList;
 
         //获取系统分配给每个应用程序的最大内存，每个应用系统分配32M
@@ -59,7 +59,7 @@ public class AdapterFolderImage extends AdapterList {
         imagesFolder = null;
         mSelectedList = null;
         mContext = null;
-        rmFragment = null;
+        rmMainFragment = null;
         mMemoryCache = null;
     }
 
@@ -129,7 +129,7 @@ public class AdapterFolderImage extends AdapterList {
         holder.layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                rmFragment.jumpInFolder(file.id);
+                rmMainFragment.jumpInFolder(file.id);
             }
         });
 

@@ -224,10 +224,10 @@ public class LoadingView extends View {
         public void run() {
 //            Log.d("", "Thread is start.");
             while (isRunningProgress) {
-                mProgressAngle = (mProgressAngle + 1) % 360;
+                mProgressAngle = (mProgressAngle + 5) % 360;
                 postInvalidate();//View里面的方法, 让重画, 及重新调用onDraw方法. 因为y已经更新.
                 try {
-                    Thread.sleep(mDuration / 360);  //慢点更新
+                    Thread.sleep(mDuration / 72);  //慢点更新
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }

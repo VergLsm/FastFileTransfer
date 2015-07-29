@@ -7,6 +7,7 @@ import android.util.SparseArray;
 import java.lang.ref.WeakReference;
 
 /**
+ * 接收文件列表<br>
  * Created by Vision on 15/7/8.<br>
  * Email:Vision.lsm.2012@gmail.com
  */

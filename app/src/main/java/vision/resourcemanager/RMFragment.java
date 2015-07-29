@@ -97,12 +97,14 @@ public class RMFragment extends Fragment {
             mFragmentManager = ((FragmentActivity) context).getSupportFragmentManager();
         }
         if (null == mRmBottomButtonFragment) {
-            mRmBottomButtonFragment = new RMBottomButtonFragment(this, type);
+//            mRmBottomButtonFragment = new RMBottomButtonFragment(this, type);
+            mRmBottomButtonFragment = RMBottomButtonFragment.newInstance(type);
         }
         if (null == mRmMainFragment) {
-            mRmMainFragment = new RMMainFragment(this, type, page, mSelectedList);
+            mRmMainFragment = RMMainFragment.newInstance(type, page);
+//            mRmMainFragment = new RMMainFragment(this, type, page, mSelectedList);
         }
-
+        //-----------------------------------------------------------------------------
         if (ResourceManagerInterface.TYPE_FILE_TRANSFER == type) {
             mShareListener = new View.OnClickListener() {
                 @Override
@@ -217,17 +219,6 @@ public class RMFragment extends Fragment {
         }
     }
 
-
-    /**
-     * 跳进相册
-     *
-     * @param folderId 要跳到的相册的ID
-     */
-    public void jumpInFolder(int folderId) {
-        RMGridFragmentImage rmGridFragmentImage = RMGridFragmentImage.newInstance(folderId, mRmMainFragment.imageFolderAdapter);
-        mFragmentManager.beginTransaction().hide(mRmMainFragment).add(R.id.mainContain, rmGridFragmentImage).addToBackStack(null).commit();
-    }
-
     /**
      * 取消全部选择
      */
@@ -301,4 +292,5 @@ public class RMFragment extends Fragment {
             Toast.makeText(getActivity(), "删除失败", Toast.LENGTH_SHORT).show();
         }
     }
+
 }

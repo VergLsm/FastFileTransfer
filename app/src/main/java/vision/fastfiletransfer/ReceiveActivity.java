@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.IBinder;
@@ -93,9 +94,13 @@ public class ReceiveActivity extends FragmentActivity {
         super.onDestroy();
         mReceiveService.sendLogout();
         unbindService(serConn);
-        sendBroadcast(new Intent(
-                Intent.ACTION_MEDIA_MOUNTED,
-                Uri.parse("file://" + Environment.getExternalStorageDirectory() + getResources().getString(R.string.recFolder))));
+        if (Build.VERSION.SDK_INT == Build.VERSION_CODES.KITKAT) {
+//            MediaScannerConnection.scanFile(this, new String[]{Environment.getExternalStorageDirectory() + getResources().getString(R.string.recFolder)}, null, null);
+        } else {
+            sendBroadcast(new Intent(
+                    Intent.ACTION_MEDIA_MOUNTED,
+                    Uri.parse("file://" + Environment.getExternalStorageDirectory() + getResources().getString(R.string.recFolder))));
+        }
 
     }
 

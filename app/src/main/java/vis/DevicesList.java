@@ -12,6 +12,7 @@ import java.lang.ref.WeakReference;
 import vis.net.FilesTransfer;
 
 /**
+ * 用户连接列表<br>
  * Created by Vision on 15/7/7.<br>
  * Email:Vision.lsm.2012@gmail.com
  */
