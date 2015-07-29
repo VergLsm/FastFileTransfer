@@ -6,6 +6,7 @@
     <string name="title_activity_share">ShareActivity</string>
     <string name="title_activity_receive">ReceiveActivity</string>
     <string name="open">open</string>
+    <string name="cancel">cancel</string>
 
     <string name="res_mag">ResourceManager</string>
 

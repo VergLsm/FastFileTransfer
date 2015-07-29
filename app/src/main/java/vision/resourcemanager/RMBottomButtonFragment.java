@@ -14,18 +14,21 @@ import vision.fastfiletransfer.R;
  * A simple {@link Fragment} subclass.
  */
 public class RMBottomButtonFragment extends Fragment {
-    private static final String ARG_PARAM1 = "type";
+//    private static final String ARG_PARAM1 = "type";
 
-    public Button btnLeft;
-    public Button btnRight;
-//    private RMFragment rmFragment;
-    private byte type;
+    private Button btnLeft;
+    private Button btnRight;
+    private View.OnClickListener btnLeftOnClickListener;
+    private int btnRightText;
+    private View.OnClickListener btnRightOnClickListener;
+    //    private RMFragment rmFragment;
+//    private byte type;
 
     public static RMBottomButtonFragment newInstance(byte type) {
         RMBottomButtonFragment fragment = new RMBottomButtonFragment();
-        Bundle args = new Bundle();
-        args.putByte(ARG_PARAM1, type);
-        fragment.setArguments(args);
+//        Bundle args = new Bundle();
+//        args.putByte(ARG_PARAM1, type);
+//        fragment.setArguments(args);
         return fragment;
     }
 
@@ -36,9 +39,9 @@ public class RMBottomButtonFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            type = getArguments().getByte(ARG_PARAM1);
-        }
+//        if (getArguments() != null) {
+//            type = getArguments().getByte(ARG_PARAM1);
+//        }
 
     }
 
@@ -56,16 +59,50 @@ public class RMBottomButtonFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
-        if (ResourceManagerInterface.TYPE_FILE_TRANSFER == type) {
-            btnLeft.setOnClickListener(rmFragment.mShareListener);
-            btnRight.setOnClickListener(rmFragment.mCancelListener);
-            btnRight.setText("取消");
-        } else if (ResourceManagerInterface.TYPE_RESOURCE_MANAGER == type) {
-            //这边始终是删除
-            btnRight.setOnClickListener(rmFragment.mDeleteFileListener);
+        if (null != btnLeftOnClickListener) {
+            btnLeft.setOnClickListener(btnLeftOnClickListener);
         }
-
+        if (0 != btnRightText) {
+            btnRight.setText(btnRightText);
+        }
+        if (null != btnRightOnClickListener) {
+            btnRight.setOnClickListener(btnRightOnClickListener);
+        }
     }
 
+    public void setBtnLeftOnClickListener(Button.OnClickListener btnOnClickListener) {
+        btnLeft.setOnClickListener(btnOnClickListener);
+    }
+
+    public void setBtnRightOnClickListener(Button.OnClickListener btnOnClickListener) {
+        btnRight.setOnClickListener(btnOnClickListener);
+    }
+
+    public void setBtnLeftText(CharSequence text) {
+        btnLeft.setText(text);
+    }
+
+    public void setBtnLeftText(int resid) {
+        btnLeft.setText(resid);
+    }
+
+    public void setBtnRightText(CharSequence text) {
+        btnRight.setText(text);
+    }
+
+    public void setBtnRightText(int resid) {
+        btnRight.setText(resid);
+    }
+
+    public void setOcBtnLeftOnClickListener(View.OnClickListener onClickListener) {
+        this.btnLeftOnClickListener = onClickListener;
+    }
+
+    public void setOcBtnRightOnClickListener(View.OnClickListener onClickListener) {
+        this.btnRightOnClickListener = onClickListener;
+    }
+
+    public void setOcBtnRightText(int resid) {
+        this.btnRightText = resid;
+    }
 }

@@ -160,6 +160,14 @@ public class RMFragment extends Fragment {
 
         //---------------------------------------------------------------------
 
+        if (ResourceManagerInterface.TYPE_FILE_TRANSFER == type) {
+            mRmBottomButtonFragment.setOcBtnLeftOnClickListener(mShareListener);
+            mRmBottomButtonFragment.setOcBtnRightOnClickListener(mCancelListener);
+            mRmBottomButtonFragment.setOcBtnRightText(R.string.cancel);
+        } else if (ResourceManagerInterface.TYPE_RESOURCE_MANAGER == type) {
+            //这边始终是删除
+            mRmBottomButtonFragment.setOcBtnRightOnClickListener(mDeleteFileListener);
+        }
 
         mSelectedList.setOnDataChangedListener(new SelectedFilesQueue.OnDataChangedListener() {
             @Override
@@ -170,16 +178,16 @@ public class RMFragment extends Fragment {
                 }
 
                 if (ResourceManagerInterface.TYPE_FILE_TRANSFER == type) {
-                    mRmBottomButtonFragment.btnLeft.setText(getText(R.string.share) + "(" + size + ")");
+                    mRmBottomButtonFragment.setBtnLeftText(getText(R.string.share) + "(" + size + ")");
                 } else if (ResourceManagerInterface.TYPE_RESOURCE_MANAGER == type) {
                     if (size == 1) {
-                        mRmBottomButtonFragment.btnLeft.setText(R.string.open);
-                        mRmBottomButtonFragment.btnLeft.setOnClickListener(mOpenFileListener);
+                        mRmBottomButtonFragment.setBtnLeftText(R.string.open);
+                        mRmBottomButtonFragment.setBtnLeftOnClickListener(mOpenFileListener);
                     } else {
-                        mRmBottomButtonFragment.btnLeft.setText(R.string.cancel);
-                        mRmBottomButtonFragment.btnLeft.setOnClickListener(mCancelListener);
+                        mRmBottomButtonFragment.setBtnLeftText(R.string.cancel);
+                        mRmBottomButtonFragment.setBtnLeftOnClickListener(mCancelListener);
                     }
-                    mRmBottomButtonFragment.btnRight.setText(getText(R.string.delete) + "(" + size + ")");
+                    mRmBottomButtonFragment.setBtnRightText(getText(R.string.delete) + "(" + size + ")");
                 }
             }
 
@@ -190,22 +198,21 @@ public class RMFragment extends Fragment {
                     return;
                 }
                 if (type == ResourceManagerInterface.TYPE_FILE_TRANSFER) {
-                    mRmBottomButtonFragment.btnLeft.setText("分享(" + mSelectedList.size() + ")");
+                    mRmBottomButtonFragment.setBtnLeftText(getText(R.string.share) + "(" + size + ")");
                 } else if (ResourceManagerInterface.TYPE_RESOURCE_MANAGER == type) {
                     if (size == 1) {
-                        mRmBottomButtonFragment.btnLeft.setText("打开");
-                        mRmBottomButtonFragment.btnLeft.setOnClickListener(mOpenFileListener);
+                        mRmBottomButtonFragment.setBtnLeftText(R.string.open);
+                        mRmBottomButtonFragment.setBtnLeftOnClickListener(mOpenFileListener);
                     } else {
-                        mRmBottomButtonFragment.btnLeft.setText("取消");
-                        mRmBottomButtonFragment.btnLeft.setOnClickListener(mCancelListener);
+                        mRmBottomButtonFragment.setBtnLeftText(R.string.cancel);
+                        mRmBottomButtonFragment.setBtnLeftOnClickListener(mCancelListener);
                     }
-                    mRmBottomButtonFragment.btnRight.setText("删除(" + size + ")");
+                    mRmBottomButtonFragment.setBtnRightText(getText(R.string.delete) + "(" + size + ")");
                 }
             }
         });
     }
 
-    //接收返回回来的数据
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);

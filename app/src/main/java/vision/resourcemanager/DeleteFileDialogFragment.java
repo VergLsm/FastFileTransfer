@@ -17,8 +17,8 @@ import android.app.AlertDialog;
 public class DeleteFileDialogFragment extends DialogFragment {
     public static final String RESPONSE_EVALUATE = "response_evaluate";
 
-    @NonNull
     @Override
+    @NonNull
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder
