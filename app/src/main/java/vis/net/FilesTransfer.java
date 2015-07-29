@@ -21,6 +21,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import vis.DevicesList;
+import vis.FileOperations;
 import vis.SelectedFilesQueue;
 import vis.UserDevice;
 import vis.UserFile;
@@ -160,6 +161,21 @@ public class FilesTransfer {
                         din = new DataInputStream(mSocket.getInputStream());
                         userFile = new UserFile();
                         userFile.name = din.readUTF();
+                        String type = FileOperations.getMIMEType(userFile.name);
+                        type = type.substring(0, type.indexOf('/'));
+                        if (type.equals("image")) {
+                            userFile.type = UserFile.TYPE_IMAGE;
+                        } else if (type.equals("video")) {
+                            userFile.type = UserFile.TYPE_VIDEO;
+                        } else if (type.equals("application")) {
+                            userFile.type = UserFile.TYPE_APP;
+                        } else if (type.equals("audio")) {
+                            userFile.type = UserFile.TYPE_AUDIO;
+                        } else if (type.equals("text")) {
+                            userFile.type = UserFile.TYPE_TEXT;
+                        } else {
+                            userFile.type = UserFile.TYPE_UNKNOWN;
+                        }
                         File file;
                         int i = 1;
                         while ((file = new File(dir.getPath() + "/" + userFile.name)).exists()) {

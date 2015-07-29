@@ -32,7 +32,7 @@ public class FilesList<E> extends SparseArray {
                 UserFile userFile = (UserFile)
                         msg.obj;
                 if (filesList.size() <= userFile.id) {
-                    filesList.put(((int) userFile.id), userFile);
+                    filesList.put(userFile.id, userFile);
                     if (null != filesList.onDataChangedListener) {
                         filesList.onDataChangedListener.onAdded(filesList.size());
                     }

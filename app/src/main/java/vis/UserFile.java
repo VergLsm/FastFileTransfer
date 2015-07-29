@@ -14,11 +14,12 @@ public class UserFile {
     public static final int TRANSFER_STATE_TRANSFERRING = 0x01;
     public static final int TRANSFER_STATE_FINISH = 0x02;
 
-    public static final int TYPE_IMAGE = 0;
-    public static final int TYPE_AUDIO = 1;
-    public static final int TYPE_VIDEO = 2;
-    public static final int TYPE_TEXT = 3;
-    public static final int TYPE_APP = 4;
+    public static final int TYPE_UNKNOWN = 0;
+    public static final int TYPE_IMAGE = 1;
+    public static final int TYPE_AUDIO = 2;
+    public static final int TYPE_VIDEO = 3;
+    public static final int TYPE_TEXT = 4;
+    public static final int TYPE_APP = 5;
 
     /**
      * id

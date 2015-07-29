@@ -12,7 +12,7 @@ import java.io.File;
  * Created by Vision on 15/7/8.<br>
  * Email:Vision.lsm.2012@gmail.com
  */
-public class OpenFile {
+public class FileOperations {
 
     /**
      * 调用系统程序打开一个文件
@@ -24,8 +24,8 @@ public class OpenFile {
         Intent intent = new Intent("android.intent.action.VIEW");
         intent.addCategory("android.intent.category.DEFAULT");
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        String type = getMIMEType(filename);
         File file = new File(filename);
-        String type = getMIMEType(file);
         intent.setDataAndType(Uri.fromFile(file), type);
         try {
             context.startActivity(intent);
@@ -38,24 +38,24 @@ public class OpenFile {
     /**
      * 根据文件后缀名获得对应的MIME类型。
      *
-     * @param file 要打开的文件
+     * @param fName 文件名
      */
-    public static String getMIMEType(File file) {
+    public static String getMIMEType(String fName) {
 
         String type = "*/*";
-        String fName = file.getName();
+//        String fName = file.getName();
         //获取后缀名前的分隔符"."在fName中的位置。
         int dotIndex = fName.lastIndexOf(".");
         if (dotIndex < 0) {
             return type;
         }
-    /* 获取文件的后缀名*/
+        /* 获取文件的后缀名*/
         String end = fName.substring(dotIndex, fName.length()).toLowerCase();
-        if (end == "") return type;
+        if ("".equals(end)) return type;
         //在MIME和文件类型的匹配表中找到对应的MIME类型。
-        for (int i = 0; i < MIME_MapTable.length; i++) { //MIME_MapTable??在这里你一定有疑问，这个MIME_MapTable是什么？
-            if (end.equals(MIME_MapTable[i][0]))
-                type = MIME_MapTable[i][1];
+        for (String[] aMIME_MapTable : MIME_MapTable) { //MIME_MapTable??
+            if (end.equals(aMIME_MapTable[0]))
+                type = aMIME_MapTable[1];
         }
         return type;
     }

@@ -1,6 +1,7 @@
 package vis;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -72,10 +73,34 @@ public class UserFilesAdapter extends BaseAdapter {
         // 这里position和app.id的值是相等的
 //        final UserDevice userDevice = dataList.get(position);
         //这里并不关心key，不能用get(key)
-        final UserFile userFile = (UserFile) dataList.valueAt(position);
+        final UserFile userFile = (UserFile) dataList.valueAt(dataList.size() - 1 - position);
         holder.name.setText(userFile.name);
-//        Drawable drawable = mContext.getResources().getDrawable(R.mipmap.app_icon);
-//        holder.icon.setImageDrawable(drawable);
+        Drawable drawable = null;
+        switch (userFile.type) {
+            case UserFile.TYPE_IMAGE: {
+                drawable = mContext.getResources().getDrawable(R.mipmap.listitem_icon_image);
+                break;
+            }
+            case UserFile.TYPE_AUDIO: {
+                drawable = mContext.getResources().getDrawable(R.mipmap.listitem_icon_audio);
+                break;
+            }
+            case UserFile.TYPE_VIDEO: {
+                drawable = mContext.getResources().getDrawable(R.mipmap.listitem_icon_video);
+                break;
+            }
+            case UserFile.TYPE_TEXT: {
+                drawable = mContext.getResources().getDrawable(R.mipmap.listitem_icon_text);
+                break;
+            }
+            case UserFile.TYPE_APP: {
+                drawable = mContext.getResources().getDrawable(R.mipmap.listitem_icon_app);
+                break;
+            }
+        }
+        if (null != drawable) {
+            holder.icon.setImageDrawable(drawable);
+        }
 
         switch (userFile.state) {
             case UserFile.TRANSFER_STATE_NORMAL:
@@ -98,7 +123,7 @@ public class UserFilesAdapter extends BaseAdapter {
                     public void onClick(View v) {
                         Toast.makeText(mContext, userFile.name, Toast.LENGTH_SHORT)
                                 .show();
-                        OpenFile.openFile(mContext, Environment.getExternalStorageDirectory().getPath() + mContext.getResources().getString(R.string.recFolder) + "/" + userFile.name);
+                        FileOperations.openFile(mContext, Environment.getExternalStorageDirectory().getPath() + mContext.getResources().getString(R.string.recFolder) + "/" + userFile.name);
                     }
                 });
                 break;

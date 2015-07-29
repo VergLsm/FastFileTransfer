@@ -17,7 +17,7 @@ import android.widget.Toast;
 import java.io.File;
 import java.util.Iterator;
 
-import vis.OpenFile;
+import vis.FileOperations;
 import vis.SelectedFilesQueue;
 import vis.UserFile;
 import vision.fastfiletransfer.R;
@@ -114,7 +114,7 @@ public class RMFragment extends Fragment {
             mOpenFileListener = new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    OpenFile.openFile(getActivity(), mSelectedList.getPaths()[0]);
+                    FileOperations.openFile(getActivity(), mSelectedList.getPaths()[0]);
                 }
             };
             mDeleteFileListener = new View.OnClickListener() {
