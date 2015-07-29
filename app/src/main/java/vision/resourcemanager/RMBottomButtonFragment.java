@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import vision.fastfiletransfer.R;
-import vision.fastfiletransfer.RMFragment;
 
 /**
  * A simple {@link Fragment} subclass.

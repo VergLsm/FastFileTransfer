@@ -1,7 +1,8 @@
-package vision.fastfiletransfer;
+package vision.resourcemanager;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -19,13 +20,7 @@ import java.util.Iterator;
 import vis.OpenFile;
 import vis.SelectedFilesQueue;
 import vis.UserFile;
-import vision.resourcemanager.DeleteFileDialogFragment;
-import vision.resourcemanager.FileFolder;
-import vision.resourcemanager.FileImage;
-import vision.resourcemanager.RMBottomButtonFragment;
-import vision.resourcemanager.RMGridFragmentImage;
-import vision.resourcemanager.RMMainFragment;
-import vision.resourcemanager.ResourceManagerInterface;
+import vision.fastfiletransfer.R;
 
 public class RMFragment extends Fragment {
     public static final int REQUEST_EVALUATE = 0X110;
@@ -43,14 +38,11 @@ public class RMFragment extends Fragment {
     private SelectedFilesQueue<UserFile> mSelectedList;
 
     private FragmentManager mFragmentManager;
-    //    private LinearLayout btnLinearLayout;
     private RMBottomButtonFragment mRmBottomButtonFragment;
     private ResourceManagerInterface mListener;
     private RMMainFragment mRmMainFragment;
     private View mMainContain;
     private View mBtnContain;
-
-//    private ShareFragment mShareFragment;
 
 
     /**
@@ -219,18 +211,26 @@ public class RMFragment extends Fragment {
         if (requestCode == REQUEST_EVALUATE) {
             int evaluate = data
                     .getIntExtra(DeleteFileDialogFragment.RESPONSE_EVALUATE, 0);
-            if (-1 == evaluate) {
+            if (DialogInterface.BUTTON_POSITIVE == evaluate) {
                 deleteFile();
             }
         }
     }
 
 
-    public void jumpInFolder(int indexOfFolder) {
-        RMGridFragmentImage rmGridFragmentImage = RMGridFragmentImage.newInstance(indexOfFolder, mRmMainFragment.imageFolderAdapter);
+    /**
+     * 跳进相册
+     *
+     * @param folderId 要跳到的相册的ID
+     */
+    public void jumpInFolder(int folderId) {
+        RMGridFragmentImage rmGridFragmentImage = RMGridFragmentImage.newInstance(folderId, mRmMainFragment.imageFolderAdapter);
         mFragmentManager.beginTransaction().hide(mRmMainFragment).add(R.id.mainContain, rmGridFragmentImage).addToBackStack(null).commit();
     }
 
+    /**
+     * 取消全部选择
+     */
     public void cancelAll() {
         for (UserFile file : mSelectedList.data) {
             file.isSelected = false;
@@ -245,6 +245,9 @@ public class RMFragment extends Fragment {
         mRmMainFragment.refreshAll();
     }
 
+    /**
+     * 删除文件
+     */
     public void deleteFile() {
         boolean delete = false;
         Iterator selectedList = mSelectedList.data.iterator();

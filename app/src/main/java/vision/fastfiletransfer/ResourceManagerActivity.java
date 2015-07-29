@@ -8,16 +8,17 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.SparseArray;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import vis.SelectedFilesQueue;
 import vis.UserFile;
 import vision.resourcemanager.FileFolder;
+import vision.resourcemanager.RMFragment;
+import vision.resourcemanager.ResourceManager;
 import vision.resourcemanager.ResourceManagerInterface;
 
 public class ResourceManagerActivity extends FragmentActivity implements ResourceManagerInterface {
@@ -61,32 +62,16 @@ public class ResourceManagerActivity extends FragmentActivity implements Resourc
 
         btnTitleBarRight = (Button) findViewById(R.id.titlebar_btnRight);
 
-        // 必须在查找前进行全盘的扫描，否则新加入的图片是无法得到显示的(加入对sd卡操作的权限)
-        sendBroadcast(new Intent(
-                Intent.ACTION_MEDIA_MOUNTED,
-                Uri.parse("file://" + Environment.getExternalStorageDirectory())));
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_resource_manager, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        if (ResourceManager.checkSDcard(getResources().getString(R.string.recFolder))) {
+            // 必须在查找前进行全盘的扫描，否则新加入的图片是无法得到显示的(加入对sd卡操作的权限)
+            sendBroadcast(new Intent(
+                    Intent.ACTION_MEDIA_MOUNTED,
+                    Uri.parse("file://" + Environment.getExternalStorageDirectory())));
+        } else {
+            Toast.makeText(this, "请检查SD卡是否正确安装", Toast.LENGTH_SHORT).show();
+            finish();
         }
 
-        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -139,4 +124,5 @@ public class ResourceManagerActivity extends FragmentActivity implements Resourc
     public Button getTitleRightBtn() {
         return this.btnTitleBarRight;
     }
+
 }

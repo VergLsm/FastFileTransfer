@@ -14,6 +14,12 @@ import java.io.File;
  */
 public class OpenFile {
 
+    /**
+     * 调用系统程序打开一个文件
+     *
+     * @param context
+     * @param filename
+     */
     public static void openFile(Context context, String filename) {
         Intent intent = new Intent("android.intent.action.VIEW");
         intent.addCategory("android.intent.category.DEFAULT");
@@ -24,7 +30,7 @@ public class OpenFile {
         try {
             context.startActivity(intent);
         } catch (ActivityNotFoundException exception) {
-            Toast.makeText(context,"本机未安装相关应用",Toast.LENGTH_SHORT)
+            Toast.makeText(context, "本机未安装相关应用", Toast.LENGTH_SHORT)
                     .show();
         }
     }

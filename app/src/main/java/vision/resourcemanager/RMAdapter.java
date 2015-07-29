@@ -1,10 +1,11 @@
-package vision.fastfiletransfer;
+package vision.resourcemanager;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
 /**
+ * 资源管理ViewPager适配器
  * Created by Vision on 15/6/30.<br>
  * Email:Vision.lsm.2012@gmail.com
  */

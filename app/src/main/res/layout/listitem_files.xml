@@ -32,7 +32,8 @@
             android:singleLine="true"
             android:text=""
             android:textColor="@color/item_text_color_normal"
-            android:textSize="20sp" />
+            android:textSize="20sp"
+            android:ellipsize="middle" />
 
         <TextView
             android:id="@+id/app_tips"

@@ -29,12 +29,11 @@
             android:layout_above="@+id/tvTips" />
 
         <TextView
-            android:id="@+id/textView3"
+            android:id="@+id/tvTips2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="false"
             android:gravity="center_horizontal"
-            android:text="@string/recFolder"
             android:textColor="@color/item_text_color_s"
             android:layout_below="@+id/tvTips" />
 

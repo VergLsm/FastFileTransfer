@@ -9,9 +9,8 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.app.AlertDialog;
 
-import vision.fastfiletransfer.RMFragment;
-
 /**
+ * 删除确认对话框<br>
  * Created by Vision on 15/7/24.<br>
  * Email:Vision.lsm.2012@gmail.com
  */
@@ -40,9 +39,9 @@ public class DeleteFileDialogFragment extends DialogFragment {
                 });
         return builder.create();
     }
+
     // 设置返回数据
-    protected void setResult(int which)
-    {
+    protected void setResult(int which) {
         // 判断是否设置了targetFragment
         if (getTargetFragment() == null)
             return;

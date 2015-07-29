@@ -132,7 +132,7 @@ public class AdapterVideo extends AdapterList {
         if (null != bitmap) {
             holder.image.setImageBitmap(bitmap);
         } else {
-            holder.image.setImageResource(R.mipmap.listitem_icon_image);
+            holder.image.setImageResource(R.mipmap.listitem_icon_video);
             new LoadImage(holder.image, file.oid)
                     .execute();
         }

@@ -25,9 +25,6 @@ public interface ResourceManagerInterface {
     int RM_FRAGMENT = 0;
     int SHARE_FRAGMENT = 1;
 
-
-//    void onFragmentInteraction(int arg1, int indexOfFolder);
-
     /**
      * 获取已经选择的文件队列
      *

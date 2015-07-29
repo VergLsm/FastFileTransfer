@@ -65,10 +65,10 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:layout_marginBottom="20dp"
-        android:layout_marginRight="10dp"
         android:text="邀请好友安装亿动手机助手>"
-        android:textColor="#ff07c2ab" />
+        android:textColor="#ff07c2ab"
+        android:paddingBottom="20dp"
+        android:paddingRight="10dp" />
 
     <RelativeLayout
         android:id="@+id/activity_main_top"

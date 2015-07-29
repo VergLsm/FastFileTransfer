@@ -33,7 +33,7 @@ public class RMGridFragmentImage extends Fragment {
     private SparseArray<FileImage> mFileImage;
 
     private ResourceManagerInterface mListener;
-    private int indexOfFolder;
+    private int folderId;
 
     /**
      * Use this factory method to create a new instance of
@@ -44,14 +44,14 @@ public class RMGridFragmentImage extends Fragment {
      *
      * @return A new instance of fragment RMGridFragmentImage.
      */
-    public static RMGridFragmentImage newInstance(int indexOfFolder, BaseAdapter folderAdapter) {
+    public static RMGridFragmentImage newInstance(int folderId, BaseAdapter folderAdapter) {
         RMGridFragmentImage.folderAdapter = folderAdapter;
-        RMGridFragmentImage fragment = new RMGridFragmentImage(indexOfFolder);
+        RMGridFragmentImage fragment = new RMGridFragmentImage(folderId);
         return fragment;
     }
 
-    public RMGridFragmentImage(int indexOfFolder) {
-        this.indexOfFolder = indexOfFolder;
+    public RMGridFragmentImage(int folderId) {
+        this.folderId = folderId;
     }
 
     @Override
@@ -85,7 +85,7 @@ public class RMGridFragmentImage extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        final FileFolder fileFolder = mListener.getImageFolder().get(indexOfFolder);
+        final FileFolder fileFolder = mListener.getImageFolder().get(folderId);
         SparseArray<FileImage> fileImage = fileFolder.mImages;
 
 //        tvTitle.setText(fileFolder.name);

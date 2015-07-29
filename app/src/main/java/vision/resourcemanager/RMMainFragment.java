@@ -26,8 +26,6 @@ import java.util.List;
 import vis.SelectedFilesQueue;
 import vis.UserFile;
 import vision.fastfiletransfer.R;
-import vision.fastfiletransfer.RMAdapter;
-import vision.fastfiletransfer.RMFragment;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -72,7 +70,7 @@ public class RMMainFragment extends Fragment {
                 page &= ~ResourceManagerInterface.PAGE_TEXT;
             }
         }
-        this.pageCount = NumCount2(page);
+        this.pageCount = ResourceManager.numCount2(page);
 
         mFragments = new Fragment[this.pageCount];
         mAdapterLists = new AdapterList[this.pageCount];
@@ -166,6 +164,9 @@ public class RMMainFragment extends Fragment {
 
     }
 
+    /**
+     * 刷新相册列表
+     */
     private class RefreshImageDirList extends AsyncTask<Void, Void, SparseArray<?>> {
         public SparseArray<FileFolder> imagesFolder;
         private Fragment mFragment;
@@ -178,6 +179,7 @@ public class RMMainFragment extends Fragment {
 
         protected SparseArray<?> doInBackground(Void... params) {
             Context context = getActivity();
+            imagesFolder = ((ResourceManagerInterface) getActivity()).getImageFolder();
             if (null == context) {
                 return null;
             }
@@ -195,7 +197,6 @@ public class RMMainFragment extends Fragment {
                     null,
                     MediaStore.Images.Media.DATE_MODIFIED + " DESC");
             if (cursor.moveToFirst()) {
-                imagesFolder = ((ResourceManagerInterface) getActivity()).getImageFolder();
                 FileFolder folder;
                 FileImage file;
                 int folderID = 0;
@@ -247,9 +248,6 @@ public class RMMainFragment extends Fragment {
 
         @Override
         protected void onPostExecute(SparseArray<?> sparseArray) {
-            if (null == sparseArray) {
-                return;
-            }
             if (null != mAdapterList) {
                 imageFolderAdapter = mAdapterList;
                 mAdapterList.setData(sparseArray);
@@ -260,6 +258,9 @@ public class RMMainFragment extends Fragment {
         }
     }
 
+    /**
+     * 刷新音频列表
+     */
     private class RefreshAudioList extends AsyncTask<Void, Void, SparseArray<?>> {
         SparseArray<FileAudio> audios;
         private Fragment mFragment;
@@ -327,6 +328,9 @@ public class RMMainFragment extends Fragment {
         }
     }
 
+    /**
+     * 刷新视频列表
+     */
     private class RefreshVideoList extends AsyncTask<Void, Void, SparseArray<?>> {
         SparseArray<FileVideo> videos;
         private Fragment mFragment;
@@ -398,7 +402,7 @@ public class RMMainFragment extends Fragment {
     }
 
     /**
-     *
+     * 刷新文本列表
      */
     private class RefreshTextList extends AsyncTask<Void, Void, SparseArray<?>> {
         SparseArray<FileText> texts;
@@ -469,6 +473,9 @@ public class RMMainFragment extends Fragment {
 
     }
 
+    /**
+     * 刷新应用列表
+     */
     private class RefreshAppList extends AsyncTask<Void, Void, SparseArray<?>> {
         SparseArray<FileApp> apps;
         private Fragment mFragment;
@@ -538,6 +545,9 @@ public class RMMainFragment extends Fragment {
 
     }
 
+    /**
+     * 刷新所有列表
+     */
     public void refreshAll() {
         for (AdapterList adapterList : mAdapterLists) {
             adapterList.notifyDataSetChanged();
@@ -557,15 +567,6 @@ public class RMMainFragment extends Fragment {
             vp.setCurrentItem(index);
         }
 
-    }
-
-    public static int NumCount2(int a) {
-        int num = 0;
-        while (a != 0) {
-            a &= (a - 1);
-            num++;
-        }
-        return num;
     }
 
 }

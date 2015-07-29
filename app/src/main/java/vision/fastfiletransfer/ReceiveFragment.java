@@ -16,6 +16,7 @@ import vis.UserFilesAdapter;
 
 
 /**
+ * 接收fragment<br>
  * A simple {@link Fragment} subclass.
  * Use the {@link ReceiveFragment#newInstance} factory method to
  * create an instance of this fragment.
@@ -30,6 +31,7 @@ public class ReceiveFragment extends Fragment {
     private FilesList<UserFile> mFilesList;
     private ImageView ivArrow;
     private CharSequence mTitle;
+    private TextView tvTips2;
 
     public static ReceiveFragment newInstance() {
         ReceiveFragment fragment = new ReceiveFragment();
@@ -48,6 +50,7 @@ public class ReceiveFragment extends Fragment {
 
         tvTips = (TextView) rootView.findViewById(R.id.tvTips);
         tvName = (TextView) rootView.findViewById(R.id.tvName);
+        tvTips2 = (TextView) rootView.findViewById(R.id.tvTips2);
         lvFiles = (ListView) rootView.findViewById(R.id.lvFiles);
         ivArrow = (ImageView) rootView.findViewById(R.id.arrow);
         return rootView;
@@ -58,6 +61,7 @@ public class ReceiveFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         tvName.setText(mTitle);
+        tvTips2.setText("存放位置:" + getResources().getString(R.string.recFolder));
 
         mFilesList = ((ReceiveActivity) getActivity()).mFilesList;
         mUserFilesAdapter = new UserFilesAdapter(getActivity(), mFilesList);
@@ -86,7 +90,7 @@ public class ReceiveFragment extends Fragment {
     public void setTitle(CharSequence text) {
         if (tvName != null) {
             tvName.setText(text);
-        }else{
+        } else {
             mTitle = text;
         }
     }

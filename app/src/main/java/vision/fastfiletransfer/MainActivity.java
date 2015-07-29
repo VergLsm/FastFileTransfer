@@ -5,10 +5,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.FragmentActivity;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -16,7 +13,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.io.File;
+import vision.resourcemanager.ResourceManager;
 
 public class MainActivity extends FragmentActivity {
 
@@ -56,14 +53,14 @@ public class MainActivity extends FragmentActivity {
             @Override
             public void onClick(View v) {
                 Intent shareIntent = new Intent(MainActivity.this, ShareActivity.class);
-                shareIntent.putExtra("hasSDcard", checkSDcard(getResources().getString(R.string.recFolder)));
+                shareIntent.putExtra("hasSDcard", ResourceManager.checkSDcard(getResources().getString(R.string.recFolder)));
                 startActivity(shareIntent);
             }
         });
         btnReceive.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (checkSDcard(getResources().getString(R.string.recFolder))) {
+                if (ResourceManager.checkSDcard(getResources().getString(R.string.recFolder))) {
                     Intent receiveIntent = new Intent(MainActivity.this, ReceiveActivity.class);
                     startActivity(receiveIntent);
                 } else {
@@ -74,13 +71,14 @@ public class MainActivity extends FragmentActivity {
         tvInvite.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(MainActivity.this, "分享些啥？", Toast.LENGTH_SHORT)
-                        .show();
+                onClickShare();
+//                Toast.makeText(MainActivity.this, "分享些啥？", Toast.LENGTH_SHORT)
+//                        .show();
             }
         });
         sendBroadcast(new Intent(
                 Intent.ACTION_MEDIA_MOUNTED,
-                Uri.parse("file://" + Environment.getExternalStorageDirectory())));
+                Uri.parse("file://" + Environment.getExternalStorageDirectory() + getResources().getString(R.string.recFolder))));
     }
 
     @Override
@@ -88,57 +86,15 @@ public class MainActivity extends FragmentActivity {
         super.onResume();
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
+    public void onClickShare() {
+        String share = "http://wzapi27.yidont.com/mobilem/app/app_v2/rule/register.php?uid=1&c=2345";
+
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.setType("text/*");
+        intent.putExtra(Intent.EXTRA_SUBJECT, "分享");
+        intent.putExtra(Intent.EXTRA_TEXT, "【亿动手机助手】\n 打电话不要钱,wifi免费连,你下载,我送钱！" + share + "(请用浏览器打开下载安装)");
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(Intent.createChooser(intent,"请选择"));
+
     }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-        if (id == R.id.res_mag) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-    public boolean checkSDcard(String dirName) {
-        boolean isOK = false;
-        if (Environment.getExternalStorageState().equals(
-                Environment.MEDIA_MOUNTED)) {
-//            Log.d(this.getClass().getName(), Environment.getExternalStorageState());
-            File dir = new File(Environment.getExternalStorageDirectory().getPath() + dirName);
-            if (!dir.exists()) {            //文件夹不存在
-                if (dir.mkdirs()) {         //创建文件夹
-//                    Toast.makeText(this.context, "创建文件夹成功", Toast.LENGTH_SHORT).show();
-                    Log.d(this.getClass().getName(), "created document success");
-                }
-            }
-            if (dir.exists()) {             //已经存在或者已经创建成功
-                if (dir.canWrite()) {       //可以写入
-                    Log.d(this.getClass().getName(), "the dir is OK!");
-                    isOK = true;
-                } else {
-                    Log.e(this.getClass().getName(), "the dir can not write");
-                }
-            } else {
-                Log.d(this.getClass().getName(), "没有这个目录");
-            }
-        } else {
-            Log.d(this.getClass().getName(), "请检查SD卡是否正确安装");
-        }
-        return isOK;
-    }
-
 }

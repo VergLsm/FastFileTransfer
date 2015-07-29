@@ -15,7 +15,6 @@ import android.widget.TextView;
 
 import vis.SelectedFilesQueue;
 import vision.fastfiletransfer.R;
-import vision.fastfiletransfer.RMFragment;
 
 /**
  * Created by Vision on 15/6/30.<br>

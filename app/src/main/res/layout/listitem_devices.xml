@@ -38,7 +38,8 @@
                 android:singleLine="true"
                 android:text=""
                 android:textColor="@color/item_text_color_normal"
-                android:textSize="20sp" />
+                android:textSize="20sp"
+                android:ellipsize="middle" />
 
             <TextView
                 android:id="@+id/listitem_devices_tips"
@@ -67,7 +68,9 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/currentFile" />
+            android:id="@+id/currentFile"
+            android:singleLine="true"
+            android:ellipsize="middle" />
     </LinearLayout>
 
 
