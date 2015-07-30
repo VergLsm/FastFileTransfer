@@ -6,8 +6,8 @@
     <string name="cancel">取消</string>
     <string name="delete">删除</string>
     <string name="res_mag">资源管理</string>
-
+    <string name="iwantshare">我要分享</string>
+    <string name="iwantreceive">我要接收</string>
     <string name="send">发送</string>
-
     <string name="title_activity_resource_manager">资源管理</string>
 </resources>

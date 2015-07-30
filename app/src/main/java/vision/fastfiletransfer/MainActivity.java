@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -19,9 +20,9 @@ import vision.resourcemanager.ResourceManager;
 
 public class MainActivity extends FragmentActivity {
 
-    private Button btnShare;
-    private Button btnReceive;
-    private TextView tvModel;
+    private ImageButton btnShare;
+    private ImageButton btnReceive;
+//    private TextView tvModel;
     private TextView tvInvite;
 
     @Override
@@ -38,11 +39,11 @@ public class MainActivity extends FragmentActivity {
         TextView tvTitle = (TextView) rootView.findViewById(R.id.titlebar_tvtitle);
         tvTitle.setText("文件快传");
 
-        tvModel = (TextView) findViewById(R.id.tvModel);
-        btnShare = (Button) findViewById(R.id.btnShare);
-        btnReceive = (Button) findViewById(R.id.btnReceive);
+//        tvModel = (TextView) findViewById(R.id.tvModel);
+        btnShare = (ImageButton) findViewById(R.id.btnShare);
+        btnReceive = (ImageButton) findViewById(R.id.btnReceive);
         tvInvite = (TextView) findViewById(R.id.tvInvite);
-        tvModel.setText("本机: " + android.os.Build.MODEL.replaceAll("\\s|-", ""));
+//        tvModel.setText("本机: " + android.os.Build.MODEL.replaceAll("\\s|-", ""));
 //        Log.d("SSID:", android.os.Build.MODEL.replaceAll("\\s|-", ""));
 
         btnTitleBarLeft.setOnClickListener(new View.OnClickListener() {
