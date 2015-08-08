@@ -70,7 +70,7 @@ public class ResourceManagerActivity extends FragmentActivity implements Resourc
                 MediaScannerConnection.scanFile(this, new String[]{Environment.getExternalStorageDirectory() + ""}, null, null);
             } else {
                 sendBroadcast(new Intent(
-                        Intent.ACTION_MEDIA_MOUNTED,
+                        Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,
                         Uri.parse("file://" + Environment.getExternalStorageDirectory() + "")));
             }
         } else {

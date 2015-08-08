@@ -83,7 +83,7 @@ public class MainActivity extends FragmentActivity {
             MediaScannerConnection.scanFile(this, new String[]{Environment.getExternalStorageDirectory() + getResources().getString(R.string.recFolder)}, null, null);
         } else {
             sendBroadcast(new Intent(
-                    Intent.ACTION_MEDIA_MOUNTED,
+                    Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,
                     Uri.parse("file://" + Environment.getExternalStorageDirectory() + getResources().getString(R.string.recFolder))));
         }
     }
