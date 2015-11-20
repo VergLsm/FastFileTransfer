@@ -3,8 +3,6 @@
     <string name="title_activity_share">ShareActivity</string>
     <string name="title_activity_receive">ReceiveActivity</string>
     <string name="open">open</string>
-    <string name="cancel">cancel</string>
-    <string name="res_mag">ResourceManager</string>
     <string name="send">send</string>
     <string name="title_activity_resource_manager">ResourceManagerActivity</string>
     <string name="share">share</string>
@@ -12,4 +10,7 @@
     <string name="delete">delete</string>
     <string name="iwantshare">SHARE</string>
     <string name="iwantreceive">RECEIVE</string>
+    <string name="title_activity_resmgr">NewResourceActivity</string>
+    <string name="action_settings">Settings</string>
+
 </resources>
